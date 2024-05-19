@@ -1,0 +1,75 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
+import 'package:team_adaptive/Module1_User_Management/View_Models/LoginViewModel.dart';
+import 'LandingNavPages/AboutPage.dart';
+import 'LandingNavPages/CoursesPage.dart';
+import 'LandingNavPages/HomePage.dart';
+import 'Module1_User_Management/View_Models/RegisterViewModel.dart';
+import 'Module1_User_Management/Views/LoginView.dart';
+import 'Module1_User_Management/Views/RegisterView.dart';
+
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Firebase.initializeApp(options: const FirebaseOptions(
+        apiKey: "AIzaSyDBv6AtnL2k6ma3laZVNfkIMRUtb72TlHQ",
+        appId: "1:219837929614:web:3857f058d59dd54bf411df",
+        messagingSenderId: "219837929614",
+        projectId: "adaptiveedu-ccde2"));
+  }
+  await Firebase.initializeApp();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthServices()),
+        ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => RegisterViewModel()),
+        ],
+      child: const MyApp(),
+    )
+
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a purple toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
+        // Notice that the counter didn't reset back to zero; the application
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      routes: {
+        '/Home': (context) => const HomePage(),
+        '/Courses': (context) => const CoursesPage(),
+        '/About': (context) => const AboutPage(),
+        '/login': (context) => const LoginView(),
+        '/register': (context) => const RegisterView(),
+      },
+      initialRoute: '/Home', // Specify the initial route
+    );
+  }
+}
+
