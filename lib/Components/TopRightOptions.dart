@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 
+import '../Module1_User_Management/Models/User.dart';
+
 
 List<Widget> authOptions(context, String highlighted) {
   return [
@@ -29,12 +31,12 @@ List<Widget> authOptions(context, String highlighted) {
   ];
 }
 
-List<Widget> userInfo(String? username, String? type, BuildContext context) {
+List<Widget> userInfo(User user, BuildContext context) {
   final authServices = context.read<AuthServices>();
   return [
-    Text(username!),
+    Text(user.username!),
     const SizedBox(width: 10,),
-    Text(type!),
+    Text(user.type!),
     const SizedBox(width: 10,),
     ElevatedButton(
       onPressed: () async {

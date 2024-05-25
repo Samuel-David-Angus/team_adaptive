@@ -81,19 +81,14 @@ class AuthServices with ChangeNotifier{
         DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
             .collection('User')
             .doc(_currentUser!.uid)
+            .withConverter<User>(
+              fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!),
+              toFirestore: (user, _) => user.toJson())
             .get();
 
         if (documentSnapshot.exists) {
-          var data = documentSnapshot.data() as Map<String, dynamic>;
-          _userInfo = User.setAll(
-            _currentUser!.uid,
-            data['firstname'],
-            data['lastname'],
-            data['username'],
-            data['email'],
-            null,
-            data['type'],
-          );
+          var data = documentSnapshot.data();
+          _userInfo = data as User;
         } else {
           print('User document does not exist in Firestore');
           _userInfo = null;
@@ -111,14 +106,10 @@ class AuthServices with ChangeNotifier{
       await FirebaseFirestore.instance
           .collection('User')
           .doc(user.id)
-          .set({
-        'firstname': user.firstname,
-        'lastname': user.lastname,
-        'username': user.username,
-        'email': user.email,
-        'type': user.type,
-        // Add other user properties as needed
-      });
+          .withConverter<User>(
+            fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!),
+            toFirestore: (user, _) => user.toJson())
+          .set(user);
       print('User information added to Firestore');
     } catch (e) {
       print('Error adding user information to Firestore: $e');

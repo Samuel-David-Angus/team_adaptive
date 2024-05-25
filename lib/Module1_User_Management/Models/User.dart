@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class User {
   String? _id;
@@ -39,8 +38,46 @@ class User {
     _type = value;
   }
 
-  User.setAll(this._id, this._firstname, this._lastname, this._username, this._email,
-      this._password, this._type);
+  User.setAll(
+      this._id,
+      this._firstname,
+      this._lastname,
+      this._username,
+      this._email,
+      this._password,
+      this._type);
 
   User();
+
+  factory User.fromJson(Map<String, dynamic> json) => User.setAll(
+      json['id'],
+      json['firstname'],
+      json['lastname'],
+      json['username'],
+      json['email'],
+      null,
+      json['type']
+  );
+
+  Map<String, Object?> toJson() {
+    if (id != null) {
+      return {
+        'id': id,
+        'firstname': firstname,
+        'lastname': lastname,
+        'username': username,
+        'email': email,
+        'type': type
+      };
+    } else {
+      return {
+        'firstname': firstname,
+        'lastname': lastname,
+        'username': username,
+        'email': email,
+        'type': type
+      };
+    }
+  }
+
 }
