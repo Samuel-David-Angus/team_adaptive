@@ -3,15 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 
-import '../../View_Models/StudentCourseViewModel.dart';
+import '../../View_Models/TeacherCourseViewModel.dart';
 
-class EnrollCourseView extends StatelessWidget {
+class TeacherJoinCourseView extends StatelessWidget {
   final TextEditingController textController = TextEditingController();
-  EnrollCourseView({super.key});
+  TeacherJoinCourseView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    StudentCourseViewModel viewModel = Provider.of<StudentCourseViewModel>(context);
+    TeacherCourseViewModel viewModel = Provider.of<TeacherCourseViewModel>(context);
     return TemplateView(
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
@@ -22,21 +22,21 @@ class EnrollCourseView extends StatelessWidget {
             children: [
               TextField(
                 decoration: const InputDecoration (
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a Course ID'
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter a Course ID'
                 ),
                 controller: textController,
               ),
               ElevatedButton(
                   onPressed: () async {
-                    bool enrolled = await viewModel.enroll(textController.text);
+                    bool enrolled = await viewModel.joinCourse(textController.text);
                     if (enrolled) {
                       Navigator.pushNamed(context, '/Courses');
                     } else {
-                      msgDialogShow(context, 'Enrolling failed. Pls check the id');
+                      msgDialogShow(context, 'Joining failed. Pls check the id');
                     }
                   },
-                  child: const Text('Enroll')),
+                  child: const Text('Join')),
             ],
           ),
         ));

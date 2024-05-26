@@ -9,37 +9,25 @@ import '../Services/TeacherCourseServices.dart';
 
 class TeacherCourseViewModel extends ChangeNotifier{
   TeacherCourseServices courseService = TeacherCourseServices();
-  User? user;
 
-  TeacherCourseViewModel() {
-    // Initialize user with current value from AuthServices
-    user = AuthServices().userInfo;
-
-    // Listen to changes in AuthServices
-    AuthServices().addListener(_updateUser);
-  }
-
-  void _updateUser() {
-    user = AuthServices().userInfo;
-    notifyListeners();
-  }
 
   Future<List<Course>?> getCourses() async {
-    if (user != null) {
-      return await courseService.getCourses(user!);
+    if (AuthServices().userInfo != null) {
+      return await courseService.getCourses(AuthServices().userInfo!);
     }
     return null;
   }
 
-  Future<bool> addCourse(Course course) async {
+  Future<Course?> addCourse(Course course) async {
     return await courseService.addCourse(course);
   }
 
   Future<bool> joinCourse(String courseID) async {
-    return await courseService.joinCourse(courseID, user!);
+    return await courseService.joinCourse(courseID, AuthServices().userInfo!);
   }
 
   bool validate(String title, String code, String description) {
     return title.isNotEmpty && code.isNotEmpty && description.isNotEmpty;
   }
+
 }

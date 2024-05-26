@@ -82,7 +82,7 @@ class AuthServices with ChangeNotifier{
             .collection('User')
             .doc(_currentUser!.uid)
             .withConverter<User>(
-              fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!),
+              fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!, snapshot.id),
               toFirestore: (user, _) => user.toJson())
             .get();
 
@@ -107,7 +107,7 @@ class AuthServices with ChangeNotifier{
           .collection('User')
           .doc(user.id)
           .withConverter<User>(
-            fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!),
+            fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (user, _) => user.toJson())
           .set(user);
       print('User information added to Firestore');

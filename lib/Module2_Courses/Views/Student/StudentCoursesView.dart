@@ -14,7 +14,7 @@ class StudentCoursesView extends StatelessWidget {
 
     return TemplateView(
         highlighted: SELECTED.COURSES,
-        topRight: userInfo(viewModel.user!, context),
+        topRight: userInfo(context),
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: FutureBuilder<List<Course>?>(

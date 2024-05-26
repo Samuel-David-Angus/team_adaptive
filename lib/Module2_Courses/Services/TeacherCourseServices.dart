@@ -19,7 +19,7 @@ class TeacherCourseServices {
           .collection('Course')
           .where('teachers', arrayContains: user.id)
           .withConverter<Course>(
-            fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!),
+            fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (course, _) => course.toJson())
           .get();
       for (DocumentSnapshot snapshot in querySnapshot.docs) {
@@ -33,22 +33,24 @@ class TeacherCourseServices {
     return null;
   }
 
-  Future<bool> addCourse(Course course) async {
+  Future<Course?> addCourse(Course course) async {
     try {
       CollectionReference ref = FirebaseFirestore.instance.collection('Course')
           .withConverter<Course>(
-          fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!),
+          fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!, snapshot.id),
           toFirestore: (course, _) => course.toJson());
+      DocumentReference documentReference = ref.doc();
+      String id = documentReference.id;
       if (course.id == null) {
-        await ref.add(course);
+        await documentReference.set(course);
+        course.id = id;
       } else {
         await ref.doc(course.id).set(course);
       }
-      return true;
     } catch (e) {
       print('Error adding course: $e');
     }
-    return false;
+    return course;
   }
 
   Future<bool> joinCourse(String courseID, User user) async {

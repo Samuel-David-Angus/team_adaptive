@@ -49,8 +49,8 @@ class User {
 
   User();
 
-  factory User.fromJson(Map<String, dynamic> json) => User.setAll(
-      json['id'],
+  factory User.fromJson(Map<String, dynamic> json, String id) => User.setAll(
+      id,
       json['firstname'],
       json['lastname'],
       json['username'],

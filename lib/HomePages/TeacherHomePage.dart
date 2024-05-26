@@ -14,10 +14,9 @@ class TeacherHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authServices = Provider.of<AuthServices>(context);
-    User? user = authServices.userInfo;
     return TemplateView(
         highlighted: SELECTED.HOME,
-        topRight: userInfo(user!, context),
+        topRight: userInfo(context),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(

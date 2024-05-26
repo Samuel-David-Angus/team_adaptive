@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
+import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel.dart';
 
 import '../../Models/CourseModel.dart';
@@ -17,7 +18,7 @@ class TeacherAddCourseView extends StatelessWidget {
     final TeacherCourseViewModel viewModel = Provider.of<TeacherCourseViewModel>(context);
     return TemplateView(
         highlighted: SELECTED.NONE,
-        topRight: userInfo(viewModel.user!, context),
+        topRight: userInfo(context),
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Column(
@@ -54,10 +55,10 @@ class TeacherAddCourseView extends StatelessWidget {
                           code: codeController.text,
                           description: descriptionController.text,
                           students: [],
-                          teachers: [viewModel.user?.id ?? '']);
-                      bool added = await viewModel.addCourse(course);
-                      if (added) {
-                        msgDialogShow(context, "Course added");
+                          teachers: [AuthServices().userInfo?.id ?? '']);
+                      Course? added = await viewModel.addCourse(course);
+                      if (added != null) {
+                        Navigator.pushNamed(context, '/courseOverview', arguments: added);
                       } else {
                         msgDialogShow(context, "Course failed to eb added");
                       }

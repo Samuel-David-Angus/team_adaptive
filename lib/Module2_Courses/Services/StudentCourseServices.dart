@@ -20,7 +20,7 @@ class StudentCourseServices {
           .collection('Course')
           .where('students', arrayContains: user.id)
           .withConverter<Course>(
-            fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!),
+            fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot snapshot in querySnapshot.docs) {
@@ -53,7 +53,7 @@ class StudentCourseServices {
           .collection('Course')
           .doc(id)
           .withConverter<Course>(
-          fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!),
+          fromFirestore: (snapshot, _) => Course.fromJson(snapshot.data()!, snapshot.id),
           toFirestore: (model, _) => model.toJson())
           .get();
       if (documentSnapshot.exists) {

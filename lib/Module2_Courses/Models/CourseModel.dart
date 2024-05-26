@@ -53,14 +53,17 @@ class Course {
     _teachers = teachers;
   }
 
-  factory Course.fromJson(Map<String, dynamic> json) => Course.setAll(
-    id: json['id'],
+  factory Course.fromJson(Map<String, dynamic> json, String id) {
+    print(json);
+    return Course.setAll(
+    id: id,
     title: json['title'],
     code: json['code'],
     description: json['description'],
     students: List.from(json['students']),
     teachers: List.from(json['teachers'])
-  );
+    );
+  }
 
   Map<String, Object?> toJson() {
     if (id != null) {

@@ -31,19 +31,20 @@ List<Widget> authOptions(context, String highlighted) {
   ];
 }
 
-List<Widget> userInfo(User user, BuildContext context) {
+List<Widget> userInfo(BuildContext context) {
   final authServices = context.read<AuthServices>();
+  final user = authServices.userInfo;
   return [
-    Text(user.username!),
+    Text(user!.username!),
     const SizedBox(width: 10,),
-    Text(user.type!),
+    Text(user!.type!),
     const SizedBox(width: 10,),
     ElevatedButton(
       onPressed: () async {
         await authServices.signOut();
         Navigator.pushNamed(context, '/login');
       },
-      child: const Text('Register'),
+      child: const Text('Sign out'),
     ),
   ];
 }

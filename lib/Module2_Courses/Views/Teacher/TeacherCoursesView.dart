@@ -15,7 +15,7 @@ class TeacherCoursesView extends StatelessWidget {
 
     return TemplateView(
         highlighted: SELECTED.COURSES,
-        topRight: userInfo(viewModel.user!, context),
+        topRight: userInfo(context),
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: FutureBuilder<List<Course>?>(
@@ -27,29 +27,50 @@ class TeacherCoursesView extends StatelessWidget {
                 return Text('Error: ${snapshot.error}');
               } else {
                 List<Course> courses = snapshot.data!;
-                return Wrap(
-                  spacing: 10,
-                  children: List.generate(
-                      courses.length,
-                          (index) {
-                        return Card(
-                          child: ListTile(
-                            title: Text(courses[index].title!),
-                            subtitle: Text(courses[index].code!),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/courseOverview', arguments: courses[index]);
-                                  },
-                                  child: const Text('Enter'),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/addCourse');
+                            },
+                            child: Text('Add Course')
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/joinCourse');
+                            },
+                            child: Text('Join Course')
+                        )
+                      ],
+                    ),
+                    Wrap(
+                      spacing: 10,
+                      children: List.generate(
+                          courses.length,
+                              (index) {
+                            return Card(
+                              child: ListTile(
+                                title: Text(courses[index].title!),
+                                subtitle: Text(courses[index].code!),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, '/courseOverview', arguments: courses[index]);
+                                      },
+                                      child: const Text('Enter'),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
+                              ),
+                            );
+                          }),
+                    ),
+                  ],
                 );
               }
             },

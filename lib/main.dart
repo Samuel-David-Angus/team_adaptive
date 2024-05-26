@@ -8,7 +8,10 @@ import 'package:team_adaptive/Module1_User_Management/View_Models/LoginViewModel
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module2_Courses/Services/StudentCourseServices.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
+import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';
+import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
+import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
 import 'LandingNavPages/AboutPage.dart';
 import 'LandingNavPages/CoursesPage.dart';
 import 'LandingNavPages/HomePage.dart';
@@ -33,6 +36,7 @@ Future main() async{
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => StudentCourseViewModel()),
+        ChangeNotifierProvider(create: (_) => TeacherCourseViewModel()),
         ],
       child: const MyApp(),
     )
@@ -74,7 +78,10 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),
         '/enroll': (context) => EnrollCourseView(),
-        '/courseOverview': (context) => CourseOverviewPage(course: ModalRoute.of(context)?.settings.arguments as Course)
+        '/courseOverview': (context) => CourseOverviewPage(course: ModalRoute.of(context)?.settings.arguments as Course),
+        '/addCourse'     : (context) => TeacherAddCourseView(),
+        '/joinCourse'     : (context) => TeacherJoinCourseView(),
+
       },
 
       initialRoute: '/Home', // Specify the initial route
