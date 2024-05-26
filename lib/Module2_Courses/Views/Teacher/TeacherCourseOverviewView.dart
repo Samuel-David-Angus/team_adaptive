@@ -37,7 +37,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
             'Course ID: ${course.id!}',
             style: TextStyle(fontSize: 20),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
                 //todo
@@ -45,7 +45,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
               child: const Text('Lessons')),
           ElevatedButton(
               onPressed: () {
-                //todo
+                Navigator.pushNamed(context, '/conceptMap');
               },
               child: const Text('Concept Map'))
         ],

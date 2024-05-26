@@ -54,7 +54,6 @@ class Course {
   }
 
   factory Course.fromJson(Map<String, dynamic> json, String id) {
-    print(json);
     return Course.setAll(
     id: id,
     title: json['title'],
