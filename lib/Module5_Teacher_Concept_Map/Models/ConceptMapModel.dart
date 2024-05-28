@@ -16,15 +16,23 @@ class ConceptMapModel {
     _conceptMap = value;
   }
 
-  ConceptMapModel.setAll({required courseID, required conceptMap});
+  ConceptMapModel.setAll({required String? courseID, required Map<String, List<int>>? conceptMap}) {
+    _courseID = courseID;
+    _conceptMap = conceptMap;
+  }
 
   // Factory constructor for creating an instance from JSON
   factory ConceptMapModel.fromJson(Map<String, dynamic> json, String id) {
+    Map<String, List<int>> conceptMap = (json['conceptMap'] as Map<String, dynamic>? ?? {}).map(
+          (key, value) {
+        final nonNullKey = key ?? '';
+        final nonNullValue = (value as List<dynamic>?)?.map((e) => e as int).toList() ?? [];
+        return MapEntry(nonNullKey, nonNullValue);
+      },
+    );
     return ConceptMapModel.setAll(
-      courseID: id,
-      conceptMap: (json['conceptMap'] as Map<String, dynamic>).map(
-              (key, value) => MapEntry(key, List<int>.from(value))
-      ),
+        courseID: id,
+        conceptMap: conceptMap
     );
   }
 

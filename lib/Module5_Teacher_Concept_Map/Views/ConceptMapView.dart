@@ -13,7 +13,10 @@ class ConceptMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ConceptMapViewModel>(context);
+    final viewModel = Provider.of<ConceptMapViewModel>(context, listen: false);
+    if (viewModel.map == null || viewModel.map!.courseID != course.id) {
+      viewModel.getConceptMap(course.id!);
+    }
     return TemplateView(
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
@@ -31,15 +34,64 @@ class ConceptMapView extends StatelessWidget {
                 ),
                 controller: conceptController,
               ),
-              ElevatedButton(
-                  onPressed: (){
-                    viewModel.addConcept(conceptController.text);
-                  },
-                  child: Text("Add Concept")),
-              buildTable(viewModel.map!.conceptMap!),
-              ElevatedButton(
-                  onPressed: (){
+              Row(
+                children: [
+                  ElevatedButton(
+                      onPressed: (){
+                        viewModel.addConcept(conceptController.text);
+                      },
+                      child: Text("Add Concept")),
+                  const SizedBox(width: 10,),
+                  Consumer<ConceptMapViewModel>(
+                      builder: (context, viewModel, child) {
+                        return viewModel.map != null && viewModel.map!.conceptMap!.length > 0 ?
+                        PopupMenuButton<String>(
+                          child: const Text("Delete Concept"),
+                            itemBuilder: (BuildContext context) {
+                              Map<String, List<int>> cmap = viewModel.map!.conceptMap!;
+                              return List.generate(
+                                  cmap.length,
+                                  (index) {
+                                    String val = cmap!.keys!.toList()[index];
+                                    return PopupMenuItem(
+                                        value: val,
+                                        child: Text(val));
+                                  }
+                              );
+                            },
+                          onSelected: (String val) {
+                              viewModel.deleteConcept(val);
+                          },
+                        )
+                            : Text('No concepts to delete');
+                      }
+                  )
+                ]
+              ),
 
+              Consumer<ConceptMapViewModel>(
+                builder: (context, viewModel, child) {
+                  final conceptMap = viewModel.map?.conceptMap;
+
+                  if (conceptMap == null || conceptMap.isEmpty) {
+                    return Center(child: Text('No data available'));
+                  }
+
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SingleChildScrollView(
+                      child: buildTable(conceptMap, viewModel),
+                    ),
+                  );
+                },
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    if(await viewModel.saveEdits()) {
+                      print("Saved successfully");
+                    } else {
+                      print("Not saved");
+                    }
                   },
                   child: Text("Save")),
             ],
@@ -47,28 +99,35 @@ class ConceptMapView extends StatelessWidget {
         ));
   }
 
-  Widget buildTable(Map<String, List<int>> data) {
-    List<TableRow> rows = [];
+  Widget buildTable(Map<String, List<int>>? data, ConceptMapViewModel viewModel) {
 
-    // Add the header row
-    List<Widget> headerRow = [TableCell(child: SizedBox())]; // Empty cell for corner
-    data.keys.forEach((key) {
-      headerRow.add(TableCell(child: Center(child: Text(key))));
-    });
-    rows.add(TableRow(children: headerRow));
+    if (data == null) {
+      return const CircularProgressIndicator();
+    }
+    var keys = data.keys.toList();
+    var rows = List.generate(
+      data.length,
+          (rowIndex) => DataRow(
+        cells: [DataCell(Text(keys[rowIndex]))] + List.generate(
+          data[keys[rowIndex]]!.length,
+              (colIndex) => DataCell(GestureDetector(
+                onTap: (){viewModel.setPrerequisite(keys[rowIndex], keys[colIndex]);},
+                child: Text(data[keys[rowIndex]]![colIndex].toString()))),
+        ),
+      ),
+    );
+    var columns = [DataColumn(
+        label: Text(''))] + List.generate(
+      data.length,
+          (index) => DataColumn(
+        label: Text(keys[index]),
+      ),
+    );
 
-    // Add data rows
-    data.forEach((key, value) {
-      List<Widget> rowData = [TableCell(child: Center(child: Text(key)))];
-      value.forEach((element) {
-        rowData.add(TableCell(child: Center(child: Text(element.toString()))));
-      });
-      rows.add(TableRow(children: rowData));
-    });
+    return DataTable(
 
-    return Table(
-      border: TableBorder.all(),
-      children: rows,
+      columns: columns,
+      rows: rows,
     );
   }
 }

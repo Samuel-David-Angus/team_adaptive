@@ -45,7 +45,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
               child: const Text('Lessons')),
           ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/conceptMap');
+                Navigator.pushNamed(context, '/conceptMap', arguments: course);
               },
               child: const Text('Concept Map'))
         ],

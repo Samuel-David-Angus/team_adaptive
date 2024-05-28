@@ -21,14 +21,14 @@ class ConceptMapService {
           .set(map);
       return true;
     } catch (e) {
-      print("Error adding concept map: $e ");
+      print("Error editing concept map: $e ");
     }
     return false;
   }
 
   Future<bool> newConceptMap(String courseID) async {
     try {
-      ConceptMapModel map = ConceptMapModel.setAll(courseID: courseID, conceptMap: Map<String, List<int>>);
+      ConceptMapModel map = ConceptMapModel.setAll(courseID: courseID, conceptMap: <String, List<int>>{});
       await FirebaseFirestore.instance
           .collection('ConceptMap')
           .withConverter(
@@ -53,8 +53,10 @@ class ConceptMapService {
           .doc(courseID)
           .get();
       if (documentSnapshot.exists) {
-        var data = documentSnapshot.data();
-        return data as ConceptMapModel;
+        var data = documentSnapshot.data() as ConceptMapModel;
+        return data;
+
+
       }
 
     } catch (e) {

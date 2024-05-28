@@ -12,6 +12,7 @@ import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel
 import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
 import 'LandingNavPages/AboutPage.dart';
 import 'LandingNavPages/CoursesPage.dart';
@@ -38,6 +39,7 @@ Future main() async{
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => StudentCourseViewModel()),
         ChangeNotifierProvider(create: (_) => TeacherCourseViewModel()),
+        ChangeNotifierProvider(create: (_) => ConceptMapViewModel()),
         ],
       child: const MyApp(),
     )
@@ -82,7 +84,7 @@ class MyApp extends StatelessWidget {
         '/courseOverview': (context) => CourseOverviewPage(course: ModalRoute.of(context)?.settings.arguments as Course),
         '/addCourse'     : (context) => TeacherAddCourseView(),
         '/joinCourse'     : (context) => TeacherJoinCourseView(),
-        '/conceptMap'     : (context) => ConceptMapView(course: ModalRoute.of(context)?.settings.arguments as Course),
+        '/conceptMap'     : (context) => ConceptMapView(course: ModalRoute.of(context)?.settings.arguments as Course, ),
       },
 
       initialRoute: '/Home', // Specify the initial route

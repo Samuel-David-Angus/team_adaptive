@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
 import '../../Module1_User_Management/Models/User.dart';
 import '../Models/CourseModel.dart';
@@ -41,6 +42,7 @@ class TeacherCourseServices {
           toFirestore: (course, _) => course.toJson());
       DocumentReference documentReference = ref.doc();
       String id = documentReference.id;
+      ConceptMapService().newConceptMap(id);
       if (course.id == null) {
         await documentReference.set(course);
         course.id = id;
