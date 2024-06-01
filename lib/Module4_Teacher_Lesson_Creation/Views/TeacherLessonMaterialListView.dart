@@ -30,9 +30,12 @@ class TeacherLessonMaterialListView extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => TeacherAddLessonMaterialView(type: type, lesson: lesson)));
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return TeacherAddLessonMaterialView(type: type, lesson: lesson);
+                          }
+                      );
                     },
                     child: Text('Add $type lesson')),
                 Wrap(

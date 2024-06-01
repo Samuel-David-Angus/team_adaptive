@@ -32,6 +32,7 @@ class TeacherSelectLearningStyleView extends StatelessWidget {
               TextButton(
                 child: Text('Cancel'),
                 onPressed: () {
+                  viewModel.reset();
                   Navigator.of(context).pop();
                 },
               ),
