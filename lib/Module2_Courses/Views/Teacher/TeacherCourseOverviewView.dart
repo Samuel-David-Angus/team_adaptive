@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonHomeView.dart';
 
 import '../../../Module1_User_Management/Models/User.dart';
 import '../../../Module1_User_Management/Services/AuthServices.dart';
@@ -40,7 +41,10 @@ class TeacherCourseOverviewView extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
-                //todo
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TeacherLessonHomeView(course: course))
+                );
               },
               child: const Text('Lessons')),
           ElevatedButton(

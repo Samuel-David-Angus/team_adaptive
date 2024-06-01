@@ -12,6 +12,9 @@ import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel
 import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectConceptsViewModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectLearningStyleViewModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
 import 'LandingNavPages/AboutPage.dart';
@@ -40,6 +43,9 @@ Future main() async{
         ChangeNotifierProvider(create: (_) => StudentCourseViewModel()),
         ChangeNotifierProvider(create: (_) => TeacherCourseViewModel()),
         ChangeNotifierProvider(create: (_) => ConceptMapViewModel()),
+        ChangeNotifierProvider(create: (_) => TeacherLessonViewModel()),
+        ChangeNotifierProvider(create: (_) => SelectConceptsViewModel()),
+        ChangeNotifierProvider(create: (_) => SelectLearningStyleViewModel()),
         ],
       child: const MyApp(),
     )
@@ -74,6 +80,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      //replace routes if there is time since it is apparently not recommended bruh
       routes: {
         '/Home': (context) => const HomePage(),
         '/Courses': (context) => const CoursesPage(),
