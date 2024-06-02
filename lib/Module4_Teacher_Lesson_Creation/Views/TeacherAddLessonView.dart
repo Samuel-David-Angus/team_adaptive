@@ -14,6 +14,7 @@ class TeacherAddLessonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<TeacherLessonViewModel>(context, listen: false);
+    List<String>? selectedItems;
     return AlertDialog(
       title: const Text('Add Lesson'),
       content: Padding(
@@ -38,7 +39,7 @@ class TeacherAddLessonView extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  final List<String>? selectedItems = await showDialog<List<String>>(
+                  selectedItems = await showDialog<List<String>>(
                     context: context,
                     builder: (BuildContext context) {
                       return TeacherSelectConceptsView(
@@ -46,9 +47,16 @@ class TeacherAddLessonView extends StatelessWidget {
                       );
                     },
                   );
+
+
+                },
+                child: const Text('Concepts')),
+            const SizedBox(height: 20,),
+            TextButton(
+                onPressed: () async {
                   if (selectedItems != null) {
-                    if (selectedItems.isNotEmpty && titleController.text.isNotEmpty && descriptionController.text.isNotEmpty) {
-                      viewModel.addLesson(titleController.text, descriptionController.text, course.id!, selectedItems);
+                    if (selectedItems!.isNotEmpty && titleController.text.isNotEmpty && descriptionController.text.isNotEmpty) {
+                      await viewModel.addLesson(titleController.text, descriptionController.text, course.id!, selectedItems!);
                     } else {
                       showDialog(
                         context: context,
@@ -69,9 +77,8 @@ class TeacherAddLessonView extends StatelessWidget {
                       );
                     }
                   }
-
                 },
-                child: const Text('Concepts'))
+                child: Text('Save'))
           ],
         ),
       ),

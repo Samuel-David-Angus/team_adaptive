@@ -12,6 +12,7 @@ import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel
 import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
+import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectConceptsViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectLearningStyleViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';

@@ -58,7 +58,6 @@ class LessonModel {
 
 
   factory LessonModel.fromJson(Map<String, dynamic> json, String id) {
-    print(json);
     return LessonModel.setAll(
       id: id,
       lessonTitle: json['lessonTitle'] as String,

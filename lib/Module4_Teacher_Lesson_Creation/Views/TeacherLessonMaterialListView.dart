@@ -55,12 +55,7 @@ class TeacherLessonMaterialListView extends StatelessWidget {
                                     },
                                     child: const Text('View'),
                                   ),
-                                  TextButton(
-                                    onPressed: () {
 
-                                    },
-                                    child: const Text('Edit'),
-                                  ),
                                 ],
                               ),
                             ));

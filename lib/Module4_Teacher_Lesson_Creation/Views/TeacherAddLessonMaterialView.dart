@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherSelectLearningStyleView.dart';
 
 import '../View_Models/TeacherLessonViewModel.dart';
 import 'TeacherSelectConceptsView.dart';
@@ -17,6 +18,8 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<TeacherLessonViewModel>(context, listen: false);
+    List<String>? selectedConcepts;
+    String? learningStyle;
     return AlertDialog(
       title: Text('Add material'),
       content: Padding(
@@ -40,7 +43,7 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  final List<String>? selectedItems = await showDialog<List<String>>(
+                  selectedConcepts = await showDialog<List<String>>(
                     context: context,
                     builder: (BuildContext context) {
                       return TeacherSelectConceptsView(
@@ -48,9 +51,26 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                       );
                     },
                   );
-                  if (selectedItems != null) {
-                    if (selectedItems.isNotEmpty && titleController.text.isNotEmpty && linkController.text.isNotEmpty) {
-                      //viewModel.addLessonMaterial(lesson.courseID!, AuthServices().userInfo!.id!, titleController.text, descriptionController.text, course.id!, selectedItems);
+
+                },
+                child: const Text('Concepts')),
+            ElevatedButton(
+                onPressed: () async {
+                  learningStyle = await showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const TeacherSelectLearningStyleView();
+                    },
+                  );
+
+                },
+                child: const Text('Learning Styles')),
+            const SizedBox(height: 20,),
+            TextButton(
+                onPressed: () async {
+                  if (selectedConcepts != null) {
+                    if (selectedConcepts!.isNotEmpty && titleController.text.isNotEmpty && linkController.text.isNotEmpty) {
+                      await viewModel.addLessonMaterial(lesson.courseID!, lesson.id!, titleController.text, AuthServices().userInfo!.id!, linkController.text, learningStyle!, selectedConcepts!, type);
                     } else {
                       showDialog(
                         context: context,
@@ -71,9 +91,8 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                       );
                     }
                   }
-
                 },
-                child: const Text('Concepts'))
+                child: Text('Save'))
           ],
         ),
       ),
