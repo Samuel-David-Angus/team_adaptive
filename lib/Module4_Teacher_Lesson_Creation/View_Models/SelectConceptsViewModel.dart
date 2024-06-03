@@ -21,9 +21,12 @@ class SelectConceptsViewModel extends ChangeNotifier{
         items = [];
         for (var concept in lesson.concepts!) {
               items!.add("$concept(main)");
+              print(concept);
               List<int> val = map[concept]!;
+              print(val);
               for (int i = 0; i < val.length; i++) {
                 if (val[i] == 1) {
+                  print(keys[i]);
                   items!.add(keys[i]);
                 }
               }

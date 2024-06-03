@@ -25,13 +25,15 @@ class TeacherLessonViewModel extends ChangeNotifier {
     return await service.getLessonMaterialsByType(courseID, lessonID, type);
   }
 
-  Future<bool> addLessonMaterial(String courseID, String title, String author, String src, String learningStyle, List<String> concepts) async {
+  Future<bool> addLessonMaterial(String courseID, String lessonID, String title, String author, String src, String learningStyle, List<String> concepts, String type) async {
     LessonMaterialModel lessonMaterial = LessonMaterialModel();
     lessonMaterial.title = title;
+    lessonMaterial.lessonID = lessonID;
     lessonMaterial.author = author;
     lessonMaterial.src = src;
     lessonMaterial.learningStyle = learningStyle;
     lessonMaterial.concepts = concepts;
+    lessonMaterial.type = type;
     notifyListeners();
     return await service.addLessonMaterial(courseID, lessonMaterial);
   }

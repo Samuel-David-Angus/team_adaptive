@@ -16,12 +16,10 @@ class TeacherSelectLearningStyleView extends StatelessWidget {
                 children: viewModel.learningStyles!.map((item) {
                   return CheckboxListTile(
                     title: Text(item),
-                    value: viewModel.selectedStyles!.contains(item),
+                    value: viewModel.selectedStyle == item,
                     onChanged: (bool? checked) {
                       if (checked == true) {
-                        viewModel.addStyle(item);
-                      } else {
-                        viewModel.removeStyle(item);
+                        viewModel.setStyle(item);
                       }
                     },
                   );
@@ -39,9 +37,9 @@ class TeacherSelectLearningStyleView extends StatelessWidget {
               TextButton(
                 child: Text('OK'),
                 onPressed: () {
-                  var results = [...?viewModel.selectedStyles];
+                  String result = viewModel.selectedStyle;
                   viewModel.reset();
-                  Navigator.of(context).pop(results);
+                  Navigator.of(context).pop(result);
                 },
               ),
             ],
