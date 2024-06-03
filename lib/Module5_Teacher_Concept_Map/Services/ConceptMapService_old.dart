@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 
 class ConceptMapService {
@@ -27,36 +26,16 @@ class ConceptMapService {
     return false;
   }
 
-  Future<bool> addLesson(LessonModel lesson) async {
+  Future<bool> newConceptMap(String courseID) async {
     try {
-      var ref = FirebaseFirestore.instance
-          .collection("Course")
-          .doc(lesson.courseID)
-          .collection("Lesson")
-          .withConverter(
-          fromFirestore: (snapshot, _) => LessonModel.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (model, _) => model.toJson());
-      QuerySnapshot querySnapshot = await ref.get();
-      lesson.order = querySnapshot.size + 1;
-      await ref.add(lesson);
-      return true;
-    } catch (e) {
-      print("Error adding lesson: $e");
-    }
-    return false;
-  }
-
-  Future<bool> newConceptMap(String courseID, ConceptMapModel conceptMap) async {
-    try {
-      var ref = FirebaseFirestore.instance
-          .collection('Course')
-          .doc(courseID)
-          .collection("ConceptMap")
+      ConceptMapModel map = ConceptMapModel.setAll(courseID: courseID, conceptMap: <String, List<int>>{});
+      await FirebaseFirestore.instance
+          .collection('ConceptMap')
           .withConverter(
             fromFirestore: (snapshot, _) => ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
-            toFirestore: (model, _) => model.toJson());
-          QuerySnapshot querySnapshot = await ref.get();
-          await ref.add(conceptMap);
+            toFirestore: (model, _) => model.toJson())
+          .doc(courseID)
+          .set(map);
       return true;
     } catch (e) {
       print("Error adding concept map: $e ");
@@ -76,6 +55,8 @@ class ConceptMapService {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data() as ConceptMapModel;
         return data;
+
+
       }
 
     } catch (e) {
