@@ -3,6 +3,7 @@ import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
+import 'package:team_adaptive/Module3_Learner/Views/StudentLessonListView.dart';
 
 import '../../../Module1_User_Management/Models/User.dart';
 
@@ -39,7 +40,10 @@ class StudentCourseOverviewView extends StatelessWidget {
           SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
-                //todo
+                Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => StudentLessonListView(course: course))
+                );
               },
               child: const Text('Lessons'))
         ],

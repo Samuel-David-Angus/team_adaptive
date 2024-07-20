@@ -12,6 +12,7 @@ import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel
 import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
+import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectConceptsViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectLearningStyleViewModel.dart';
@@ -47,6 +48,7 @@ Future main() async{
         ChangeNotifierProvider(create: (_) => TeacherLessonViewModel()),
         ChangeNotifierProvider(create: (_) => SelectConceptsViewModel()),
         ChangeNotifierProvider(create: (_) => SelectLearningStyleViewModel()),
+        ChangeNotifierProvider(create: (_) => StudentLessonViewModel()),
         ],
       child: const MyApp(),
     )
