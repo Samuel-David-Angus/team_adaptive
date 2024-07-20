@@ -1,115 +1,127 @@
 class ConceptMapModel {
-  late String _id;
   late String _courseID;
-  late List<String> _concepts;
-  late List<List<bool>> _conceptMatrix;
+  late Map<String, List<int>> _conceptMap;
   late int _conceptCount;
-  late List<int> _conceptDepths;
-  late int _treeHeight;
 
-  ConceptMapModel.setAll({
-    required String id,
-    required String courseID,
-    required List<String> concepts,
-    required List<List<bool>> conceptMatrix
-  }) {
-    _id = id;
-    _courseID = courseID;
-    _concepts = concepts;
-    _conceptMatrix = conceptMatrix;
-    _conceptCount = _concepts.length;
-    _conceptDepths = List<int>.filled(_concepts.length, 0);
-    setDepthsAndHeight();
-  }
-
-  int findIndexOfConcept(String concept) {
-    for (int i = 0; i < _conceptCount; i++) {
-      if (concept == _concepts[i]) return i;
-    }
-    return -1;
-  }
-
-  void setConceptConnection(String preRequisite, String postRequisite, bool connection) {
-    int from = findIndexOfConcept(preRequisite);
-    int to = findIndexOfConcept(postRequisite);
-    _conceptMatrix[from][to] = connection;
-  }
-
-  void findPreRequisites(int to, List<int> foundPreRequisites) {
-    foundPreRequisites[to] = 1;
-    for (int from = 0; from < _conceptCount; from++) {
-      if (_conceptMatrix[from][to]) findPreRequisites(from, foundPreRequisites);
-    }
-  }
-
-  int getDepth(int to) {
-    for (int from = 0; from < _conceptCount; from++) {
-      if (_conceptMatrix[from][to]) return 1 + getDepth(from);
-    }
-    return 1;
-  }
-
-  void setDepthsAndHeight() {
-    int maxDepth = 0;
-    for (int conceptIndex = 0; conceptIndex < _conceptCount; conceptIndex++) {
-      int depth = getDepth(conceptIndex);
-      _conceptDepths[conceptIndex] = depth;
-      if (depth > maxDepth) maxDepth = depth;
-    }
-    _treeHeight = maxDepth;
-  }
-
-  // Getter and Setter for _id
-  String get id => _id;
-  set id(String id) {
-    _id = id;
-  }
-
-  // Getter and Setter for _courseID
+  // getters
   String get courseID => _courseID;
+  Map<String, List<int>> get conceptMap => _conceptMap;
+  int get conceptCount => _conceptCount;
+
+  //setters
   set courseID(String courseID) {
     _courseID = courseID;
   }
-
-  // Getter and Setter for _concepts
-  List<String> get concepts => _concepts;
-  set concepts(List<String> concepts) {
-    _concepts = concepts;
+  set conceptMap (Map<String, List<int>> conceptMap) {
+    _conceptMap = conceptMap;
   }
-
-  // Getter and Setter for _conceptMatrix
-  List<List<bool>> get conceptMatrix => _conceptMatrix;
-  set conceptMatrix(List<List<bool>> conceptMatrix) {
-    _conceptMatrix = conceptMatrix;
-  }
-
-  // Getter and Setter for _conceptCount
-  int get conceptCount => _conceptCount;
   set conceptCount(int conceptCount) {
     _conceptCount = conceptCount;
   }
 
-  // Getter and Setter for _conceptDepths
-  List<int> get conceptDepths => _conceptDepths;
-  set conceptDepths(List<int> conceptDepths) {
-    _conceptDepths = conceptDepths;
+  ConceptMapModel.setAll({required String courseID, required Map<String, List<int>> conceptMap}) {
+    _courseID = courseID;
+    _conceptMap = conceptMap;
+    _conceptCount = conceptMap.length;
   }
 
   factory ConceptMapModel.fromJson(Map<String, dynamic> json, String id) {
+    Map<String, List<int>> conceptMapUnordered = json['conceptMap'];
+    List<String> order = json['order'];
+    Map<String, List<int>> conceptMapOrdered = {for (String concept in order) concept: conceptMapUnordered[concept]!};
     return ConceptMapModel.setAll(
-      id: id,
-      courseID: json['courseID'],
-      concepts: List<String>.from(json['concepts']),
-      conceptMatrix: List<List<bool>>.from(json['conceptMatrix']),
+      courseID: id,
+      conceptMap: conceptMapOrdered,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'courseID': courseID,
-      'concepts': concepts,
-      'conceptMatrix': conceptMatrix
+      'order': _conceptMap.keys,
+      'conceptMap': _conceptMap.map((key, value) => MapEntry(key, value)),
     };
   }
+
+  bool addConcept(String concept) {
+    if (_conceptMap.containsKey(concept)) {
+      return false;
+    }
+    _conceptMap.forEach(
+        (key, value) {
+          value.add(0);
+        }
+    );
+    List<int> emptyList = List.generate(_conceptCount + 1, (i) => 0);
+    _conceptMap[concept] = emptyList;
+    _conceptCount++;
+    return true;
+  }
+
+  bool removeConcept(String concept) {
+    if (!_conceptMap.containsKey(concept)) {
+      return false;
+    }
+    int indexToDelete = indexOfConcept(concept);
+    _conceptMap.remove(concept);
+    _conceptMap.forEach(
+        (key, value) {
+          value.removeAt(indexToDelete);
+        }
+    );
+    return true;
+  }
+
+  int indexOfConcept(String concept) {
+    return _conceptMap.keys.toList().indexOf(concept);
+  }
+
+  String conceptOfIndex(int index) {
+    return _conceptMap.keys.toList()[index];
+  }
+
+  int areConnected(String concept1, dynamic concept2) {
+    assert(concept2 is String || concept2 is int, "2nd arg must be either String or int");
+    if (concept2 is int) {
+      return _conceptMap[concept1]![concept2];
+    }
+    return _conceptMap[concept1]![indexOfConcept(concept2)];
+  }
+
+  bool setPrerequisite(String concept, String prereq) {
+    int index = indexOfConcept(prereq);
+    if (index == -1) {
+      return false;
+    }
+    int value =  areConnected(concept, index);
+    if (value == 0) {
+      _conceptMap[concept]![index] = 1;
+    } else {
+      _conceptMap[concept]![index] = 0;
+    }
+    return true;
+  }
+
+  void findAllPrerequisites(String concept, List<String> foundPrerequisites) {
+    if (!foundPrerequisites.contains(concept)) {
+      foundPrerequisites.add(concept);
+    }
+    for (int index = 0; index < _conceptCount; index++) {
+      int value = areConnected(concept, index);
+      if (value == 1) {
+        String prereq = conceptOfIndex(index);
+        findAllPrerequisites(prereq, foundPrerequisites);
+      }
+    }
+  }
+
+  int findConceptDepth(String concept) {
+    for (int index = 0; index < _conceptCount; index++) {
+      if (_conceptMap[concept]![index] == 1) {
+        String prereq = conceptOfIndex(index);
+        return 1 + findConceptDepth(prereq);
+      }
+    }
+    return 1;
+  }
+
 }
