@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel_old.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
@@ -8,10 +9,10 @@ class SelectConceptsViewModel extends ChangeNotifier{
   List<String>? items;
   List<String>? selectedItems;
 
-  Future<void> loadDataToAdd({String? courseID, Lesson? lesson}) async {
+  Future<void> loadDataToAdd({String? courseID, LessonModel? lesson}) async {
     try {
       assert(courseID != null || lesson != null);
-      ConceptMap? conceptMapModel = await ConceptMapService().getConceptMap(courseID ?? lesson!.courseID!);
+      ConceptMapModel? conceptMapModel = await ConceptMapService().getConceptMap(courseID ?? lesson!.courseID!);
       List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
       Map<String, List<int>> map = conceptMapModel.conceptMap!;
       selectedItems = [];
@@ -38,9 +39,9 @@ class SelectConceptsViewModel extends ChangeNotifier{
     }
   }
 
-  Future<void> loadDataToEdit({required Lesson lesson, LessonMaterial? material}) async {
+  Future<void> loadDataToEdit({required LessonModel lesson, LessonMaterialModel? material}) async {
     try {
-      ConceptMap? conceptMapModel = await ConceptMapService().getConceptMap(lesson.courseID!);
+      ConceptMapModel? conceptMapModel = await ConceptMapService().getConceptMap(lesson.courseID!);
       List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
       Map<String, List<int>> map = conceptMapModel.conceptMap!;
       selectedItems = [];
