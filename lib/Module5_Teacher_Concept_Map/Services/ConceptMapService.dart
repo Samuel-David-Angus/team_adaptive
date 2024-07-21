@@ -27,7 +27,7 @@ class ConceptMapService {
     return false;
   }
 
-  Future<bool> addLesson(LessonModel lesson) async {
+/*  Future<bool> addLesson(LessonModel lesson) async {
     try {
       var ref = FirebaseFirestore.instance
           .collection("Course")
@@ -45,8 +45,8 @@ class ConceptMapService {
     }
     return false;
   }
-
-  Future<bool> newConceptMap(String courseID, ConceptMapModel conceptMap) async {
+*/
+  Future<bool> uploadConceptMap(String courseID, ConceptMapModel conceptMap) async {
     try {
       var ref = FirebaseFirestore.instance
           .collection('Course')

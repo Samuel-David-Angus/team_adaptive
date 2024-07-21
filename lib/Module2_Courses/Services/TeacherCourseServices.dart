@@ -42,7 +42,7 @@ class TeacherCourseServices {
           toFirestore: (course, _) => course.toJson());
       DocumentReference documentReference = ref.doc();
       String id = documentReference.id;
-      ConceptMapService().newConceptMap(id);
+      //ConceptMapService().newConceptMap(id);
       if (course.id == null) {
         await documentReference.set(course);
         course.id = id;

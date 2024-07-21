@@ -6,7 +6,7 @@ import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 
 class ConceptMapView extends StatelessWidget {
-  Course course;
+  Course? course;
   final TextEditingController conceptController = TextEditingController();
 
   ConceptMapView({super.key, required this.course});
@@ -14,8 +14,12 @@ class ConceptMapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ConceptMapViewModel>(context, listen: false);
-    if (viewModel.map == null || viewModel.map!.courseID != course.id) {
-      viewModel.getConceptMap(course.id!);
+    if (course != null) {
+      if (viewModel.map == null || viewModel.map!.courseID != course!.id) {
+        viewModel.getConceptMap(course!.id!);
+      }
+    } else {
+      viewModel.createConceptMap();
     }
     return TemplateView(
         highlighted: SELECTED.NONE,
@@ -80,7 +84,7 @@ class ConceptMapView extends StatelessWidget {
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: SingleChildScrollView(
-                      child: buildTable(conceptMap, viewModel),
+                      child: buildTable(conceptMap, viewModel, course == null),
                     ),
                   );
                 },
@@ -99,7 +103,7 @@ class ConceptMapView extends StatelessWidget {
         ));
   }
 
-  Widget buildTable(Map<String, List<int>>? data, ConceptMapViewModel viewModel) {
+  Widget buildTable(Map<String, List<int>>? data, ConceptMapViewModel viewModel, bool canEdit) {
 
     if (data == null) {
       return const CircularProgressIndicator();
@@ -109,9 +113,9 @@ class ConceptMapView extends StatelessWidget {
       data.length,
           (rowIndex) => DataRow(
         cells: [DataCell(Text(keys[rowIndex]))] + List.generate(
-          data[keys[rowIndex]]!.length,
+              data[keys[rowIndex]]!.length,
               (colIndex) => DataCell(GestureDetector(
-                onTap: (){viewModel.setPrerequisite(keys[rowIndex], keys[colIndex]);},
+                onTap: canEdit ? (){viewModel.setPrerequisite(keys[rowIndex], keys[colIndex]);} : (){},
                 child: Text(data[keys[rowIndex]]![colIndex].toString()))),
         ),
       ),

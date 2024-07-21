@@ -7,6 +7,14 @@ class ConceptMapViewModel extends ChangeNotifier {
   ConceptMapService service = ConceptMapService();
   ConceptMapModel? map;
 
+  void createConceptMap() {
+    map = ConceptMapModel.setAll(courseID: null, conceptMap: {});
+  }
+
+  Future<bool> uploadConceptMap(String courseID) async{
+    return await service.uploadConceptMap(courseID, map!);
+  }
+
   bool addConcept(String concept){
     try {
       notifyListeners();

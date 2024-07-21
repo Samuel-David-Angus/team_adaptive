@@ -51,7 +51,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/conceptMap', arguments: course);
               },
-              child: const Text('Concept Map'))
+              child: const Text('View Concept Map'))
         ],
       ),
     ));

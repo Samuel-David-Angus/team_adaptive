@@ -1,15 +1,15 @@
 class ConceptMapModel {
-  late String _courseID;
+  late String? _courseID;
   late Map<String, List<int>> _conceptMap;
   late int _conceptCount;
 
   // getters
-  String get courseID => _courseID;
+  String? get courseID => _courseID;
   Map<String, List<int>> get conceptMap => _conceptMap;
   int get conceptCount => _conceptCount;
 
   //setters
-  set courseID(String courseID) {
+  set courseID(String? courseID) {
     _courseID = courseID;
   }
   set conceptMap (Map<String, List<int>> conceptMap) {
@@ -19,7 +19,7 @@ class ConceptMapModel {
     _conceptCount = conceptCount;
   }
 
-  ConceptMapModel.setAll({required String courseID, required Map<String, List<int>> conceptMap}) {
+  ConceptMapModel.setAll({required String? courseID, required Map<String, List<int>> conceptMap}) {
     _courseID = courseID;
     _conceptMap = conceptMap;
     _conceptCount = conceptMap.length;

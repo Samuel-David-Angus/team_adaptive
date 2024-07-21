@@ -4,6 +4,8 @@ import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
 
 import '../../Models/CourseModel.dart';
 
@@ -15,7 +17,8 @@ class TeacherAddCourseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TeacherCourseViewModel viewModel = Provider.of<TeacherCourseViewModel>(context);
+    final TeacherCourseViewModel teacherCourseViewModel = Provider.of<TeacherCourseViewModel>(context);
+    final ConceptMapViewModel conceptMapViewModel = Provider.of<ConceptMapViewModel>(context, listen: false);
     return TemplateView(
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
@@ -46,9 +49,10 @@ class TeacherAddCourseView extends StatelessWidget {
                 ),
                 controller: descriptionController,
               ),
+              ConceptMapView(course: null),
               ElevatedButton(
                   onPressed: () async {
-                    if (viewModel.validate(titleController.text, codeController.text, descriptionController.text)) {
+                    if (teacherCourseViewModel.validate(titleController.text, codeController.text, descriptionController.text)) {
                       Course course =  Course.setAll(
                           id: null,
                           title: titleController.text,
@@ -56,8 +60,9 @@ class TeacherAddCourseView extends StatelessWidget {
                           description: descriptionController.text,
                           students: [],
                           teachers: [AuthServices().userInfo?.id ?? '']);
-                      Course? added = await viewModel.addCourse(course);
+                      Course? added = await teacherCourseViewModel.addCourse(course);
                       if (added != null) {
+                        await conceptMapViewModel.uploadConceptMap(added.id!);
                         Navigator.pushNamed(context, '/courseOverview', arguments: added);
                       } else {
                         msgDialogShow(context, "Course failed to eb added");
