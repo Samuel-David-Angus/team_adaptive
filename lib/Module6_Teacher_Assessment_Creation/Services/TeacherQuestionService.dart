@@ -1,3 +1,82 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Models/QuestionModel.dart';
+
+class TeacherQuestionService {
+  static final TeacherQuestionService _instance = TeacherQuestionService._internal();
+
+  TeacherQuestionService._internal();
+
+  factory TeacherQuestionService() {
+    return _instance;
+  }
+
+  Future<bool> addQuestions(List<QuestionModel> questions, String lessonID) async {
+    try {
+      var batch = FirebaseFirestore.instance.batch();
+      var ref = FirebaseFirestore.instance
+          .collection("Question")
+          .doc(lessonID)
+          .collection("Pool")
+          .withConverter(
+          fromFirestore: (snapshot, _) => QuestionModel.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (model, _) => model.toJson());
+
+      for (var question in questions) {
+        var docRef = ref.doc(); // Generate a new document reference
+        batch.set(docRef, question);
+      }
+
+      await batch.commit();
+      return true;
+    } catch (e) {
+      print("Error adding questions: $e");
+    }
+    return false;
+  }
+
+  Future<bool> editQuestion(QuestionModel question, String lessonID) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("Question")
+          .doc(lessonID)
+          .collection("Pool")
+          .withConverter(
+          fromFirestore: (snapshot, _) => QuestionModel.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (model, _) => question.toJson())
+          .doc(question.id)
+          .set(question);
+      return true;
+    } catch (e) {
+      print("Error editing concept map: $e ");
+    }
+    return false;
+  }
+
+  Future<List<QuestionModel>?> getLessonQuestions(String lessonID) async {
+    List<QuestionModel> questions = [];
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("Question")
+          .doc(lessonID)
+          .collection("Pool")
+          .withConverter(
+          fromFirestore: (snapshot, _) => QuestionModel.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (model, _) => {})
+          .get();
+      querySnapshot.docs.forEach(
+          (QueryDocumentSnapshot docSnapshot) {
+            questions.add(docSnapshot.data() as QuestionModel);
+          }
+      );
+      return questions;
+    } catch (e) {
+      print("Error getting questions: $e");
+    }
+    return null;
+  }
+}
+
 /*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
