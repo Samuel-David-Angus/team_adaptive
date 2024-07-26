@@ -66,17 +66,15 @@ class ConceptMapService {
 
   Future<ConceptMapModel?> getConceptMap(String courseID) async {
     try {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("Course")
+          .doc(courseID)
           .collection("ConceptMap")
           .withConverter(
-          fromFirestore: (snapshot, _) => ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (model, _) => model.toJson())
-          .doc(courseID)
+            fromFirestore: (snapshot, _) => ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
+            toFirestore: (model, _) => model.toJson())
           .get();
-      if (documentSnapshot.exists) {
-        var data = documentSnapshot.data() as ConceptMapModel;
-        return data;
-      }
+      return querySnapshot.docs[0].data() as ConceptMapModel;
 
     } catch (e) {
       print("Error getting concept map: $e");

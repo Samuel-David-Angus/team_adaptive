@@ -14,93 +14,89 @@ class ConceptMapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ConceptMapViewModel>(context, listen: false);
-    if (course != null) {
-      if (viewModel.map == null || viewModel.map!.courseID != course!.id) {
-        viewModel.getConceptMap(course!.id!);
-      }
-    } else {
-      viewModel.createConceptMap();
-    }
-    return TemplateView(
-        highlighted: SELECTED.NONE,
-        topRight: userInfo(context),
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Concept Map"),
-              const SizedBox(height: 10,),
-              TextField(
-                decoration: const InputDecoration(
+    final Widget view = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Concept Map"),
+            const SizedBox(height: 10,),
+            if (course == null)
+              ...[TextField(
+              decoration: const InputDecoration(
                   hintText: 'Concept',
                   border: OutlineInputBorder()
-                ),
-                controller: conceptController,
               ),
-              Row(
+              controller: conceptController,
+            ),
+            Row(
                 children: [
                   ElevatedButton(
                       onPressed: (){
                         viewModel.addConcept(conceptController.text);
                       },
-                      child: Text("Add Concept")),
+                      child: const Text("Add Concept")),
                   const SizedBox(width: 10,),
                   Consumer<ConceptMapViewModel>(
                       builder: (context, viewModel, child) {
-                        return viewModel.map != null && viewModel.map!.conceptMap!.length > 0 ?
+                        return viewModel.map != null && viewModel.map!.conceptMap.isNotEmpty ?
                         PopupMenuButton<String>(
                           child: const Text("Delete Concept"),
-                            itemBuilder: (BuildContext context) {
-                              Map<String, List<int>> cmap = viewModel.map!.conceptMap!;
-                              return List.generate(
-                                  cmap.length,
-                                  (index) {
-                                    String val = cmap!.keys!.toList()[index];
-                                    return PopupMenuItem(
-                                        value: val,
-                                        child: Text(val));
-                                  }
-                              );
-                            },
+                          itemBuilder: (BuildContext context) {
+                            Map<String, List<int>> cmap = viewModel.map!.conceptMap;
+                            return List.generate(
+                                cmap.length,
+                                    (index) {
+                                  String val = cmap.keys.toList()[index];
+                                  return PopupMenuItem(
+                                      value: val,
+                                      child: Text(val));
+                                }
+                            );
+                          },
                           onSelected: (String val) {
-                              viewModel.deleteConcept(val);
+                            viewModel.deleteConcept(val);
                           },
                         )
-                            : Text('No concepts to delete');
+                            : const Text('No concepts to delete');
                       }
                   )
                 ]
-              ),
+            )],
 
-              Consumer<ConceptMapViewModel>(
-                builder: (context, viewModel, child) {
-                  final conceptMap = viewModel.map?.conceptMap;
+            Consumer<ConceptMapViewModel>(
+              builder: (context, viewModel, child) {
+                final conceptMap = viewModel.map?.conceptMap;
 
-                  if (conceptMap == null || conceptMap.isEmpty) {
-                    return Center(child: Text('No data available'));
-                  }
+                if (conceptMap == null || conceptMap.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                }
 
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: SingleChildScrollView(
-                      child: buildTable(conceptMap, viewModel, course == null),
-                    ),
-                  );
-                },
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if(await viewModel.saveEdits()) {
-                      print("Saved successfully");
-                    } else {
-                      print("Not saved");
-                    }
-                  },
-                  child: Text("Save")),
-            ],
-          ),
-        ));
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SingleChildScrollView(
+                    child: buildTable(conceptMap, viewModel, course == null),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+    if (course != null) {
+      if (viewModel.map == null || viewModel.map!.courseID != course!.id) {
+        viewModel.getConceptMap(course!.id!);
+      }
+      return TemplateView(
+          highlighted: SELECTED.NONE,
+          topRight: userInfo(context),
+          child: view
+      );
+    }
+    viewModel.createConceptMap();
+    return view;
   }
 
   Widget buildTable(Map<String, List<int>>? data, ConceptMapViewModel viewModel, bool canEdit) {
@@ -120,7 +116,7 @@ class ConceptMapView extends StatelessWidget {
         ),
       ),
     );
-    var columns = [DataColumn(
+    var columns = [const DataColumn(
         label: Text(''))] + List.generate(
       data.length,
           (index) => DataColumn(

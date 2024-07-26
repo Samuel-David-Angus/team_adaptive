@@ -26,8 +26,14 @@ class ConceptMapModel {
   }
 
   factory ConceptMapModel.fromJson(Map<String, dynamic> json, String id) {
-    Map<String, List<int>> conceptMapUnordered = json['conceptMap'];
-    List<String> order = json['order'];
+    Map<String, List<int>> conceptMapUnordered = (json['conceptMap'] as Map<String, dynamic>? ?? {}).map(
+          (key, value) {
+        final nonNullKey = key ?? '';
+        final nonNullValue = (value as List<dynamic>?)?.map((e) => e as int).toList() ?? [];
+        return MapEntry(nonNullKey, nonNullValue);
+      },
+    );
+    List<String> order = List.from(json['order']).cast<String>();
     Map<String, List<int>> conceptMapOrdered = {for (String concept in order) concept: conceptMapUnordered[concept]!};
     return ConceptMapModel.setAll(
       courseID: id,
@@ -68,6 +74,7 @@ class ConceptMapModel {
           value.removeAt(indexToDelete);
         }
     );
+    conceptCount--;
     return true;
   }
 
