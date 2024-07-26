@@ -52,7 +52,7 @@ class TeacherAddCourseView extends StatelessWidget {
               ConceptMapView(course: null),
               ElevatedButton(
                   onPressed: () async {
-                    if (teacherCourseViewModel.validate(titleController.text, codeController.text, descriptionController.text)) {
+                    if (teacherCourseViewModel.validate(titleController.text, codeController.text, descriptionController.text, conceptMapViewModel.map!)) {
                       Course course =  Course.setAll(
                           id: null,
                           title: titleController.text,
