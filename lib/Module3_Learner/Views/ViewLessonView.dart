@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Learner/Views/Iframe.dart';
+import 'package:team_adaptive/Module3_Student_Assessment/Views/AssessmentView.dart';
 
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
@@ -36,8 +38,36 @@ class ViewLessonView extends StatelessWidget {
                   child: Column(
                     children: [
                       ElevatedButton(
-                          onPressed: () async {
-                            await viewModel.completeMainLesson(lesson.id!);
+                          onPressed: () {
+                            showDialog(context: context,
+                                builder: (context) {
+                                  return PointerInterceptor(
+                                    child: AlertDialog(
+                                      title: Text('Heads Up!'),
+                                      content: Text('After completing you will be redirected to an assessment.'),
+                                      actions: [
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancel')
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                              await viewModel.completeMainLesson(lesson.id!);
+                                              Navigator.of(context).pop();
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => AssessmentView(lessonModel: lesson)));
+                                            },
+                                            child: Text('Ok')
+                                        )
+                                      ],
+                                    ),
+
+                                  );
+                                }
+                            );
+
+
                           },
                           child: Text('Complete Lesson')
                       ),

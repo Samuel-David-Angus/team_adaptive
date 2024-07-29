@@ -1,30 +1,39 @@
 import 'dart:math';
 
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 
 class AssessmentModel {
-  late String _lessonID;
+  late LessonModel _lesson;
   late List<QuestionModel> _questions;
   late ConceptMapModel _conceptMapModel;
   late List<int> _scores;
 
+  late List<Map<String, dynamic>> processedQuestions;
+  late List<int> _answers;
+  int? score;
+
   // Constructor
   AssessmentModel.createNew({
-    required String lessonID,
+    required LessonModel lessonID,
     required List<QuestionModel> questions,
     required ConceptMapModel conceptMapModel
-    }) :  _lessonID = lessonID,
+    }) :  _lesson = lessonID,
           _questions = questions,
           _conceptMapModel = conceptMapModel,
-          _scores = List.filled(questions.length, 0);
+          _scores = List.filled(questions.length, 0)
+  {
+    generateProcessedQuestions();
+  }
+
 
   // Getter for _lessonID
-  String get lessonID => _lessonID;
+  LessonModel get lesson => _lesson;
 
   // Setter for _lessonID
-  set lessonID(String value) {
-    _lessonID = value;
+  set lessonID(LessonModel value) {
+    _lesson = value;
   }
 
   // Getter for _questions
@@ -51,31 +60,40 @@ class AssessmentModel {
     _scores = value;
   }
 
-  List<Map<String, dynamic>> processedQuestions() {
+  List<Map<String, dynamic>> generateProcessedQuestions() {
     List<Map<String, dynamic>> processedQuestions = [];
+    _answers = [];
     for (var question in _questions) {
           var rng = Random();
           int correctChoice = rng.nextInt(question.wrongChoices.length + 1);
           List<String> choices = question.wrongChoices;
           choices.shuffle();
           choices.insert(correctChoice, question.correctAnswer);
+          _answers.add(correctChoice);
           processedQuestions.add(
             {
               "question": question.question,
               "choices": choices,
-              "answer": correctChoice
             }
           );
         }
+    this.processedQuestions = processedQuestions;
     return processedQuestions;
   }
 
-  void markAsCorrect(int index) {
-    _scores[index] = 1;
-  }
-
-  void markAsWrong(int index) {
-    _scores[index] = 0;
+  int processAssessment(List<int> studentAnswers) {
+    assert(studentAnswers.length == _answers.length, "the answer arrays must have the same length");
+    int overallScore = 0;
+    for (int i = 0; i < _answers.length; i++) {
+      if (studentAnswers[i] == _answers[i]) {
+        _scores[i] = 1;
+        overallScore++;
+      } else {
+        _scores[i] = 0;
+      }
+    }
+    score = overallScore;
+    return overallScore;
   }
 
 
@@ -122,7 +140,7 @@ class AssessmentModel {
     return totalConceptStrengths;
   }
 
-  double predictFailureRateOfConcept(List<int> studentAnswers, String concept) {
+  double predictFailureRateOfConcept(String concept) {
     int weightedSum = 0;
     int conceptIndex = conceptMapModel.indexOfConcept(concept);
     List<int> totalConceptStrengths = calculateTotalConceptStrengths();
@@ -131,18 +149,18 @@ class AssessmentModel {
     for (int index = 0; index < questionCount; index++) {
       QuestionModel question = _questions[index];
       List<int> testItemRelationships = calculateTestItemRelationships(question);
-      weightedSum += (1 - studentAnswers[index]) * testItemRelationships[conceptIndex];
+      weightedSum += (1 - _scores[index]) * testItemRelationships[conceptIndex];
     }
 
     return 100.0 * weightedSum / totalConceptStrengths[conceptIndex];
   }
 
-  int calculateSkillLevel(List<int> studentAnswers) {
+  int calculateSkillLevel() {
     int sum = 0;
     int questionCount = _questions.length;
 
     for (int index = 0; index < questionCount; index++) {
-      if (studentAnswers[index] == 1) {
+      if (_scores[index] == 1) {
         QuestionModel question = _questions[index];
         sum += question.adjustedDifficulty;
       }

@@ -97,11 +97,11 @@ class QuestionModel {
         authorID: json["authorID"],
         question: json["question"],
         correctAnswer: json["correctAnswer"],
-        wrongChoices: json["wrongChoices"],
+        wrongChoices: List<String>.from(json["wrongChoices"]),
         questionConcept: json["questionConcept"],
         numberOfCorrectAnswers: json["numberOfCorrectAnswers"],
         numberOfWrongAnswers: json["numberOfWrongAnswers"],
-        prerequisiteConcepts: json["prerequisiteConcepts"],
+        prerequisiteConcepts: List<String>.from(json["prerequisiteConcepts"]),
         baseDifficulty: json["baseDifficulty"],
         adjustedDifficulty: json["adjustedDifficulty"]
     );
