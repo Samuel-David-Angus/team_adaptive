@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Components/TemplateView.dart';
+import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
-import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService_old.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
@@ -25,14 +27,14 @@ class TeacherAddQuestionView extends StatelessWidget {
     final TeacherQuestionViewModel teacherQuestionViewModel = Provider.of<TeacherQuestionViewModel>(context);
     if (!isInitialized) {
       isInitialized = true;
-      isEditing ? addEditViewModel.initializeCreate() : addEditViewModel.initializeEdit(question!);
+      !isEditing ? addEditViewModel.initializeCreate() : addEditViewModel.initializeEdit(question!);
       submit = isEditing ? (QuestionModel question) async {
         return await teacherQuestionViewModel.editQuestion(question);
       } : (QuestionModel question) async {
         return await teacherQuestionViewModel.addQuestion(question);
       };
     }
-    return FutureBuilder<ConceptMapModel?>(
+    return TemplateView(highlighted: SELECTED.NONE, topRight: userInfo(context), child: FutureBuilder<ConceptMapModel?>(
       future: conceptMap,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -188,7 +190,7 @@ class TeacherAddQuestionView extends StatelessWidget {
                     itemCount: addEditViewModel.choiceList.length,
                     itemBuilder: (context, index) {
                       return CheckboxListTile(
-                        title: Text('Option ${index + 1}'),
+                        title: Text(addEditViewModel.choiceList[index].text),
                         value: index == addEditViewModel.indexOfCorrectAnswer,
                         onChanged: (bool? value) {
                           if (value == true) {
@@ -209,7 +211,9 @@ class TeacherAddQuestionView extends StatelessWidget {
                           ConceptMapModel conceptMapModel = snapshot.data!;
                           QuestionModel createdQuestion = addEditViewModel
                               .createQuestionModel(userID, conceptMapModel);
+                          print(createdQuestion);
                           bool result = await submit(createdQuestion);
+                          print('finish');
                           if (result) {
                             showMessageDialog(
                                 context, "Successfully added question");
@@ -231,7 +235,7 @@ class TeacherAddQuestionView extends StatelessWidget {
           return const Center(child: Text('Retrieved Concept Map is null'));
         }
       },
-    );
+    ));
 
   }
 }

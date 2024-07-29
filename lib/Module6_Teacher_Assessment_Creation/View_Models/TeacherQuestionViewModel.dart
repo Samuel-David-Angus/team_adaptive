@@ -17,6 +17,7 @@ class TeacherQuestionViewModel extends ChangeNotifier {
     if (this.lessonID == null || this.lessonID != lessonID) {
       List<QuestionModel>? allQuestions =
           await teacherService.getLessonQuestions(lessonID);
+      this.lessonID = lessonID;
       String userID = authService.userInfo!.id!;
       myQuestionPool = [];
       otherQuestionPool = [];

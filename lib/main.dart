@@ -19,6 +19,8 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/Select
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
 import 'LandingNavPages/AboutPage.dart';
 import 'LandingNavPages/CoursesPage.dart';
 import 'LandingNavPages/HomePage.dart';
@@ -49,6 +51,8 @@ Future main() async{
         ChangeNotifierProvider(create: (_) => SelectConceptsViewModel()),
         ChangeNotifierProvider(create: (_) => SelectLearningStyleViewModel()),
         ChangeNotifierProvider(create: (_) => StudentLessonViewModel()),
+        ChangeNotifierProvider(create: (_) => TeacherQuestionViewModel()),
+        ChangeNotifierProvider(create: (_) => CreateEditQuestionViewModel()),
         ],
       child: const MyApp(),
     )

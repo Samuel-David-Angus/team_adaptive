@@ -8,6 +8,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLesso
 
 import '../../Components/TemplateView.dart';
 import '../../Components/TopRightOptions.dart';
+import '../../Module6_Teacher_Assessment_Creation/Views/TeacherViewQuestionView.dart';
 
 class TeacherLessonHomeView extends StatelessWidget {
   Course course;
@@ -61,6 +62,14 @@ class TeacherLessonHomeView extends StatelessWidget {
                                               MaterialPageRoute(builder: (context) => TeacherLessonMaterialHomeView(lesson: lessons[index])));
                                         },
                                         child: const Text('See materials'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => TeacherViewQuestionView(lesson: lessons[index])));
+                                        },
+                                        child: const Text('Create Assessment Questions'),
                                       ),
                                     ],
                                   ),
