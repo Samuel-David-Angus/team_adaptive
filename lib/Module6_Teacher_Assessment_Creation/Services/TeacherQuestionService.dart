@@ -11,26 +11,34 @@ class TeacherQuestionService {
     return _instance;
   }
 
-  Future<bool> addQuestions(List<QuestionModel> questions, String lessonID) async {
+  Future<bool> addQuestion(QuestionModel question, String lessonID) async {
     try {
-      var batch = FirebaseFirestore.instance.batch();
-      var ref = FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("Question")
           .doc(lessonID)
           .collection("Pool")
           .withConverter(
           fromFirestore: (snapshot, _) => QuestionModel.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (model, _) => model.toJson());
-
-      for (var question in questions) {
-        var docRef = ref.doc(); // Generate a new document reference
-        batch.set(docRef, question);
-      }
-
-      await batch.commit();
+          toFirestore: (model, _) => question.toJson())
+          .add(question);
       return true;
     } catch (e) {
       print("Error adding questions: $e");
+    }
+    return false;
+  }
+
+  Future<bool> deleteQuestion(QuestionModel question, String lessonID) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("Question")
+          .doc(lessonID)
+          .collection("Pool")
+          .doc(question.id)
+          .delete();
+      return true;
+    } catch (e) {
+      print("Error deleting question: $e");
     }
     return false;
   }
