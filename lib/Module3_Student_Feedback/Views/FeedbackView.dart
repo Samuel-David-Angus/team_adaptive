@@ -99,7 +99,7 @@ class FeedbackView extends StatelessWidget {
                                                           ),
                                                         ),
                                                         const SizedBox(width: 10), // Optional: Add spacing between the progress bar and text
-                                                        Text("${(entry.value / 100).toStringAsFixed(2)}%", style: const TextStyle(fontSize: 20.0),)
+                                                        Text("${entry.value.toStringAsFixed(2)}%", style: const TextStyle(fontSize: 20.0),)
                                                       ],
                                                     ),
                                                   )
