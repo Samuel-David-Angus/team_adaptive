@@ -7,6 +7,8 @@ import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewMo
 
 import '../Models/FeedbackModel.dart';
 
+var color = Colors.grey[400];
+
 class FeedbackView extends StatelessWidget {
   final AssessmentModel assessment;
   late Future<bool> successfulFeedbackGenerated;
@@ -60,23 +62,18 @@ class FeedbackView extends StatelessWidget {
                                 Text('Suggested Learning Style: ${viewModel.feedback.diagnosedLearningStyle}', style: const TextStyle(fontSize: 24.0),),
                                 const SizedBox(height: 15,),
                                 Table(
-                                    border: const TableBorder(
-                                      horizontalInside: BorderSide(
-                                        width: 1,
-                                        color: Colors.black,
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
                                     children: [
-                                      const TableRow(
+                                      TableRow(
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(10.0),
-                                              child: Text("Concept", style: TextStyle(fontSize: 24.0),),
+                                            Container(
+                                              margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: const Text("Concept", style: TextStyle(fontSize: 24.0),),
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.all(10.0),
-                                              child: Text("Failure Rate", style: TextStyle(fontSize: 24.0),),
+                                            Container(
+                                              margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: const Text("Failure Rate", style: TextStyle(fontSize: 24.0),),
                                             )
                                           ]
                                       ),
@@ -84,17 +81,22 @@ class FeedbackView extends StatelessWidget {
                                               (entry) {
                                             return TableRow(
                                                 children: [
-                                                  Padding(
+                                                  Container(
+                                                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                                    color: color,
                                                     padding: const EdgeInsets.all(10.0),
                                                     child: Text(entry.key, style: const TextStyle(fontSize: 20.0),),
                                                   ),
-                                                  Padding(
+                                                  Container(
+                                                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                                    color: color,
                                                     padding: const EdgeInsets.all(10.0),
                                                     child: Row(
                                                       children: [
                                                         SizedBox(
                                                           width: 200, // specify the width you want
                                                           child: LinearProgressIndicator(
+                                                            minHeight: 20,
                                                             value: entry.value / 100,
                                                           ),
                                                         ),
