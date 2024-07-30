@@ -36,7 +36,7 @@ class FeedbackModel {
     Map<String, List<String>> map = {};
     calculateLessonConceptFailureRates().forEach(
         (String concept, double failureRate) {
-          if (failureRate <= 50) {
+          if (failureRate >= 50) {
             List<String> prereqs = [];
             assessment.conceptMapModel.findAllPrerequisites(concept, prereqs);
             map[concept] = prereqs;
