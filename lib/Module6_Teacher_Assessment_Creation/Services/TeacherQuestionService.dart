@@ -83,6 +83,31 @@ class TeacherQuestionService {
     }
     return null;
   }
+
+  Future<bool> updateQuestionsFromAssessment(List<QuestionModel> questions, String lessonID) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      final batch = db.batch();
+      final collectionRef = db.collection("Questions")
+          .doc(lessonID)
+          .collection("Pool");
+
+      for (QuestionModel question in questions) {
+        batch.set(collectionRef.doc(question.id), {
+          "numberOfCorrectAnswers": question.numberOfWrongAnswers,
+          "numberOfWrongAnswers": question.numberOfWrongAnswers,
+          "adjustedDifficulty": question.adjustedDifficulty
+        });
+      }
+
+      await batch.commit();
+
+      return true;
+    } catch (e) {
+      print("Error updating questions: $e");
+    }
+    return false;
+  }
 }
 
 /*

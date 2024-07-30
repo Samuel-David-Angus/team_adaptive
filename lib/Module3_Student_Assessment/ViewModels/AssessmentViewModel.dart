@@ -43,4 +43,11 @@ class AssessmentViewModel extends ChangeNotifier {
     return learnerAnswers[questionIndex] == selectedIndex;
   }
 
+  Future<bool> submitAssessment() async {
+    assessmentModel.processAssessment(learnerAnswers);
+    List<QuestionModel> adjustedCopies = assessmentModel.getCopyOfQuestionsWithAdjustedDifficulties();
+    bool res = await questionService.updateQuestionsFromAssessment(adjustedCopies, lesson.id!);
+    return res;
+  }
+
 }

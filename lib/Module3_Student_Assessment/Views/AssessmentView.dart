@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 
 class AssessmentView extends StatelessWidget {
@@ -36,7 +37,16 @@ class AssessmentView extends StatelessWidget {
                         const Text('Assessment'),
                         ...generateTestItems(viewModel),
                         ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              bool? confirmSubmit = await showConfirmationDialog(context, "Are you sure you want to submit");
+                              if (confirmSubmit == true) {
+                                bool success = await viewModel.submitAssessment();
+                                if (success) {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackView(assessment: viewModel.assessmentModel,)));
+                                } else {
+                                  showConfirmationDialog(context, "Error submitting assessment");
+                                }
+                              }
 
                             },
                             child: const Text('Submit')
@@ -89,5 +99,31 @@ List<Widget> generateTestItems(AssessmentViewModel viewModel) {
           ),
         );
       }
+  );
+}
+
+Future<bool?> showConfirmationDialog(BuildContext context, String message) async {
+  return showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Message'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+          ),
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          ),
+        ],
+      );
+    },
   );
 }

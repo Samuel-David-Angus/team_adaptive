@@ -179,14 +179,28 @@ class AssessmentModel {
     }
   }
 
+  void updateQuestion(QuestionModel question, bool isCorrect) {
+    if (isCorrect) {
+      question.numberOfCorrectAnswers++;
+    } else {
+      question.numberOfWrongAnswers++;
+    }
+    question.calculateAdjustedDifficulty(conceptMapModel);
+  }
+
   void adjustQuestionDifficulties() {
     for (int i = 0; i < _questions.length; i++) {
-      if (_scores[i] == 1) {
-        questions[i].numberOfCorrectAnswers++;
-      } else {
-        questions[i].numberOfWrongAnswers++;
-      }
-      questions[i].calculateAdjustedDifficulty(conceptMapModel);
+      updateQuestion(questions[i], _scores[i] == 1);
     }
+  }
+
+  List<QuestionModel> getCopyOfQuestionsWithAdjustedDifficulties() {
+    List<QuestionModel> copiesWithAdjustments = [];
+    for (int i = 0; i < questions.length; i++) {
+      QuestionModel adjustedCopy = QuestionModel.copyFrom(questions[i]);
+      updateQuestion(adjustedCopy, _scores[i] == 1);
+      copiesWithAdjustments.add(adjustedCopy);
+    }
+    return copiesWithAdjustments;
   }
 }

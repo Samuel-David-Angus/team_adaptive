@@ -48,6 +48,7 @@ class QuestionModel {
       _adjustedDifficulty = adjustedDifficulty;
 
   QuestionModel.setAll({
+    required String id,
     required String authorID,
     required String question,
     required String correctAnswer,
@@ -59,7 +60,8 @@ class QuestionModel {
     required int baseDifficulty,
     required int adjustedDifficulty,
   })
-      : _authorID = authorID,
+      : _id = id,
+        _authorID = authorID,
         _question = question,
         _correctAnswer = correctAnswer,
         _wrongChoices = wrongChoices,
@@ -92,8 +94,22 @@ class QuestionModel {
     calculateAdjustedDifficulty(conceptMapModel);
   }
 
+  QuestionModel.copyFrom(QuestionModel original) :
+        _id = original.id,
+        _authorID = original.authorID,
+        _question = original.question,
+        _correctAnswer = original.correctAnswer,
+        _wrongChoices = original.wrongChoices,
+        _questionConcept = original.questionConcept,
+        _numberOfCorrectAnswers = original.numberOfCorrectAnswers,
+        _numberOfWrongAnswers = original.numberOfWrongAnswers,
+        _prerequisiteConcepts = original.prerequisiteConcepts,
+        _baseDifficulty = original.baseDifficulty,
+        _adjustedDifficulty = original.adjustedDifficulty;
+
   factory QuestionModel.fromJson(Map<String, dynamic> json, String id) {
     return QuestionModel.setAll(
+        id: json["id"],
         authorID: json["authorID"],
         question: json["question"],
         correctAnswer: json["correctAnswer"],
