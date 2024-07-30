@@ -109,7 +109,7 @@ class QuestionModel {
 
   factory QuestionModel.fromJson(Map<String, dynamic> json, String id) {
     return QuestionModel.setAll(
-        id: json["id"],
+        id: id,
         authorID: json["authorID"],
         question: json["question"],
         correctAnswer: json["correctAnswer"],

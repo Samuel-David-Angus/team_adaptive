@@ -15,6 +15,7 @@ import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseVie
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectConceptsViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/SelectLearningStyleViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
@@ -55,6 +56,7 @@ Future main() async{
         ChangeNotifierProvider(create: (_) => TeacherQuestionViewModel()),
         ChangeNotifierProvider(create: (_) => CreateEditQuestionViewModel()),
         ChangeNotifierProvider(create: (_) => AssessmentViewModel()),
+        ChangeNotifierProvider(create: (_) => FeedbackViewModel()),
         ],
       child: const MyApp(),
     )

@@ -34,17 +34,20 @@ class FeedbackViewModel extends ChangeNotifier{
     return styles[Random().nextInt(3)];
   }
 
-  LessonMaterialModel getRandomMaterialByConceptAndLearningStyle(List<LessonMaterialModel> pool, String concept, String learningStyle) {
+  LessonMaterialModel? getRandomMaterialByConceptAndLearningStyle(List<LessonMaterialModel> pool, String concept, String learningStyle) {
     final filteredList = pool.where((item) => item.concepts!.contains(concept) && item.learningStyle == learningStyle).toList();
+    if (filteredList.isEmpty) {
+      return null;
+    }
     return filteredList[Random().nextInt(filteredList.length)];
   }
 
   Future<List<Map<String, dynamic>>> getSuggestedMaterials() async {
     List<LessonMaterialModel> allMainLessons = await lessonService.getLessonMaterialsByType(feedback.assessment.lesson.courseID!, feedback.assessment.lesson.id!, "main");
     List<LessonMaterialModel> allSubLessons = await lessonService.getLessonMaterialsByType(feedback.assessment.lesson.courseID!, feedback.assessment.lesson.id!, "sub");
-    if (allMainLessons.isEmpty || allSubLessons.isEmpty) {
-      throw Exception('failed getting lessons');
-    }
+    // if (allMainLessons.isEmpty || allSubLessons.isEmpty) {
+    //   throw Exception('failed getting lessons');
+    // }
     List<Map<String, dynamic>> result = [];
     feedback.calculateWeakConceptsAndTheirPrereqs().forEach(
         (String mainConcept, List<String> prereqs) {

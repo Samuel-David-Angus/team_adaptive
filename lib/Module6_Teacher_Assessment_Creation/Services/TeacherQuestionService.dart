@@ -80,6 +80,7 @@ class TeacherQuestionService {
       return questions;
     } catch (e) {
       print("Error getting questions: $e");
+      rethrow;
     }
     return null;
   }
@@ -88,16 +89,12 @@ class TeacherQuestionService {
     try {
       final db = FirebaseFirestore.instance;
       final batch = db.batch();
-      final collectionRef = db.collection("Questions")
+      final collectionRef = db.collection("Question")
           .doc(lessonID)
           .collection("Pool");
 
       for (QuestionModel question in questions) {
-        batch.set(collectionRef.doc(question.id), {
-          "numberOfCorrectAnswers": question.numberOfWrongAnswers,
-          "numberOfWrongAnswers": question.numberOfWrongAnswers,
-          "adjustedDifficulty": question.adjustedDifficulty
-        });
+        batch.set(collectionRef.doc(question.id), question.toJson());
       }
 
       await batch.commit();

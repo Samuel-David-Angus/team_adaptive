@@ -66,7 +66,7 @@ class AssessmentModel {
     for (var question in _questions) {
           var rng = Random();
           int correctChoice = rng.nextInt(question.wrongChoices.length + 1);
-          List<String> choices = question.wrongChoices;
+          List<String> choices = List.from(question.wrongChoices);
           choices.shuffle();
           choices.insert(correctChoice, question.correctAnswer);
           _answers.add(correctChoice);
