@@ -1,19 +1,16 @@
-
-import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Models/AssessmentModel.dart';
-import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Services/TeacherLessonService.dart';
 
 class FeedbackModel {
   late AssessmentModel assessment;
-  late User user;
+  late String userID;
+  late List<Map<String, dynamic>> suggestedLessons;
+  late String diagnosedLearningStyle;
   Map<String, double>? _lessonConceptFailureRates;
-  List<String>? _weakConcepts;
-  List<String>? _prereqsToLearn;
+  Map<String, List<String>>? _weakConceptsAndTheirPrereqs;
+  int? _skillLevel;
 
-
-  FeedbackModel.setAll({required this.assessment,  required this.user, required learnerScores}) {
-    assessment.processAssessment(learnerScores);
-  }
+  //assessment must have processAssessment called before passing
+  FeedbackModel.setAll({required this.assessment,  required this.userID});
 
   int getScore() {
     return assessment.score!;
@@ -32,51 +29,55 @@ class FeedbackModel {
     return _lessonConceptFailureRates!;
   }
 
-  List<String> findWeakConcepts() {
-    if (_weakConcepts != null) {
-      return _weakConcepts!;
+  Map<String, List<String>> calculateWeakConceptsAndTheirPrereqs() {
+    if (_weakConceptsAndTheirPrereqs != null) {
+      return _weakConceptsAndTheirPrereqs!;
     }
-    List<String> weakConcepts = [];
-    if (_lessonConceptFailureRates == null) {
-      calculateLessonConceptFailureRates();
-    }
-    _lessonConceptFailureRates!.forEach(
+    Map<String, List<String>> map = {};
+    calculateLessonConceptFailureRates().forEach(
         (String concept, double failureRate) {
           if (failureRate <= 50) {
-            weakConcepts.add(concept);
+            List<String> prereqs = [];
+            assessment.conceptMapModel.findAllPrerequisites(concept, prereqs);
+            map[concept] = prereqs;
           }
         }
     );
-    _weakConcepts = weakConcepts;
-    return _weakConcepts!;
+    _weakConceptsAndTheirPrereqs = map;
+    return map;
+  }
+
+  List<String> findWeakConcepts() {
+    if (_weakConceptsAndTheirPrereqs == null) {
+      calculateWeakConceptsAndTheirPrereqs();
+    }
+    return _weakConceptsAndTheirPrereqs!.keys.toList();
   }
 
  List<String> determinePrereqsToLearn() {
-    if (_prereqsToLearn != null) {
-      return _prereqsToLearn!;
-    }
-    List<String> prereqs = [];
-    for (String concept in _weakConcepts!){
-      assessment.conceptMapModel.findAllPrerequisites(concept, prereqs);
-    }
-    _prereqsToLearn = prereqs;
-    return _prereqsToLearn!;
- }
-
- List<String> getSuggestedLessons() {
-    TeacherLessonService.
+   if (_weakConceptsAndTheirPrereqs == null) {
+     calculateWeakConceptsAndTheirPrereqs();
+   }
+   List<String> prereqsToLearn = [];
+   _weakConceptsAndTheirPrereqs!.forEach(
+       (String concept, List<String> prereqs) {
+         prereqsToLearn.addAll(prereqs);
+       }
+   );
+   return prereqsToLearn;
  }
 
  int skillLevel() {
-  return assessment.calculateSkillLevel();
+  if (_skillLevel != null) {
+    return _skillLevel!;
+  }
+  _skillLevel = assessment.calculateSkillLevel();
+  return _skillLevel!;
  }
 
  String categorizedSkillLevel() {
-  return assessment.categorizeSkillLevel(skillLevel());
+  return assessment.categorizeSkillLevel(_skillLevel!);
  }
 
- String getLearningStyle() {
-    
- }
 
 }
