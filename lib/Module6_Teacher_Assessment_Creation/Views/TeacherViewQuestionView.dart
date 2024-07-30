@@ -15,46 +15,48 @@ class TeacherViewQuestionView extends StatelessWidget {
   Widget questionListView(List<QuestionModel> questionList, bool canEdit) {
     return Consumer<TeacherQuestionViewModel>(
         builder: (context, viewModel, child) {
-          return Wrap(
-            spacing: 10,
-            children: List.generate(
-                questionList.length,
-                    (index) {
-                  QuestionModel question = questionList[index];
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            question.question,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SizedBox(height: 8),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                choiceOption(question.correctAnswer, Colors.green),
-                                ...question.wrongChoices.map((choice) {
-                                  return choiceOption(choice, Colors.red);
-                                }),
-                              ]
-                          ),
-                          if (canEdit) Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => TeacherAddQuestionView(lessonModel: lesson, question: question,)));
-                              },
-                              child: const Text('Edit'),
+          return SingleChildScrollView(
+            child: Wrap(
+              spacing: 10,
+              children: List.generate(
+                  questionList.length,
+                      (index) {
+                    QuestionModel question = questionList[index];
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              question.question,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  choiceOption(question.correctAnswer, Colors.green),
+                                  ...question.wrongChoices.map((choice) {
+                                    return choiceOption(choice, Colors.red);
+                                  }),
+                                ]
+                            ),
+                            if (canEdit) Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => TeacherAddQuestionView(lessonModel: lesson, question: question,)));
+                                },
+                                child: const Text('Edit'),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+            ),
           );
         }
     );
