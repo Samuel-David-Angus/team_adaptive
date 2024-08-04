@@ -18,8 +18,9 @@ class TeacherLessonService {
           .doc(lesson.courseID)
           .collection("Lesson")
           .withConverter(
-          fromFirestore: (snapshot, _) => LessonModel.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (model, _) => model.toJson());
+              fromFirestore: (snapshot, _) =>
+                  LessonModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson());
       QuerySnapshot querySnapshot = await ref.get();
       lesson.order = querySnapshot.size + 1;
       await ref.add(lesson);
@@ -38,19 +39,21 @@ class TeacherLessonService {
           .doc(courseID)
           .collection("Lesson")
           .withConverter(
-          fromFirestore: (snapshot, _) => LessonModel.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (model, _) => model.toJson())
+              fromFirestore: (snapshot, _) =>
+                  LessonModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot snapshot in querySnapshot.docs) {
         list.add(snapshot.data() as LessonModel);
       }
-    } catch(e) {
+    } catch (e) {
       print("Error getting lessons: $e");
     }
     return list;
   }
 
-  Future<List<LessonMaterialModel>> getLessonMaterialsByType(String courseID, String lessonID, String type) async {
+  Future<List<LessonMaterialModel>> getLessonMaterialsByType(
+      String courseID, String lessonID, String type) async {
     List<LessonMaterialModel> list = [];
     try {
       assert(type == "main" || type == "sub");
@@ -61,8 +64,9 @@ class TeacherLessonService {
           .doc(lessonID)
           .collection(type)
           .withConverter(
-            fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(snapshot.data()!, type, lessonID, snapshot.id),
-            toFirestore: (model, _) => model.toJson())
+              fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
+                  snapshot.data()!, type, lessonID, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
         list.add(documentSnapshot.data() as LessonMaterialModel);
@@ -73,7 +77,8 @@ class TeacherLessonService {
     return list;
   }
 
-  Future<bool> addLessonMaterial(String courseID, LessonMaterialModel lessonMaterial) async {
+  Future<bool> addLessonMaterial(
+      String courseID, LessonMaterialModel lessonMaterial) async {
     try {
       await FirebaseFirestore.instance
           .collection("Course")
@@ -82,17 +87,39 @@ class TeacherLessonService {
           .doc(lessonMaterial.lessonID)
           .collection(lessonMaterial.type!)
           .withConverter(
-            fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(snapshot.data()!, lessonMaterial.type!, lessonMaterial.lessonID!, snapshot.id),
-            toFirestore: (model, _) => model.toJson())
+              fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
+                  snapshot.data()!,
+                  lessonMaterial.type!,
+                  lessonMaterial.lessonID!,
+                  snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .add(lessonMaterial);
       return true;
-    } catch(e) {
+    } catch (e) {
       print("Error adding lesson material: $e");
     }
     return false;
   }
 
-  Future<bool> editLessonMaterial(String courseID, LessonMaterialModel lessonMaterial) async {
+  Future<bool> addMultipleLessonMaterials async (
+      String courseID, String lessonID, List<LessonMaterialModel> materials) {
+    try {
+      DocumentReference parentRef =
+          FirebaseFirestore.instance.collection("Course").doc(courseID);
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+      for (var material in materials) {
+        DocumentReference ref = parentRef.collection(material.type!).doc();
+        batch.set(ref, material.toJson());
+      }
+      await batch.commit();
+      return true;
+    } catch (e) {
+      print('Error adding multiple materials: $e');
+    }
+  }
+
+  Future<bool> editLessonMaterial(
+      String courseID, LessonMaterialModel lessonMaterial) async {
     try {
       await FirebaseFirestore.instance
           .collection("Course")
@@ -101,18 +128,23 @@ class TeacherLessonService {
           .doc(lessonMaterial.lessonID)
           .collection(lessonMaterial.type!)
           .withConverter(
-          fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(snapshot.data()!, lessonMaterial.type!, lessonMaterial.lessonID!, snapshot.id),
-          toFirestore: (model, _) => model.toJson())
+              fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
+                  snapshot.data()!,
+                  lessonMaterial.type!,
+                  lessonMaterial.lessonID!,
+                  snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .doc(lessonMaterial.id)
           .set(lessonMaterial);
       return true;
-    } catch(e) {
+    } catch (e) {
       print("Error adding lesson material: $e");
     }
     return false;
   }
 
-  Future<bool> deleteLessonMaterial(String courseID, LessonMaterialModel lessonMaterial) async {
+  Future<bool> deleteLessonMaterial(
+      String courseID, LessonMaterialModel lessonMaterial) async {
     try {
       await FirebaseFirestore.instance
           .collection("Course")
@@ -123,7 +155,7 @@ class TeacherLessonService {
           .doc(lessonMaterial.id)
           .delete();
       return true;
-    } catch(e) {
+    } catch (e) {
       print("Error adding lesson material: $e");
     }
     return false;
