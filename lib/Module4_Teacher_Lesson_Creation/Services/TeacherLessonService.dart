@@ -101,8 +101,8 @@ class TeacherLessonService {
     return false;
   }
 
-  Future<bool> addMultipleLessonMaterials async (
-      String courseID, String lessonID, List<LessonMaterialModel> materials) {
+  Future<bool> addMultipleLessonMaterials(String courseID, String lessonID,
+      List<LessonMaterialModel> materials) async {
     try {
       DocumentReference parentRef =
           FirebaseFirestore.instance.collection("Course").doc(courseID);
@@ -116,6 +116,7 @@ class TeacherLessonService {
     } catch (e) {
       print('Error adding multiple materials: $e');
     }
+    return false;
   }
 
   Future<bool> editLessonMaterial(
