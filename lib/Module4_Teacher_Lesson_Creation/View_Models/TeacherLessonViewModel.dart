@@ -7,7 +7,8 @@ import '../Models/LessonMaterialModel.dart';
 class TeacherLessonViewModel extends ChangeNotifier {
   TeacherLessonService service = TeacherLessonService();
 
-  Future<bool> addLesson(String title, String description, String courseId, List<String> concepts) async {
+  Future<bool> addLesson(String title, String description, String courseId,
+      List<String> concepts) async {
     LessonModel lesson = LessonModel();
     lesson.lessonTitle = title;
     lesson.lessonDescription = description;
@@ -21,11 +22,20 @@ class TeacherLessonViewModel extends ChangeNotifier {
     return await service.getLessonsByCourse(courseID);
   }
 
-  Future<List<LessonMaterialModel>> getLessonMaterialsByType(String courseID, String lessonID, String type) async {
+  Future<List<LessonMaterialModel>> getLessonMaterialsByType(
+      String courseID, String lessonID, String type) async {
     return await service.getLessonMaterialsByType(courseID, lessonID, type);
   }
 
-  Future<bool> addLessonMaterial(String courseID, String lessonID, String title, String author, String src, String learningStyle, List<String> concepts, String type) async {
+  Future<bool> addLessonMaterial(
+      String courseID,
+      String lessonID,
+      String title,
+      String author,
+      String src,
+      String learningStyle,
+      List<String> concepts,
+      String type) async {
     LessonMaterialModel lessonMaterial = LessonMaterialModel();
     lessonMaterial.title = title;
     lessonMaterial.lessonID = lessonID;
@@ -38,12 +48,19 @@ class TeacherLessonViewModel extends ChangeNotifier {
     return await service.addLessonMaterial(courseID, lessonMaterial);
   }
 
-  Future<bool> editLessonMaterial(String courseID, LessonMaterialModel lessonMaterial) async {
+  Future<bool> editLessonMaterial(
+      String courseID, LessonMaterialModel lessonMaterial) async {
     return await service.editLessonMaterial(courseID, lessonMaterial);
   }
 
-  Future<bool> deleteLessonMaterial(String courseID, LessonMaterialModel lessonMaterial) async {
+  Future<bool> deleteLessonMaterial(
+      String courseID, LessonMaterialModel lessonMaterial) async {
     return await service.deleteLessonMaterial(courseID, lessonMaterial);
   }
 
+  Future<bool> addMultipleMaterials(
+      LessonModel lesson, List<LessonMaterialModel> materials) {
+    return service.addMultipleLessonMaterials(
+        lesson.courseID!, lesson.id!, materials);
+  }
 }
