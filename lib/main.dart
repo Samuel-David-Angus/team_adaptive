@@ -50,7 +50,6 @@ Future main() async {
       ChangeNotifierProvider(create: (_) => TeacherCourseViewModel()),
       ChangeNotifierProvider(create: (_) => ConceptMapViewModel()),
       ChangeNotifierProvider(create: (_) => TeacherLessonViewModel()),
-      ChangeNotifierProvider(create: (_) => SelectLearningStyleViewModel()),
       ChangeNotifierProvider(create: (_) => StudentLessonViewModel()),
       ChangeNotifierProvider(create: (_) => TeacherQuestionViewModel()),
       ChangeNotifierProvider(create: (_) => CreateEditQuestionViewModel()),

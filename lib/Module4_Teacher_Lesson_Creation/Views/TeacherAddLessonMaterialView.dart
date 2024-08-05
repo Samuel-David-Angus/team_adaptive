@@ -3,19 +3,22 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherSelectLearningStyleView.dart';
+import '../View_Models/SelectLearningStyleViewModel.dart';
 
 import '../View_Models/TeacherLessonViewModel.dart';
 import 'TeacherSelectConceptsView.dart';
 import '../View_Models/SelectConceptsViewModel.dart';
 
 class TeacherAddLessonMaterialView extends StatelessWidget {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController linkController = TextEditingController();
-  LessonModel lesson;
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController linkController = TextEditingController();
+  final LessonModel lesson;
 
-  String type;
+  final String type;
   final SelectConceptsViewModel selectConceptsViewModel =
       SelectConceptsViewModel();
+  final SelectLearningStyleViewModel selectLearningStyleViewModel =
+      SelectLearningStyleViewModel();
   TeacherAddLessonMaterialView(
       {super.key, required this.type, required this.lesson});
 
@@ -59,7 +62,9 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                   learningStyle = await showDialog<String>(
                     context: context,
                     builder: (BuildContext context) {
-                      return const TeacherSelectLearningStyleView();
+                      return ChangeNotifierProvider.value(
+                          value: selectLearningStyleViewModel,
+                          child: const TeacherSelectLearningStyleView());
                     },
                   );
                 },
