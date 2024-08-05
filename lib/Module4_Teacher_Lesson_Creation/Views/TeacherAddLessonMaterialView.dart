@@ -6,6 +6,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherSelec
 
 import '../View_Models/TeacherLessonViewModel.dart';
 import 'TeacherSelectConceptsView.dart';
+import '../View_Models/SelectConceptsViewModel.dart';
 
 class TeacherAddLessonMaterialView extends StatelessWidget {
   TextEditingController titleController = TextEditingController();
@@ -13,11 +14,15 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
   LessonModel lesson;
 
   String type;
-  TeacherAddLessonMaterialView({super.key, required this.type, required this.lesson});
+  final SelectConceptsViewModel selectConceptsViewModel =
+      SelectConceptsViewModel();
+  TeacherAddLessonMaterialView(
+      {super.key, required this.type, required this.lesson});
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<TeacherLessonViewModel>(context, listen: false);
+    final viewModel =
+        Provider.of<TeacherLessonViewModel>(context, listen: false);
     List<String>? selectedConcepts;
     String? learningStyle;
     return AlertDialog(
@@ -28,17 +33,13 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              decoration: const InputDecoration (
-                  border: OutlineInputBorder(),
-                  hintText: 'Title'
-              ),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), hintText: 'Title'),
               controller: titleController,
             ),
             TextField(
-              decoration: const InputDecoration (
-                  border: OutlineInputBorder(),
-                  hintText: 'Upload'
-              ),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), hintText: 'Upload'),
               controller: linkController,
             ),
             ElevatedButton(
@@ -46,12 +47,11 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                   selectedConcepts = await showDialog<List<String>>(
                     context: context,
                     builder: (BuildContext context) {
-                      return TeacherSelectConceptsView(
-                        lesson: lesson,
-                      );
+                      return ChangeNotifierProvider.value(
+                          value: selectConceptsViewModel,
+                          child: TeacherSelectConceptsView(lesson: lesson));
                     },
                   );
-
                 },
                 child: const Text('Concepts')),
             ElevatedButton(
@@ -62,27 +62,40 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                       return const TeacherSelectLearningStyleView();
                     },
                   );
-
                 },
                 child: const Text('Learning Styles')),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             TextButton(
                 onPressed: () async {
                   if (selectedConcepts != null) {
-                    if (selectedConcepts!.isNotEmpty && titleController.text.isNotEmpty && linkController.text.isNotEmpty) {
-                      await viewModel.addLessonMaterial(lesson.courseID!, lesson.id!, titleController.text, AuthServices().userInfo!.id!, linkController.text, learningStyle!, selectedConcepts!, type);
+                    if (selectedConcepts!.isNotEmpty &&
+                        titleController.text.isNotEmpty &&
+                        linkController.text.isNotEmpty) {
+                      await viewModel.addLessonMaterial(
+                          lesson.courseID!,
+                          lesson.id!,
+                          titleController.text,
+                          AuthServices().userInfo!.id!,
+                          linkController.text,
+                          learningStyle!,
+                          selectedConcepts!,
+                          type);
                     } else {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Message'),
-                            content: Text('Pls fill all fields and select concepts'),
+                            content:
+                                Text('Pls fill all fields and select concepts'),
                             actions: <Widget>[
                               TextButton(
                                 child: Text('OK'),
                                 onPressed: () {
-                                  Navigator.of(context).pop(); // Close the dialog
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
                                 },
                               ),
                             ],

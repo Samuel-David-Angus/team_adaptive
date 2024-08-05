@@ -5,14 +5,15 @@ import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel_old.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
-class SelectConceptsViewModel extends ChangeNotifier{
+class SelectConceptsViewModel extends ChangeNotifier {
   List<String>? items;
   List<String>? selectedItems;
 
   Future<void> loadDataToAdd({String? courseID, LessonModel? lesson}) async {
     try {
       assert(courseID != null || lesson != null);
-      ConceptMapModel? conceptMapModel = await ConceptMapService().getConceptMap(courseID ?? lesson!.courseID!);
+      ConceptMapModel? conceptMapModel = await ConceptMapService()
+          .getConceptMap(courseID ?? lesson!.courseID!);
       List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
       Map<String, List<int>> map = conceptMapModel.conceptMap!;
       selectedItems = [];
@@ -21,17 +22,17 @@ class SelectConceptsViewModel extends ChangeNotifier{
       } else {
         items = [];
         for (var concept in lesson.concepts!) {
-              items!.add("$concept(main)");
-              print(concept);
-              List<int> val = map[concept]!;
-              print(val);
-              for (int i = 0; i < val.length; i++) {
-                if (val[i] == 1) {
-                  print(keys[i]);
-                  items!.add(keys[i]);
-                }
-              }
+          items!.add("$concept(main)");
+          print(concept);
+          List<int> val = map[concept]!;
+          print(val);
+          for (int i = 0; i < val.length; i++) {
+            if (val[i] == 1) {
+              print(keys[i]);
+              items!.add(keys[i]);
             }
+          }
+        }
       }
       notifyListeners();
     } catch (e) {
@@ -39,9 +40,11 @@ class SelectConceptsViewModel extends ChangeNotifier{
     }
   }
 
-  Future<void> loadDataToEdit({required LessonModel lesson, LessonMaterialModel? material}) async {
+  Future<void> loadDataToEdit(
+      {required LessonModel lesson, LessonMaterialModel? material}) async {
     try {
-      ConceptMapModel? conceptMapModel = await ConceptMapService().getConceptMap(lesson.courseID!);
+      ConceptMapModel? conceptMapModel =
+          await ConceptMapService().getConceptMap(lesson.courseID!);
       List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
       Map<String, List<int>> map = conceptMapModel.conceptMap!;
       selectedItems = [];
@@ -69,6 +72,7 @@ class SelectConceptsViewModel extends ChangeNotifier{
 
   void addToSelected(String concept) {
     selectedItems!.add(concept);
+    print(selectedItems);
     notifyListeners();
   }
 
@@ -76,10 +80,4 @@ class SelectConceptsViewModel extends ChangeNotifier{
     selectedItems!.remove(concept);
     notifyListeners();
   }
-
-  void resetToNull() {
-    items = null;
-    selectedItems = null;
-  }
-
 }

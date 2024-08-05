@@ -5,12 +5,12 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/Select
 
 import '../Models/LessonMaterialModel.dart';
 
-
 class TeacherSelectConceptsView extends StatelessWidget {
   String? courseID;
   LessonModel? lesson;
   LessonMaterialModel? material;
-  TeacherSelectConceptsView({super.key, this.courseID, this.lesson, this.material});
+  TeacherSelectConceptsView(
+      {super.key, this.courseID, this.lesson, this.material});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,6 @@ class TeacherSelectConceptsView extends StatelessWidget {
             TextButton(
               child: Text('Cancel'),
               onPressed: () {
-                viewModel.resetToNull();
                 Navigator.of(context).pop();
               },
             ),
@@ -63,7 +62,6 @@ class TeacherSelectConceptsView extends StatelessWidget {
               child: Text('OK'),
               onPressed: () {
                 var results = [...?viewModel.selectedItems];
-                viewModel.resetToNull();
                 Navigator.of(context).pop(results);
               },
             ),

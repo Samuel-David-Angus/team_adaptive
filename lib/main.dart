@@ -30,38 +30,35 @@ import 'Module1_User_Management/View_Models/RegisterViewModel.dart';
 import 'Module1_User_Management/Views/LoginView.dart';
 import 'Module1_User_Management/Views/RegisterView.dart';
 
-Future main() async{
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
-    await Firebase.initializeApp(options: const FirebaseOptions(
-        apiKey: "AIzaSyDBv6AtnL2k6ma3laZVNfkIMRUtb72TlHQ",
-        appId: "1:219837929614:web:3857f058d59dd54bf411df",
-        messagingSenderId: "219837929614",
-        projectId: "adaptiveedu-ccde2"));
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: "AIzaSyDBv6AtnL2k6ma3laZVNfkIMRUtb72TlHQ",
+            appId: "1:219837929614:web:3857f058d59dd54bf411df",
+            messagingSenderId: "219837929614",
+            projectId: "adaptiveedu-ccde2"));
   }
   await Firebase.initializeApp();
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthServices()),
-        ChangeNotifierProvider(create: (_) => LoginViewModel()),
-        ChangeNotifierProvider(create: (_) => RegisterViewModel()),
-        ChangeNotifierProvider(create: (_) => StudentCourseViewModel()),
-        ChangeNotifierProvider(create: (_) => TeacherCourseViewModel()),
-        ChangeNotifierProvider(create: (_) => ConceptMapViewModel()),
-        ChangeNotifierProvider(create: (_) => TeacherLessonViewModel()),
-        ChangeNotifierProvider(create: (_) => SelectConceptsViewModel()),
-        ChangeNotifierProvider(create: (_) => SelectLearningStyleViewModel()),
-        ChangeNotifierProvider(create: (_) => StudentLessonViewModel()),
-        ChangeNotifierProvider(create: (_) => TeacherQuestionViewModel()),
-        ChangeNotifierProvider(create: (_) => CreateEditQuestionViewModel()),
-        ChangeNotifierProvider(create: (_) => AssessmentViewModel()),
-        ChangeNotifierProvider(create: (_) => FeedbackViewModel()),
-        ],
-      child: const MyApp(),
-    )
-
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => AuthServices()),
+      ChangeNotifierProvider(create: (_) => LoginViewModel()),
+      ChangeNotifierProvider(create: (_) => RegisterViewModel()),
+      ChangeNotifierProvider(create: (_) => StudentCourseViewModel()),
+      ChangeNotifierProvider(create: (_) => TeacherCourseViewModel()),
+      ChangeNotifierProvider(create: (_) => ConceptMapViewModel()),
+      ChangeNotifierProvider(create: (_) => TeacherLessonViewModel()),
+      ChangeNotifierProvider(create: (_) => SelectLearningStyleViewModel()),
+      ChangeNotifierProvider(create: (_) => StudentLessonViewModel()),
+      ChangeNotifierProvider(create: (_) => TeacherQuestionViewModel()),
+      ChangeNotifierProvider(create: (_) => CreateEditQuestionViewModel()),
+      ChangeNotifierProvider(create: (_) => AssessmentViewModel()),
+      ChangeNotifierProvider(create: (_) => FeedbackViewModel()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -99,14 +96,16 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),
         '/enroll': (context) => EnrollCourseView(),
-        '/courseOverview': (context) => CourseOverviewPage(course: ModalRoute.of(context)?.settings.arguments as Course),
-        '/addCourse'     : (context) => TeacherAddCourseView(),
-        '/joinCourse'     : (context) => TeacherJoinCourseView(),
-        '/conceptMap'     : (context) => ConceptMapView(course: ModalRoute.of(context)?.settings.arguments as Course, ),
+        '/courseOverview': (context) => CourseOverviewPage(
+            course: ModalRoute.of(context)?.settings.arguments as Course),
+        '/addCourse': (context) => TeacherAddCourseView(),
+        '/joinCourse': (context) => TeacherJoinCourseView(),
+        '/conceptMap': (context) => ConceptMapView(
+              course: ModalRoute.of(context)?.settings.arguments as Course,
+            ),
       },
 
       initialRoute: '/Home', // Specify the initial route
     );
   }
 }
-
