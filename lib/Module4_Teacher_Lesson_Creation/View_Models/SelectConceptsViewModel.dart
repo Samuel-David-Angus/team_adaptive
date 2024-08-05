@@ -8,6 +8,7 @@ import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapSer
 class SelectConceptsViewModel extends ChangeNotifier {
   List<String>? items;
   List<String>? selectedItems;
+  List<String>? prevSelectedItems;
 
   Future<void> loadDataToAdd({String? courseID, LessonModel? lesson}) async {
     try {
@@ -79,5 +80,17 @@ class SelectConceptsViewModel extends ChangeNotifier {
   void removeFromSelected(String concept) {
     selectedItems!.remove(concept);
     notifyListeners();
+  }
+
+  void confirmSelected() {
+    prevSelectedItems = List.from(selectedItems!);
+  }
+
+  void cancelSelected() {
+    if (prevSelectedItems == null) {
+      selectedItems = [];
+      return;
+    }
+    selectedItems = List.from(prevSelectedItems!);
   }
 }

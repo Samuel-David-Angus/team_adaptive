@@ -55,6 +55,7 @@ class TeacherSelectConceptsView extends StatelessWidget {
             TextButton(
               child: Text('Cancel'),
               onPressed: () {
+                viewModel.cancelSelected();
                 Navigator.of(context).pop();
               },
             ),
@@ -62,6 +63,7 @@ class TeacherSelectConceptsView extends StatelessWidget {
               child: Text('OK'),
               onPressed: () {
                 var results = [...?viewModel.selectedItems];
+                viewModel.confirmSelected();
                 Navigator.of(context).pop(results);
               },
             ),
