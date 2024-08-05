@@ -57,10 +57,4 @@ class TeacherLessonViewModel extends ChangeNotifier {
       String courseID, LessonMaterialModel lessonMaterial) async {
     return await service.deleteLessonMaterial(courseID, lessonMaterial);
   }
-
-  Future<bool> addMultipleMaterials(
-      LessonModel lesson, List<LessonMaterialModel> materials) {
-    return service.addMultipleLessonMaterials(
-        lesson.courseID!, lesson.id!, materials);
-  }
 }
