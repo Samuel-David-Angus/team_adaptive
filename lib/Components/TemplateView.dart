@@ -5,9 +5,7 @@ import 'package:team_adaptive/Module1_User_Management/Views/LoginView.dart';
 
 import '../Module1_User_Management/Services/AuthServices.dart';
 
-enum SELECTED {
-  HOME, COURSES, ABOUT, NONE
-}
+enum SELECTED { HOME, COURSES, ABOUT, NONE }
 
 class TemplateView extends StatelessWidget {
   Widget child;
@@ -33,25 +31,24 @@ class TemplateView extends StatelessWidget {
     topLeft.addAll(List.generate(navBtns.length, (index) {
       Text text = Text(navBtns[index]);
       if (index == highlighted.index && index != SELECTED.NONE.index) {
-        text = Text(navBtns[index], style: const TextStyle(decoration: TextDecoration.underline),);
+        text = Text(
+          navBtns[index],
+          style: const TextStyle(decoration: TextDecoration.underline),
+        );
       }
-      return TextButton(onPressed: () {
-        Navigator.pushNamed(context, '/${navBtns[index]}');
-      }, child: text);
+      return TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/${navBtns[index]}');
+          },
+          child: text);
     }));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Wrap(
-          spacing: 100,
-          children: topLeft
-        ),
-        actions: topRight
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+            title: Wrap(spacing: 100, children: topLeft), actions: topRight),
+        body: child,
       ),
-      body: child,
     );
   }
-
-
-
 }
