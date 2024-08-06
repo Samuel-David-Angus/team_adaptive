@@ -91,17 +91,18 @@ class TeacherLessonHomeView extends StatelessWidget {
                                 child:
                                     const Text('Create Assessment Questions'),
                               ),
-                              TextButton(
-                                  onPressed: () async {
-                                    await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                InitialAddMaterialsView(
-                                                    lesson: lessons[index])));
-                                    viewModel.refresh();
-                                  },
-                                  child: const Text('Setup'))
+                              if (!lessons[index].isSetupComplete!)
+                                TextButton(
+                                    onPressed: () async {
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InitialAddMaterialsView(
+                                                      lesson: lessons[index])));
+                                      viewModel.refresh();
+                                    },
+                                    child: const Text('Setup'))
                             ],
                           ),
                         ));

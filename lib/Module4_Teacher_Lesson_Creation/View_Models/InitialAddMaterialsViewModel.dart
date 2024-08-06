@@ -79,4 +79,8 @@ class InitialAddMaterialsViewModel extends ChangeNotifier {
   void setPrereqs(String courseID, List<String> concepts) {
     prereqs = getPrereqs(courseID, concepts);
   }
+
+  Future<bool> confirmSetupComplete(LessonModel lesson) async {
+    return await service.confirmSetupComplete(lesson);
+  }
 }

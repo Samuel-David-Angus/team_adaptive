@@ -113,24 +113,19 @@ class InitialAddMaterialsView extends StatelessWidget {
                               child: const Text('Submit lessons'),
                               onPressed: () async {
                                 if (viewModel.validate()) {
-                                  await viewModel.addMultipleMaterials(lesson);
-                                  Navigator.pop(context);
+                                  if (await viewModel
+                                          .addMultipleMaterials(lesson) &&
+                                      await viewmodel
+                                          .confirmSetupComplete(lesson)) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    showMessage(
+                                        'Error submitting lessons and completing setup',
+                                        context);
+                                  }
                                 } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                            title: const Text('OOPS!'),
-                                            content: const Text(
-                                                'some fields are missing.'),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Ok'))
-                                            ]);
-                                      });
+                                  showMessage(
+                                      'Some fields are missing', context);
                                 }
                               }),
                         ]),
@@ -145,4 +140,21 @@ class InitialAddMaterialsView extends StatelessWidget {
                   ));
             })));
   }
+}
+
+void showMessage(String message, BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+            title: const Text('OOPS!'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Ok'))
+            ]);
+      });
 }

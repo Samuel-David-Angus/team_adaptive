@@ -11,6 +11,21 @@ class TeacherLessonService {
     return _instance;
   }
 
+  Future<bool> confirmSetupComplete(LessonModel lesson) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("Course")
+          .doc(lesson.courseID)
+          .collection("Lesson")
+          .doc(lesson.id)
+          .update({"isSetupComplete": true});
+      return true;
+    } catch (e) {
+      print("Error confirming setup complete: $e");
+    }
+    return false;
+  }
+
   Future<bool> addLesson(LessonModel lesson) async {
     try {
       var ref = FirebaseFirestore.instance
