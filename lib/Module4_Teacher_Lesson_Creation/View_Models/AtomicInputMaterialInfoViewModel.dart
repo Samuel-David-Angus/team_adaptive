@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'SelectConceptsViewModel.dart';
-import 'SelectLearningStyleViewModel.dart';
-
-class AtomicInputMaterialViewModel extends ChangeNotifier {
+class AtomicInputMaterialViewModel {
   final titleController = TextEditingController();
   final linkController = TextEditingController();
-  final selectConceptsViewModel = SelectConceptsViewModel();
-  final selectStyleViewModel = SelectLearningStyleViewModel();
+  List<String> concepts = [];
+  String learningStyle = '';
   String type = '';
 
   bool validate() {
     return titleController.text.isNotEmpty &&
         linkController.text.isNotEmpty &&
-        selectConceptsViewModel.selectedItems!.isNotEmpty &&
-        selectStyleViewModel.selectedStyle.isNotEmpty;
+        concepts.isNotEmpty &&
+        learningStyle.isNotEmpty &&
+        type.isNotEmpty;
   }
 }

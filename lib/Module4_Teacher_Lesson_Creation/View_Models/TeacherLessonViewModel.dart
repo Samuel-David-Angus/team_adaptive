@@ -6,6 +6,7 @@ import '../Models/LessonMaterialModel.dart';
 
 class TeacherLessonViewModel extends ChangeNotifier {
   TeacherLessonService service = TeacherLessonService();
+  bool canAddMoreLessons = true;
 
   Future<bool> addLesson(String title, String description, String courseId,
       List<String> concepts) async {
@@ -14,12 +15,24 @@ class TeacherLessonViewModel extends ChangeNotifier {
     lesson.lessonDescription = description;
     lesson.courseID = courseId;
     lesson.concepts = concepts;
+    lesson.isSetupComplete = false;
     notifyListeners();
     return await service.addLesson(lesson);
   }
 
+  void refresh() {
+    notifyListeners();
+  }
+
   Future<List<LessonModel>> getLessonByCourse(String courseID) async {
-    return await service.getLessonsByCourse(courseID);
+    List<LessonModel> lessons = await service.getLessonsByCourse(courseID);
+    for (var lesson in lessons) {
+      if (!lesson.isSetupComplete!) {
+        canAddMoreLessons = false;
+        break;
+      }
+    }
+    return lessons;
   }
 
   Future<List<LessonMaterialModel>> getLessonMaterialsByType(

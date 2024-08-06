@@ -21,7 +21,8 @@ class LessonModel {
         _lessonDescription = lessonDescription,
         _courseID = courseID,
         _concepts = concepts,
-        _order = order;
+        _order = order,
+        _isSetupComplete = isSetupComplete;
 
   LessonModel();
 
@@ -71,7 +72,7 @@ class LessonModel {
         courseID: json['courseID'] as String,
         concepts: List<String>.from(json['concepts']),
         order: json['order'],
-        isSetupComplete: json['isSetUpComplete']);
+        isSetupComplete: json['isSetupComplete']);
   }
 
   // Method to convert an instance of LessonModel to a map
@@ -82,6 +83,7 @@ class LessonModel {
       'courseID': _courseID,
       'concepts': _concepts,
       'order': _order,
+      'isSetupComplete': _isSetupComplete,
     };
   }
 }

@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
+import '../Models/LessonModel.dart';
+import '../View_Models/AtomicInputMaterialInfoViewModel.dart';
 
 class AtomicInputMaterialInfoView extends StatelessWidget {
-  const AtomicInputMaterialInfoView({super.key});
+  final viewModel = AtomicInputMaterialViewModel();
+  final LessonModel lesson;
+  final void Function(AtomicInputMaterialViewModel) connector;
+  final String lessonType;
+  final List<String> concepts;
+  final String learningStyle;
+  AtomicInputMaterialInfoView(
+      {super.key,
+      required this.lesson,
+      required this.connector,
+      required this.lessonType,
+      required this.concepts,
+      required this.learningStyle}) {
+    viewModel.type = lessonType;
+    viewModel.concepts = concepts;
+    viewModel.learningStyle = learningStyle;
+    connector(viewModel);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,37 +32,18 @@ class AtomicInputMaterialInfoView extends StatelessWidget {
           TextField(
             decoration: const InputDecoration(
                 border: OutlineInputBorder(), hintText: 'Title'),
-            controller: titleController,
+            controller: viewModel.titleController,
           ),
           TextField(
             decoration: const InputDecoration(
                 border: OutlineInputBorder(), hintText: 'Upload'),
-            controller: linkController,
+            controller: viewModel.linkController,
           ),
-          ElevatedButton(
-              onPressed: () async {
-                selectedConcepts = await showDialog<List<String>>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ChangeNotifierProvider.value(
-                        value: selectConceptsViewModel,
-                        child: TeacherSelectConceptsView(lesson: lesson));
-                  },
-                );
-              },
-              child: const Text('Concepts')),
-          ElevatedButton(
-              onPressed: () async {
-                learningStyle = await showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ChangeNotifierProvider.value(
-                        value: selectLearningStyleViewModel,
-                        child: const TeacherSelectLearningStyleView());
-                  },
-                );
-              },
-              child: const Text('Learning Styles')),
+          const Text('Concepts: '),
+          ...List.generate(concepts.length, (index) {
+            return Text(concepts[index]);
+          }),
+          Text('Learning Style: $learningStyle'),
           const SizedBox(
             height: 20,
           ),
