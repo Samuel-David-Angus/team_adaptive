@@ -119,8 +119,11 @@ class TeacherLessonService {
   Future<bool> addMultipleLessonMaterials(String courseID, String lessonID,
       List<LessonMaterialModel> materials) async {
     try {
-      DocumentReference parentRef =
-          FirebaseFirestore.instance.collection("Course").doc(courseID);
+      DocumentReference parentRef = FirebaseFirestore.instance
+          .collection("Course")
+          .doc(courseID)
+          .collection("Lesson")
+          .doc(lessonID);
       WriteBatch batch = FirebaseFirestore.instance.batch();
       for (var material in materials) {
         DocumentReference ref = parentRef.collection(material.type!).doc();

@@ -54,7 +54,7 @@ class InitialAddMaterialsView extends StatelessWidget {
                           return AtomicInputMaterialInfoView(
                             connector: connect,
                             lesson: lesson,
-                            lessonType: "main",
+                            lessonType: "sub",
                             learningStyle: learningStyles[index2],
                             concepts: [snapshot.data![index1]],
                           );
