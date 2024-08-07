@@ -12,18 +12,28 @@ class StudentLessonViewModel extends ChangeNotifier {
   StudentDataService dataService = StudentDataService();
 
   Future<List<LessonModel>> getCourseLessons(String courseID) async {
-    return await lessonService.getLessonsByCourse(courseID);
+    var courseLessons = await lessonService.getLessonsByCourse(courseID);
+    return courseLessons.where((element) => element.isSetupComplete!).toList();
   }
 
-  Future<LessonMaterialModel?> getMainLesson(String courseID, String lessonID) async {
+  Future<LessonMaterialModel?> getMainLesson(
+      String courseID, String lessonID) async {
     try {
-      StudentDataModel? studentData = await dataService.getStudentData(AuthServices().userInfo!.id!);
+      StudentDataModel? studentData =
+          await dataService.getStudentData(AuthServices().userInfo!.id!);
       List<LessonMaterialModel?> materials;
-      studentData ??= await dataService.createStudentData(StudentDataModel.basic(AuthServices().userInfo!.id!));
-      if (studentData!.currentLessons != null && studentData.currentLessons![lessonID] != null) {
-        return await lessonService.getLessonMaterialByTypeAndID(courseID: courseID, lessonID: lessonID, type: "main", materialID: studentData.currentLessons![lessonID]!);
+      studentData ??= await dataService.createStudentData(
+          StudentDataModel.basic(AuthServices().userInfo!.id!));
+      if (studentData!.currentLessons != null &&
+          studentData.currentLessons![lessonID] != null) {
+        return await lessonService.getLessonMaterialByTypeAndID(
+            courseID: courseID,
+            lessonID: lessonID,
+            type: "main",
+            materialID: studentData.currentLessons![lessonID]!);
       }
-      materials = await lessonService.getLessonMaterialsByTypeAndStyle(courseID, lessonID, "main", studentData.currentLearningStyle!);
+      materials = await lessonService.getLessonMaterialsByTypeAndStyle(
+          courseID, lessonID, "main", studentData.currentLearningStyle!);
       materials.shuffle();
       studentData.currentLessons ??= {};
       studentData.currentLessons![lessonID] = materials[0]!.id!;
@@ -36,8 +46,10 @@ class StudentLessonViewModel extends ChangeNotifier {
 
   Future<bool> completeMainLesson(String lessonID) async {
     try {
-      StudentDataModel? studentData = await dataService.getStudentData(AuthServices().userInfo!.id!);
-      studentData ??= await dataService.createStudentData(StudentDataModel.basic(AuthServices().userInfo!.id!));
+      StudentDataModel? studentData =
+          await dataService.getStudentData(AuthServices().userInfo!.id!);
+      studentData ??= await dataService.createStudentData(
+          StudentDataModel.basic(AuthServices().userInfo!.id!));
       studentData!.currentLessons!.remove(lessonID);
       dataService.editStudentData(studentData);
       return true;
