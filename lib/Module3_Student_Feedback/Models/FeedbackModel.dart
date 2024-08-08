@@ -10,7 +10,7 @@ class FeedbackModel {
   int? _skillLevel;
 
   //assessment must have processAssessment called before passing
-  FeedbackModel.setAll({required this.assessment,  required this.userID});
+  FeedbackModel.setAll({required this.assessment, required this.userID});
 
   int getScore() {
     return assessment.score!;
@@ -34,15 +34,14 @@ class FeedbackModel {
       return _weakConceptsAndTheirPrereqs!;
     }
     Map<String, List<String>> map = {};
-    calculateLessonConceptFailureRates().forEach(
-        (String concept, double failureRate) {
-          if (failureRate >= 50) {
-            List<String> prereqs = [];
-            assessment.conceptMapModel.findAllPrerequisites(concept, prereqs);
-            map[concept] = prereqs;
-          }
-        }
-    );
+    calculateLessonConceptFailureRates()
+        .forEach((String concept, double failureRate) {
+      if (failureRate >= 50) {
+        List<String> prereqs =
+            assessment.conceptMapModel.findDirectPrerequisites(concept);
+        map[concept] = prereqs;
+      }
+    });
     _weakConceptsAndTheirPrereqs = map;
     return map;
   }
@@ -54,30 +53,31 @@ class FeedbackModel {
     return _weakConceptsAndTheirPrereqs!.keys.toList();
   }
 
- List<String> determinePrereqsToLearn() {
-   if (_weakConceptsAndTheirPrereqs == null) {
-     calculateWeakConceptsAndTheirPrereqs();
-   }
-   List<String> prereqsToLearn = [];
-   _weakConceptsAndTheirPrereqs!.forEach(
-       (String concept, List<String> prereqs) {
-         prereqsToLearn.addAll(prereqs);
-       }
-   );
-   return prereqsToLearn;
- }
+  List<String> determinePrereqsToLearn() {
+    if (_weakConceptsAndTheirPrereqs == null) {
+      calculateWeakConceptsAndTheirPrereqs();
+    }
+    List<String> prereqsToLearn = [];
+    _weakConceptsAndTheirPrereqs!
+        .forEach((String concept, List<String> prereqs) {
+      for (var element in prereqs) {
+        if (!prereqsToLearn.contains(element)) {
+          prereqsToLearn.add(element);
+        }
+      }
+    });
+    return prereqsToLearn;
+  }
 
- int skillLevel() {
-  if (_skillLevel != null) {
+  int skillLevel() {
+    if (_skillLevel != null) {
+      return _skillLevel!;
+    }
+    _skillLevel = assessment.calculateSkillLevel();
     return _skillLevel!;
   }
-  _skillLevel = assessment.calculateSkillLevel();
-  return _skillLevel!;
- }
 
- String categorizedSkillLevel() {
-  return assessment.categorizeSkillLevel(_skillLevel!);
- }
-
-
+  String categorizedSkillLevel() {
+    return assessment.categorizeSkillLevel(_skillLevel!);
+  }
 }
