@@ -4,6 +4,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMater
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonMaterialView.dart';
 
+import '../../Module3_Student_Feedback/Views/LessonMaterialView.dart';
 import '../View_Models/TeacherLessonViewModel.dart';
 
 class TeacherLessonMaterialListView extends StatelessWidget {
@@ -51,7 +52,7 @@ class TeacherLessonMaterialListView extends StatelessWidget {
                                 children: [
                                   TextButton(
                                     onPressed: () {
-
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => LessonMaterialView(lessonMaterial: materials[index])));
                                     },
                                     child: const Text('View'),
                                   ),
