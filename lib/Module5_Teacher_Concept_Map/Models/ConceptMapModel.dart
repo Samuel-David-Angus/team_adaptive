@@ -137,8 +137,8 @@ class ConceptMapModel {
 
   List<String> findDirectPrerequisites(String concept) {
     List<String> prereqs = [];
-    for (var i in conceptMap[concept]!) {
-      if (i == 1) {
+    for (int i = 0; i < conceptMap.length; i++) {
+      if (conceptMap[concept]![i] == 1) {
         prereqs.add(conceptOfIndex(i));
       }
     }
