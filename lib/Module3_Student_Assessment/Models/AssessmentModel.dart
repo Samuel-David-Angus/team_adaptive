@@ -32,7 +32,7 @@ class AssessmentModel {
   LessonModel get lesson => _lesson;
 
   // Setter for _lessonID
-  set lessonID(LessonModel value) {
+  set lesson(LessonModel value) {
     _lesson = value;
   }
 

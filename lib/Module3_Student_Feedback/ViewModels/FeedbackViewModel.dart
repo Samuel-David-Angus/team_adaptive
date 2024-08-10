@@ -17,7 +17,7 @@ class FeedbackViewModel extends ChangeNotifier{
 
   Future<bool> createFeedback(AssessmentModel assessment) async {
     try {
-      feedback = FeedbackModel.setAll(assessment: assessment, userID: AuthServices().userInfo!.id!);
+      feedback = FeedbackModel.createFromAssessment(assessment: assessment, userID: AuthServices().userInfo!.id!);
       feedback.diagnosedLearningStyle = await determineLearningStyle("random args");
       feedback.suggestedLessons = await getSuggestedMaterials();
       return true;
@@ -43,13 +43,13 @@ class FeedbackViewModel extends ChangeNotifier{
   }
 
   Future<List<Map<String, dynamic>>> getSuggestedMaterials() async {
-    List<LessonMaterialModel> allMainLessons = await lessonService.getLessonMaterialsByType(feedback.assessment.lesson.courseID!, feedback.assessment.lesson.id!, "main");
-    List<LessonMaterialModel> allSubLessons = await lessonService.getLessonMaterialsByType(feedback.assessment.lesson.courseID!, feedback.assessment.lesson.id!, "sub");
+    List<LessonMaterialModel> allMainLessons = await lessonService.getLessonMaterialsByType(feedback.courseID, feedback.lessonID, "main");
+    List<LessonMaterialModel> allSubLessons = await lessonService.getLessonMaterialsByType(feedback.courseID, feedback.lessonID, "sub");
     // if (allMainLessons.isEmpty || allSubLessons.isEmpty) {
     //   throw Exception('failed getting lessons');
     // }
     List<Map<String, dynamic>> result = [];
-    feedback.calculateWeakConceptsAndTheirPrereqs().forEach(
+    feedback.weakConceptsAndTheirPrereqs.forEach(
         (String mainConcept, List<String> prereqs) {
           Map<String, dynamic> item = {};
           item["main"] = {"concept": mainConcept, "lesson": getRandomMaterialByConceptAndLearningStyle(allMainLessons, mainConcept, feedback.diagnosedLearningStyle)};
@@ -66,6 +66,6 @@ class FeedbackViewModel extends ChangeNotifier{
   }
 
   Map<String, double> getConceptFailureRates() {
-    return feedback.calculateLessonConceptFailureRates();
+    return feedback.lessonConceptFailureRates;
   }
 }

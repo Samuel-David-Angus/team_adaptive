@@ -34,7 +34,7 @@ class FeedbackView extends StatelessWidget {
           } else
           if (snapshot.hasData && snapshot.data != null && snapshot.data!) {
             Map<String, double> conceptsAndFailureRates = viewModel.feedback
-                .calculateLessonConceptFailureRates();
+                .lessonConceptFailureRates;
             return DefaultTabController(
                 length: 2,
                 child: Padding(
@@ -55,7 +55,7 @@ class FeedbackView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 15,),
-                                  Text('Score: ${viewModel.feedback.getScore()}', style: const TextStyle(fontSize: 24.0),),
+                                  Text('Score: ${viewModel.feedback.learnerScore}', style: const TextStyle(fontSize: 24.0),),
                                   const SizedBox(height: 15,),
                                   Text('Learner Skill level: ${assessment.calculateSkillLevel()}', style: const TextStyle(fontSize: 24.0),),
                                   const SizedBox(height: 15,),
