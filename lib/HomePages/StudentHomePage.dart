@@ -136,7 +136,22 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       'Incorrect course code',
                       style: TextStyle(color: Colors.red),
                     ),
-                  const SizedBox(height: 80.0),
+                  const SizedBox(height: 20.0),
+                  Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ElevatedButton(onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedbackListView()));
+                        },
+                            child: const Text('Feedback')),
+                        const SizedBox(width: 20,),
+                        Text("Current learning style: ${AuthServices().userInfo!.learningStyle}"),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
                   Row(
                     children: [
                       const Text(
@@ -169,22 +184,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   )
               ),
               const SizedBox(width: 16.0),
-              Expanded(
-                flex: 4,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ElevatedButton(onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedbackListView()));
-                      },
-                          child: const Text('Feedback')),
-                      Text("Current learning style: ${AuthServices().userInfo!.learningStyle}")
-                    ],
-                  ),
-                ),
-
-              ),
           ],
         ),
       ),
