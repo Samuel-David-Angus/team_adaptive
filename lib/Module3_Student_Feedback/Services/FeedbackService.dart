@@ -11,7 +11,7 @@ class FeedbackService {
     return _instance;
   }
 
-  Future<bool> addFeedback(FeedbackModel feedback) async {
+  Future<bool> addFeedbackAndLessons(FeedbackModel feedback) async {
     try {
       DocumentReference docRef = await FirebaseFirestore.instance
           .collection("Feedback")
@@ -26,6 +26,19 @@ class FeedbackService {
       return true;
     } catch (e) {
       print("Error adding feedback: $e");
+    }
+    return false;
+  }
+
+  Future<bool> updateUserLearningStyle(String userID, String learningStyle) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("User")
+          .doc(userID)
+          .update({"learningStyle": learningStyle});
+      return true;
+    } catch (e) {
+      print("Error updating user learning style");
     }
     return false;
   }

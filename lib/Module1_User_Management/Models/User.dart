@@ -7,6 +7,7 @@ class User {
   String? _email;
   String? _password;
   String? _type;
+  String? learningStyle;
 
   String? get id => _id;
   String? get firstname => _firstname;
@@ -45,7 +46,8 @@ class User {
       this._username,
       this._email,
       this._password,
-      this._type);
+      this._type,
+      [this.learningStyle = "Text"]);
 
   User();
 
@@ -56,7 +58,8 @@ class User {
       json['username'],
       json['email'],
       null,
-      json['type']
+      json['type'],
+      json['learningStyle']
   );
 
   Map<String, Object?> toJson() {
