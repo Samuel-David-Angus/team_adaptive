@@ -6,6 +6,7 @@ import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart
 import 'package:team_adaptive/Module3_Student_Assessment/Models/AssessmentModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Services/AIService.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Services/FeedbackService.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Services/TeacherLessonService.dart';
 
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
@@ -13,6 +14,7 @@ import '../../Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 class FeedbackViewModel extends ChangeNotifier{
   late FeedbackModel feedback;
   TeacherLessonService lessonService = TeacherLessonService();
+  FeedbackService feedbackService = FeedbackService();
   AIServices aiService = AIServices();
 
   Future<bool> createFeedback(AssessmentModel assessment) async {
@@ -25,6 +27,16 @@ class FeedbackViewModel extends ChangeNotifier{
       print(e);
     }
     return false;
+  }
+
+  Future<bool> retrieveFeedbackMaterials(FeedbackModel feedbackHalf) async {
+    feedback = feedbackHalf;
+    List<LessonMaterialModel>? materials = await feedbackService.getFeedbackMaterials(feedback.id, feedback.lessonID);
+    if (materials == null) {
+      throw Exception('Error getting materials');
+    }
+    feedback.setRetrievedMaterials(materials);
+    return true;
   }
 
   Future<String> determineLearningStyle(argsForPrompt) async {

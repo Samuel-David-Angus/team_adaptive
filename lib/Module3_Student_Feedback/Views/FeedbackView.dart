@@ -11,10 +11,11 @@ import '../Models/FeedbackModel.dart';
 var color = Colors.grey[400];
 
 class FeedbackView extends StatelessWidget {
+  final FeedbackModel? feedback;
   final AssessmentModel assessment;
   late Future<bool> successfulFeedbackGenerated;
   bool justInitialized = true;
-  FeedbackView({super.key, required this.assessment});
+  FeedbackView({super.key, required this.assessment, this.feedback});
 
 
   @override
@@ -22,7 +23,11 @@ class FeedbackView extends StatelessWidget {
     final FeedbackViewModel viewModel = Provider.of<FeedbackViewModel>(context);
     if (justInitialized) {
       justInitialized = false;
-      successfulFeedbackGenerated = viewModel.createFeedback(assessment);
+      if (feedback == null) {
+        successfulFeedbackGenerated = viewModel.createFeedback(assessment);
+      } else {
+        successfulFeedbackGenerated = viewModel.retrieveFeedbackMaterials(feedback!);
+      }
     }
     return TemplateView(highlighted: SELECTED.NONE, topRight: userInfo(context), child: FutureBuilder(
         future: successfulFeedbackGenerated,

@@ -2,6 +2,7 @@ import 'package:team_adaptive/Module3_Student_Assessment/Models/AssessmentModel.
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 
 class FeedbackModel {
+  late String id;
   late String courseID;
   late String lessonID;
   late String userID;
@@ -15,6 +16,7 @@ class FeedbackModel {
   late int assessmentTotal;
 
   FeedbackModel.setAll({
+    required this.id,
     required this.courseID,
     required this.lessonID,
     required this.userID,
@@ -39,22 +41,13 @@ class FeedbackModel {
     weakConceptsAndTheirPrereqs = calculateWeakConceptsAndTheirPrereqs(assessment);
   }
 
-  factory FeedbackModel.fromJson(Map<String, dynamic> json, Map<String, LessonMaterialModel> materials) {
-    List<Map<String, dynamic>> lessonMapList= List<Map<String, dynamic>>.from(json["suggestedLessons"]);
-    for (var map in lessonMapList) {
-          map["main"]["lesson"] = materials[map["main"]["lesson"]];
-          map["prereqs"].forEach(
-              (item) {
-                item["lesson"] = materials[item["lesson"]];
-              }
-          );
-        }
-
+  factory FeedbackModel.fromJson(Map<String, dynamic> json, String id) {
     return FeedbackModel.setAll(
+      id: id,
       courseID: json['courseID'],
       lessonID: json['lessonID'],
       userID: json['userID'],
-      suggestedLessons: lessonMapList,
+      suggestedLessons: List<Map<String, dynamic>>.from(json["suggestedLessons"]),
       diagnosedLearningStyle: json['diagnosedLearningStyle'],
       lessonConceptFailureRates: Map<String, double>.from(json['lessonConceptFailureRates']),
       weakConceptsAndTheirPrereqs: Map<String, List<String>>.from(
@@ -94,6 +87,33 @@ class FeedbackModel {
       "learnerScore": learnerScore,
       "assessmentTotal": assessmentTotal,
     };
+  }
+
+  List<LessonMaterialModel> lessonsAsList() {
+    List<LessonMaterialModel> materials = [];
+    for (var map in suggestedLessons) {
+      materials.add(map["main"]["lesson"]);
+      map["prereqs"].forEach(
+              (item) {
+            materials.add(item["lesson"]);
+          }
+      );
+    }
+    return materials;
+  }
+
+  void setRetrievedMaterials(List<LessonMaterialModel> materials) {
+    Map<String, LessonMaterialModel> materialMap = {
+      for (var lessonMaterial in materials) lessonMaterial.id!: lessonMaterial
+    };
+    for (var map in suggestedLessons) {
+      map["main"]["lesson"] = materialMap[map["main"]["lesson"]];
+      map["prereqs"].forEach(
+              (item) {
+            item["lesson"] = materialMap[item["lesson"]];
+          }
+      );
+    }
   }
 
   Map<String, double> calculateLessonConceptFailureRates(AssessmentModel assessment) {
