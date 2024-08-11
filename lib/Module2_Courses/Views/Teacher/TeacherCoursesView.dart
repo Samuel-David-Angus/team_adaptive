@@ -7,12 +7,26 @@ import '../../../Components/TopRightOptions.dart';
 import '../../Models/CourseModel.dart';
 import '../../View_Models/TeacherCourseViewModel.dart';
 
-class TeacherCoursesView extends StatelessWidget {
+class TeacherCoursesView extends StatefulWidget {
   const TeacherCoursesView({super.key});
+
+  @override
+  _TeacherCoursesViewState createState() => _TeacherCoursesViewState();
+}
+
+class _TeacherCoursesViewState extends State<TeacherCoursesView> {
+  final TextEditingController textController = TextEditingController();
+  bool isCodeIncorrect = false;
 
   @override
   Widget build(BuildContext context) {
     TeacherCourseViewModel viewModel = Provider.of<TeacherCourseViewModel>(context);
+
+    void invalidCode() {
+      setState(() {
+        isCodeIncorrect = true;
+      });
+    }
 
     return TemplateView(
         highlighted: SELECTED.COURSES,
@@ -33,7 +47,7 @@ class TeacherCoursesView extends StatelessWidget {
                   children: [
                     Wrap(
                       direction: Axis.horizontal,
-                      spacing: 50.0,
+                      spacing: 70.0,
                       alignment: WrapAlignment.center,
                       children: [ Container(
                           width: MediaQuery.of(context).size.width / 5 - 20,
@@ -62,7 +76,7 @@ class TeacherCoursesView extends StatelessWidget {
                               const SizedBox(height: 20.0),
                               ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, '/joinCourse');
+                                    joinCourseDialog(context, viewModel, 'Enter course code');
                                   },
                                   child: const Text('Join Course')
                               )
@@ -122,4 +136,69 @@ class TeacherCoursesView extends StatelessWidget {
         )
       );
   }
+
+  void joinCourseDialog(BuildContext context, TeacherCourseViewModel viewModel, String message) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                content: SizedBox(
+                  height: 200.0,
+                  width: 300.0, // Set your desired width here
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 20.0),
+                      Text(message),
+                      const SizedBox(height: 20.0),
+                      TextField(
+                        controller: textController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      if (isCodeIncorrect)
+                        const Column(
+                          children: [
+                            Text(
+                              'Incorrect course code',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            SizedBox(height: 10.0),
+                          ],
+                        ),
+                      const SizedBox(height: 20.0),
+                      ElevatedButton(
+                        onPressed: () async {
+                          bool enrolled = await viewModel.joinCourse(textController.text);
+                          if (enrolled) {
+                            Navigator.pushNamed(context, '/Courses');
+                          } else {
+                            setState(() {
+                              isCodeIncorrect = true;
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
+                          backgroundColor: ThemeColor.darkgreyTheme,
+                        ),
+                        child: const Text(
+                          "Enroll",
+                          style: TextStyle(
+                            color: ThemeColor.offwhiteTheme,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
 }
