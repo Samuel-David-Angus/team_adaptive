@@ -48,7 +48,6 @@ class FeedbackModel {
   }
 
   factory FeedbackModel.fromJson(Map<String, dynamic> json, String id) {
-    print('here');
     return FeedbackModel.setAll(
       id: id,
       courseID: json['courseID'],
@@ -76,13 +75,14 @@ class FeedbackModel {
     List<Map<String, dynamic>> modifiedLessonMap = [];
     for (var map in suggestedLessons) {
       Map<String, dynamic> mapCopy = {};
-      mapCopy["main"] = {"concept": map["main"]};
-      map["main"]["lesson"] =
+      mapCopy["main"] = {"concept": map["main"]["concept"], "lesson": map["main"]["lesson"].id};
+      mapCopy["prereqs"] = [];
       map["prereqs"].forEach(
               (item) {
-            item["lesson"] = item["lesson"].id;
+                mapCopy["prereqs"].add({"concept": item["concept"], "lesson": item["lesson"].id});
           }
       );
+      modifiedLessonMap.add(mapCopy);
     }
     return {
       "courseID": courseID,

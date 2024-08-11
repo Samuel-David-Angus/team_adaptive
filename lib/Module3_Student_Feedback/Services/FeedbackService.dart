@@ -14,12 +14,10 @@ class FeedbackService {
   Future<bool> addFeedbackAndLessons(FeedbackModel feedback) async {
     try {
       List<LessonMaterialModel> materialsAsList = feedback.lessonsAsList();
-      print('feedback started');
       DocumentReference docRef = await FirebaseFirestore.instance
           .collection("Feedback")
           .withConverter(fromFirestore: (snapshot, _) => FeedbackModel.fromJson(snapshot.data()!, snapshot.id), toFirestore: (model, _) => model.toJson())
           .add(feedback);
-      print('feedback done');
       var batch = FirebaseFirestore.instance.batch();
       var lessonsRef = docRef.collection("Materials");
       for (var material in materialsAsList) {

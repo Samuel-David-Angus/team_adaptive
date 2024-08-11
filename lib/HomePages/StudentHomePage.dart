@@ -38,10 +38,16 @@ class StudentHomePage extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: Center(
-                  child: ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedbackListView()));
-                  }, 
-                      child: const Text('Feedback')),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedbackListView()));
+                      },
+                          child: const Text('Feedback')),
+                      Text("Current learning style: ${AuthServices().userInfo!.learningStyle}")
+                    ],
+                  ),
                 ),
               ),
             ],
