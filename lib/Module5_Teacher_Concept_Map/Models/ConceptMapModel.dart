@@ -12,29 +12,36 @@ class ConceptMapModel {
   set courseID(String? courseID) {
     _courseID = courseID;
   }
-  set conceptMap (Map<String, List<int>> conceptMap) {
+
+  set conceptMap(Map<String, List<int>> conceptMap) {
     _conceptMap = conceptMap;
   }
+
   set conceptCount(int conceptCount) {
     _conceptCount = conceptCount;
   }
 
-  ConceptMapModel.setAll({required String? courseID, required Map<String, List<int>> conceptMap}) {
+  ConceptMapModel.setAll(
+      {required String? courseID, required Map<String, List<int>> conceptMap}) {
     _courseID = courseID;
     _conceptMap = conceptMap;
     _conceptCount = conceptMap.length;
   }
 
   factory ConceptMapModel.fromJson(Map<String, dynamic> json, String id) {
-    Map<String, List<int>> conceptMapUnordered = (json['conceptMap'] as Map<String, dynamic>? ?? {}).map(
-          (key, value) {
+    Map<String, List<int>> conceptMapUnordered =
+        (json['conceptMap'] as Map<String, dynamic>? ?? {}).map(
+      (key, value) {
         final nonNullKey = key ?? '';
-        final nonNullValue = (value as List<dynamic>?)?.map((e) => e as int).toList() ?? [];
+        final nonNullValue =
+            (value as List<dynamic>?)?.map((e) => e as int).toList() ?? [];
         return MapEntry(nonNullKey, nonNullValue);
       },
     );
     List<String> order = List.from(json['order']).cast<String>();
-    Map<String, List<int>> conceptMapOrdered = {for (String concept in order) concept: conceptMapUnordered[concept]!};
+    Map<String, List<int>> conceptMapOrdered = {
+      for (String concept in order) concept: conceptMapUnordered[concept]!
+    };
     return ConceptMapModel.setAll(
       courseID: id,
       conceptMap: conceptMapOrdered,
@@ -52,11 +59,9 @@ class ConceptMapModel {
     if (_conceptMap.containsKey(concept)) {
       return false;
     }
-    _conceptMap.forEach(
-        (key, value) {
-          value.add(0);
-        }
-    );
+    _conceptMap.forEach((key, value) {
+      value.add(0);
+    });
     List<int> emptyList = List.generate(_conceptCount + 1, (i) => 0);
     _conceptMap[concept] = emptyList;
     _conceptCount++;
@@ -69,11 +74,9 @@ class ConceptMapModel {
     }
     int indexToDelete = indexOfConcept(concept);
     _conceptMap.remove(concept);
-    _conceptMap.forEach(
-        (key, value) {
-          value.removeAt(indexToDelete);
-        }
-    );
+    _conceptMap.forEach((key, value) {
+      value.removeAt(indexToDelete);
+    });
     conceptCount--;
     return true;
   }
@@ -87,7 +90,8 @@ class ConceptMapModel {
   }
 
   int areConnected(String concept1, dynamic concept2) {
-    assert(concept2 is String || concept2 is int, "2nd arg must be either String or int");
+    assert(concept2 is String || concept2 is int,
+        "2nd arg must be either String or int");
     if (concept2 is int) {
       return _conceptMap[concept1]![concept2];
     }
@@ -99,7 +103,7 @@ class ConceptMapModel {
     if (index == -1) {
       return false;
     }
-    int value =  areConnected(concept, index);
+    int value = areConnected(concept, index);
     if (value == 0) {
       _conceptMap[concept]![index] = 1;
     } else {
@@ -131,4 +135,13 @@ class ConceptMapModel {
     return 1;
   }
 
+  List<String> findDirectPrerequisites(String concept) {
+    List<String> prereqs = [];
+    for (int i = 0; i < conceptMap.length; i++) {
+      if (conceptMap[concept]![i] == 1) {
+        prereqs.add(conceptOfIndex(i));
+      }
+    }
+    return prereqs;
+  }
 }

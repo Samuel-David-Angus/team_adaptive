@@ -1,83 +1,171 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Models/AssessmentModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 
 class FeedbackModel {
-  late AssessmentModel assessment;
+  late String id;
+  late String courseID;
+  late String lessonID;
   late String userID;
+  late String feedbackTitle;
+  late DateTime createdDate;
   late List<Map<String, dynamic>> suggestedLessons;
   late String diagnosedLearningStyle;
-  Map<String, double>? _lessonConceptFailureRates;
-  Map<String, List<String>>? _weakConceptsAndTheirPrereqs;
-  int? _skillLevel;
+  late Map<String, double> lessonConceptFailureRates;
+  late Map<String, List<String>> weakConceptsAndTheirPrereqs;
+  late int skillLevel;
+  late String categorizedSkillLevel;
+  late int learnerScore;
+  late int assessmentTotal;
 
-  //assessment must have processAssessment called before passing
-  FeedbackModel.setAll({required this.assessment,  required this.userID});
+  FeedbackModel.setAll({
+    required this.id,
+    required this.courseID,
+    required this.lessonID,
+    required this.userID,
+    required this.feedbackTitle,
+    required this.createdDate,
+    required this.suggestedLessons,
+    required this.diagnosedLearningStyle,
+    required this.lessonConceptFailureRates,
+    required this.weakConceptsAndTheirPrereqs,
+    required this.skillLevel,
+    required this.categorizedSkillLevel,
+    required this.learnerScore,
+    required this.assessmentTotal,
+  });
 
-  int getScore() {
-    return assessment.score!;
+  FeedbackModel.createFromAssessment({required AssessmentModel assessment, required this.userID}) {
+    courseID = assessment.lesson.courseID!;
+    lessonID = assessment.lesson.id!;
+    learnerScore = assessment.score!;
+    assessmentTotal = assessment.questions.length;
+    skillLevel = assessment.calculateSkillLevel();
+    categorizedSkillLevel = assessment.categorizeSkillLevel(skillLevel);
+    lessonConceptFailureRates = calculateLessonConceptFailureRates(assessment);
+    weakConceptsAndTheirPrereqs = calculateWeakConceptsAndTheirPrereqs(assessment);
+    createdDate = DateTime.now();
   }
 
-  Map<String, double> calculateLessonConceptFailureRates() {
-    if (_lessonConceptFailureRates != null) {
-      return _lessonConceptFailureRates!;
+  factory FeedbackModel.fromJson(Map<String, dynamic> json, String id) {
+    return FeedbackModel.setAll(
+      id: id,
+      courseID: json['courseID'],
+      lessonID: json['lessonID'],
+      userID: json['userID'],
+      feedbackTitle: json['feedbackTitle'],
+      createdDate: (json['createdDate'] as Timestamp).toDate(),
+      suggestedLessons: List<Map<String, dynamic>>.from(json["suggestedLessons"]),
+      diagnosedLearningStyle: json['diagnosedLearningStyle'],
+      lessonConceptFailureRates: Map<String, double>.from(json['lessonConceptFailureRates']),
+      weakConceptsAndTheirPrereqs: Map<String, List<String>>.from(
+        json['weakConceptsAndTheirPrereqs'].map((key, value) => MapEntry(
+          key,
+          List<String>.from(value),
+        )),
+      ),
+      skillLevel: json['skillLevel'],
+      categorizedSkillLevel: json['categorizedSkillLevel'],
+      learnerScore: json['learnerScore'],
+      assessmentTotal: json['assessmentTotal'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    List<Map<String, dynamic>> modifiedLessonMap = [];
+    for (var map in suggestedLessons) {
+      Map<String, dynamic> mapCopy = {};
+      mapCopy["main"] = {"concept": map["main"]["concept"], "lesson": map["main"]["lesson"].id};
+      mapCopy["prereqs"] = [];
+      map["prereqs"].forEach(
+              (item) {
+                mapCopy["prereqs"].add({"concept": item["concept"], "lesson": item["lesson"].id});
+          }
+      );
+      modifiedLessonMap.add(mapCopy);
     }
+    return {
+      "courseID": courseID,
+      "lessonID": lessonID,
+      "userID": userID,
+      "feedbackTitle": feedbackTitle,
+      "createdDate": Timestamp.fromDate(createdDate),
+      "suggestedLessons": modifiedLessonMap,
+      "diagnosedLearningStyle": diagnosedLearningStyle,
+      "lessonConceptFailureRates": lessonConceptFailureRates,
+      "weakConceptsAndTheirPrereqs": weakConceptsAndTheirPrereqs,
+      "skillLevel": skillLevel,
+      "categorizedSkillLevel": categorizedSkillLevel,
+      "learnerScore": learnerScore,
+      "assessmentTotal": assessmentTotal,
+    };
+  }
+
+  List<LessonMaterialModel> lessonsAsList() {
+    List<LessonMaterialModel> materials = [];
+    for (var map in suggestedLessons) {
+      materials.add(map["main"]["lesson"]);
+      map["prereqs"].forEach(
+              (item) {
+            materials.add(item["lesson"]);
+          }
+      );
+    }
+    return materials;
+  }
+
+  void setRetrievedMaterials(List<LessonMaterialModel> materials) {
+    Map<String, LessonMaterialModel> materialMap = {
+      for (var lessonMaterial in materials) lessonMaterial.id!: lessonMaterial
+    };
+    print(materialMap);
+    for (var map in suggestedLessons) {
+      print(map);
+      map["main"]["lesson"] = materialMap[map["main"]["lesson"]];
+      map["prereqs"].forEach(
+              (item) {
+            item["lesson"] = materialMap[item["lesson"]];
+          }
+      );
+    }
+  }
+
+  Map<String, double> calculateLessonConceptFailureRates(AssessmentModel assessment) {
     List<String> lessonConcepts = assessment.lesson.concepts!;
     Map<String, double> result = {};
     for (String concept in lessonConcepts) {
       result[concept] = assessment.predictFailureRateOfConcept(concept);
     }
-    _lessonConceptFailureRates = result;
-    return _lessonConceptFailureRates!;
+    return result;
   }
 
-  Map<String, List<String>> calculateWeakConceptsAndTheirPrereqs() {
-    if (_weakConceptsAndTheirPrereqs != null) {
-      return _weakConceptsAndTheirPrereqs!;
-    }
+  Map<String, List<String>> calculateWeakConceptsAndTheirPrereqs(AssessmentModel assessment) {
     Map<String, List<String>> map = {};
-    calculateLessonConceptFailureRates().forEach(
-        (String concept, double failureRate) {
-          if (failureRate >= 50) {
-            List<String> prereqs = [];
-            assessment.conceptMapModel.findAllPrerequisites(concept, prereqs);
-            map[concept] = prereqs;
-          }
-        }
-    );
-    _weakConceptsAndTheirPrereqs = map;
+    lessonConceptFailureRates.forEach((String concept, double failureRate) {
+      if (failureRate >= 50) {
+        List<String> prereqs =
+            assessment.conceptMapModel.findDirectPrerequisites(concept);
+        map[concept] = prereqs;
+      }
+    });
     return map;
   }
 
   List<String> findWeakConcepts() {
-    if (_weakConceptsAndTheirPrereqs == null) {
-      calculateWeakConceptsAndTheirPrereqs();
-    }
-    return _weakConceptsAndTheirPrereqs!.keys.toList();
+    return weakConceptsAndTheirPrereqs.keys.toList();
   }
 
- List<String> determinePrereqsToLearn() {
-   if (_weakConceptsAndTheirPrereqs == null) {
-     calculateWeakConceptsAndTheirPrereqs();
-   }
-   List<String> prereqsToLearn = [];
-   _weakConceptsAndTheirPrereqs!.forEach(
-       (String concept, List<String> prereqs) {
-         prereqsToLearn.addAll(prereqs);
-       }
-   );
-   return prereqsToLearn;
- }
-
- int skillLevel() {
-  if (_skillLevel != null) {
-    return _skillLevel!;
+  List<String> determinePrereqsToLearn() {
+    List<String> prereqsToLearn = [];
+    weakConceptsAndTheirPrereqs
+        .forEach((String concept, List<String> prereqs) {
+      for (var element in prereqs) {
+        if (!prereqsToLearn.contains(element)) {
+          prereqsToLearn.add(element);
+        }
+      }
+    });
+    return prereqsToLearn;
   }
-  _skillLevel = assessment.calculateSkillLevel();
-  return _skillLevel!;
- }
-
- String categorizedSkillLevel() {
-  return assessment.categorizeSkillLevel(_skillLevel!);
- }
-
 
 }

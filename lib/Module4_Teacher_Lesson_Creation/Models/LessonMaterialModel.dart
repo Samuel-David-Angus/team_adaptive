@@ -13,7 +13,7 @@ class LessonMaterialModel {
     required String id,
     required String title,
     required String author,
-    required String type,
+    required String? type,
     required String lessonID,
     required String src,
     required String learningStyle,
@@ -71,7 +71,7 @@ class LessonMaterialModel {
   }
 
   // fromJson factory method
-  factory LessonMaterialModel.fromJson(Map<String, dynamic> json, String type, String lessonID, String id) {
+  factory LessonMaterialModel.fromJson(Map<String, dynamic> json, String? type, String lessonID, String id) {
     return LessonMaterialModel.setAll(
       id: id,
       title: json['title'],
