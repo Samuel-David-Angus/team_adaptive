@@ -4,6 +4,8 @@ import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
+import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
 
 class StudentHomePage extends StatefulWidget {
   const StudentHomePage({super.key});
@@ -79,6 +81,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       fontSize: 16,
                       height: 1.5,
                     ),
+
                   ),
                   const SizedBox(height: 50.0),
                   Row(children: [
@@ -160,6 +163,25 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ],
                   ),
                 ],
+
+                  )
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                flex: 4,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedbackListView()));
+                      },
+                          child: const Text('Feedback')),
+                      Text("Current learning style: ${AuthServices().userInfo!.learningStyle}")
+                    ],
+                  ),
+                ),
+
               ),
             ),
           ],
