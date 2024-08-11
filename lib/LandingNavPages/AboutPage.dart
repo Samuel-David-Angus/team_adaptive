@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../Components/TemplateView.dart';
@@ -9,9 +11,10 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authServices = Provider.of<AuthServices>(context);
     return TemplateView(
       highlighted: SELECTED.HOME,
-      topRight: authOptions(context, ''),
+      topRight: authServices != null ? userInfo(context) : authOptions(context, ''),
       child: SingleChildScrollView(
         child: Column(
           children: [

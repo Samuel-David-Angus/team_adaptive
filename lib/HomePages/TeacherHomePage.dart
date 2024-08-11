@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
-
-import '../Module1_User_Management/Services/AuthServices.dart';
 
 class TeacherHomePage extends StatelessWidget {
 
@@ -13,10 +10,9 @@ class TeacherHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authServices = Provider.of<AuthServices>(context);
     return TemplateView(
         highlighted: SELECTED.HOME,
-        topRight: authOptions(context, ''),
+        topRight: userInfo(context),
         child: SingleChildScrollView(
             child: Stack(
             children: [

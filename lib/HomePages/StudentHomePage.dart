@@ -28,7 +28,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
     return TemplateView(
       highlighted: SELECTED.HOME,
-      topRight: authOptions(context, ''),
+      topRight: userInfo(context),
       child: SingleChildScrollView(
         child: Stack(
           children: [
