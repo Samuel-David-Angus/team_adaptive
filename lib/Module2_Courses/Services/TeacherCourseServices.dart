@@ -1,6 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
+import 'package:flutter/material.dart';
 
 import '../../Module1_User_Management/Models/User.dart';
 import '../Models/CourseModel.dart';
@@ -29,7 +29,7 @@ class TeacherCourseServices {
       return courses;
 
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
     return null;
   }
@@ -50,7 +50,7 @@ class TeacherCourseServices {
         await ref.doc(course.id).set(course);
       }
     } catch (e) {
-      print('Error adding course: $e');
+      debugPrint('Error adding course: $e');
     }
     return course;
   }
@@ -63,7 +63,7 @@ class TeacherCourseServices {
           .update({'teachers': FieldValue.arrayUnion([user.id])});
       return true;
     } catch (e) {
-      print('Error joining course: $e');
+      debugPrint('Error joining course: $e');
     }
     return false;
   }

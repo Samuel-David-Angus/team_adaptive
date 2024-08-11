@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
-import 'package:team_adaptive/Module1_User_Management/Views/LoginView.dart';
 
 import '../Module1_User_Management/Services/AuthServices.dart';
 
@@ -33,7 +31,6 @@ class TemplateView extends StatelessWidget {
       if (index == highlighted.index && index != SELECTED.NONE.index) {
         text = Text(
           navBtns[index],
-          style: const TextStyle(decoration: TextDecoration.underline),
         );
       }
       return TextButton(
@@ -45,8 +42,25 @@ class TemplateView extends StatelessWidget {
 
     return SelectionArea(
       child: Scaffold(
-        appBar: AppBar(
-            title: Wrap(spacing: 100, children: topLeft), actions: topRight),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 6,
+                  blurRadius: 6,
+                  offset: const Offset(0, 4), // Positive offset for bottom shadow
+                ),
+              ],
+            ),
+            child: AppBar(
+              title: Wrap(spacing: 100, children: topLeft),
+              actions: topRight,
+            ),
+          ),
+        ),
         body: child,
       ),
     );

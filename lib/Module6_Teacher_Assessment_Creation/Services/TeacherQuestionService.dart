@@ -1,5 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
 import '../Models/QuestionModel.dart';
 
 class TeacherQuestionService {
@@ -23,7 +25,7 @@ class TeacherQuestionService {
           .add(question);
       return true;
     } catch (e) {
-      print("Error adding questions: $e");
+      debugPrint("Error adding questions: $e");
     }
     return false;
   }
@@ -38,7 +40,7 @@ class TeacherQuestionService {
           .delete();
       return true;
     } catch (e) {
-      print("Error deleting question: $e");
+      debugPrint("Error deleting question: $e");
     }
     return false;
   }
@@ -56,7 +58,7 @@ class TeacherQuestionService {
           .set(question);
       return true;
     } catch (e) {
-      print("Error editing concept map: $e ");
+      debugPrint("Error editing concept map: $e ");
     }
     return false;
   }
@@ -79,7 +81,7 @@ class TeacherQuestionService {
       );
       return questions;
     } catch (e) {
-      print("Error getting questions: $e");
+      debugPrint("Error getting questions: $e");
       rethrow;
     }
     return null;
@@ -101,7 +103,7 @@ class TeacherQuestionService {
 
       return true;
     } catch (e) {
-      print("Error updating questions: $e");
+      debugPrint("Error updating questions: $e");
     }
     return false;
   }
@@ -131,7 +133,7 @@ class TeacherQuestionService {
       await ref.add(question);
       return true;
     } catch (e) {
-      print("Error adding lesson: $e");
+      debugPrint("Error adding lesson: $e");
     }
     return false;
   }
@@ -146,7 +148,7 @@ class TeacherQuestionService {
           .doc(question.id);
       return true;
     } catch (e) {
-      print("Error editing concept map: $e ");
+      debugPrint("Error editing concept map: $e ");
     }
     return false;
   }

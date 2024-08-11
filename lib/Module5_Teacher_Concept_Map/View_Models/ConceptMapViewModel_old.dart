@@ -22,7 +22,7 @@ class ConceptMapViewModel extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      print('Concept map is not available.');
+      debugPrint('Concept map is not available.');
     }
     return false;
   }
@@ -39,7 +39,7 @@ class ConceptMapViewModel extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      print("Error deleting concept: $e");
+      debugPrint("Error deleting concept: $e");
     }
     return false;
   }
@@ -63,7 +63,7 @@ class ConceptMapViewModel extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      print("Error setting prerequisite: $e");
+      debugPrint("Error setting prerequisite: $e");
     }
     return false;
   }
@@ -72,7 +72,7 @@ class ConceptMapViewModel extends ChangeNotifier {
     try {
       return await service.editConceptMap(map!);
     } catch (e) {
-      print("Error saving map: $e");
+      debugPrint("Error saving map: $e");
     }
     return false;
   }

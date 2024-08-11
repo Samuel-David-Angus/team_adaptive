@@ -48,7 +48,7 @@ class AuthServices with ChangeNotifier{
       }
       return false;
     } catch (e) {
-      print("some error occured");
+      debugPrint("some error occured");
       return false;
     }
   }
@@ -66,7 +66,7 @@ class AuthServices with ChangeNotifier{
       return false;
 
     } catch (e) {
-      print("some error occured $e ");
+      debugPrint("some error occured $e ");
       return false;
     }
   }
@@ -90,11 +90,11 @@ class AuthServices with ChangeNotifier{
           var data = documentSnapshot.data();
           _userInfo = data as User;
         } else {
-          print('User document does not exist in Firestore');
+          debugPrint('User document does not exist in Firestore');
           _userInfo = null;
         }
       } catch (e) {
-        print('Error fetching user info: $e');
+        debugPrint('Error fetching user info: $e');
         _userInfo = null;
       }
       notifyListeners();
@@ -110,9 +110,9 @@ class AuthServices with ChangeNotifier{
             fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (user, _) => user.toJson())
           .set(user);
-      print('User information added to Firestore');
+      debugPrint('User information added to Firestore');
     } catch (e) {
-      print('Error adding user information to Firestore: $e');
+      debugPrint('Error adding user information to Firestore: $e');
       // Handle error as needed
     }
   }

@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherSelectLearningStyleView.dart';
-import '../View_Models/SelectLearningStyleViewModel.dart';
 
+import '../View_Models/SelectConceptsViewModel.dart';
+import '../View_Models/SelectLearningStyleViewModel.dart';
 import '../View_Models/TeacherLessonViewModel.dart';
 import 'TeacherSelectConceptsView.dart';
-import '../View_Models/SelectConceptsViewModel.dart';
 
 class TeacherAddLessonMaterialView extends StatelessWidget {
   final TextEditingController titleController = TextEditingController();
@@ -29,9 +29,9 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
     List<String>? selectedConcepts;
     String? learningStyle;
     return AlertDialog(
-      title: Text('Add material'),
+      title: const Text('Add material'),
       content: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

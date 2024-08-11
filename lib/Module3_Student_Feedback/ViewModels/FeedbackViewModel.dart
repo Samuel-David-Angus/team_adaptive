@@ -32,7 +32,7 @@ class FeedbackViewModel extends ChangeNotifier{
       await feedbackService.addFeedbackAndLessons(feedback);
       return true;
     } on Exception catch (e) {
-      print(e);
+      debugPrint("$e");
     }
     return false;
   }

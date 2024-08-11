@@ -236,9 +236,9 @@ class TeacherAddQuestionView extends StatelessWidget {
                               ConceptMapModel conceptMapModel = snapshot.data!;
                               QuestionModel createdQuestion = addEditViewModel
                                   .createQuestionModel(userID, conceptMapModel);
-                              print(createdQuestion);
+                              debugPrint("$createdQuestion");
                               bool result = await submit(createdQuestion);
-                              print('finish');
+                              debugPrint('finish');
                               if (result) {
                                 showMessageDialog(
                                     context, "Successfully added question");

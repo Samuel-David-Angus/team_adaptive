@@ -32,12 +32,7 @@ class StudentCourseOverviewView extends StatelessWidget {
             'Course Code: ${course.code!}',
             style: TextStyle(fontSize: 20),
           ),
-          SizedBox(height: 10),
-          Text(
-            'Course ID: ${course.id!}',
-            style: TextStyle(fontSize: 20),
-          ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
                 Navigator.push(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 
@@ -21,7 +22,7 @@ class TeacherLessonService {
           .update({"isSetupComplete": true});
       return true;
     } catch (e) {
-      print("Error confirming setup complete: $e");
+      debugPrint("Error confirming setup complete: $e");
     }
     return false;
   }
@@ -41,7 +42,7 @@ class TeacherLessonService {
       await ref.add(lesson);
       return true;
     } catch (e) {
-      print("Error adding lesson: $e");
+      debugPrint("Error adding lesson: $e");
     }
     return false;
   }
@@ -62,7 +63,7 @@ class TeacherLessonService {
         list.add(snapshot.data() as LessonModel);
       }
     } catch (e) {
-      print("Error getting lessons: $e");
+      debugPrint("Error getting lessons: $e");
     }
     return list;
   }
@@ -87,7 +88,7 @@ class TeacherLessonService {
         list.add(documentSnapshot.data() as LessonMaterialModel);
       }
     } catch (e) {
-      print("Error getting lesson materials with type $type: $e");
+      debugPrint("Error getting lesson materials with type $type: $e");
     }
     return list;
   }
@@ -111,7 +112,7 @@ class TeacherLessonService {
           .add(lessonMaterial);
       return true;
     } catch (e) {
-      print("Error adding lesson material: $e");
+      debugPrint("Error adding lesson material: $e");
     }
     return false;
   }
@@ -132,7 +133,7 @@ class TeacherLessonService {
       await batch.commit();
       return true;
     } catch (e) {
-      print('Error adding multiple materials: $e');
+      debugPrint('Error adding multiple materials: $e');
     }
     return false;
   }
@@ -157,7 +158,7 @@ class TeacherLessonService {
           .set(lessonMaterial);
       return true;
     } catch (e) {
-      print("Error adding lesson material: $e");
+      debugPrint("Error adding lesson material: $e");
     }
     return false;
   }
@@ -175,7 +176,7 @@ class TeacherLessonService {
           .delete();
       return true;
     } catch (e) {
-      print("Error adding lesson material: $e");
+      debugPrint("Error adding lesson material: $e");
     }
     return false;
   }

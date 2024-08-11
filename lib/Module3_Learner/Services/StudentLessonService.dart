@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
@@ -27,7 +28,7 @@ class StudentLessonService {
         list.add(snapshot.data() as LessonModel);
       }
     } catch(e) {
-      print("Error getting lessons: $e");
+      debugPrint("Error getting lessons: $e");
     }
     return list;
   }
@@ -51,7 +52,7 @@ class StudentLessonService {
         list.add(documentSnapshot.data() as LessonMaterialModel);
       }
     } catch (e) {
-      print("Error getting lesson materials with type $type: $e");
+      debugPrint("Error getting lesson materials with type $type: $e");
     }
     return list;
   }
@@ -73,9 +74,9 @@ class StudentLessonService {
       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
         list.add(documentSnapshot.data() as LessonMaterialModel);
       }
-      print('got materials');
+      debugPrint('got materials');
     } catch (e) {
-      print("Error getting lesson materials with type $type: $e");
+      debugPrint("Error getting lesson materials with type $type: $e");
     }
     return list;
   }
@@ -99,7 +100,7 @@ class StudentLessonService {
       }
 
     } catch (e) {
-      print("Error getting material by id: $e");
+      debugPrint("Error getting material by id: $e");
     }
     return null;
   }
