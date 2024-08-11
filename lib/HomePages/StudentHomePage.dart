@@ -7,6 +7,8 @@ import 'package:team_adaptive/Theme/ThemeColor.dart';
 import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
 
+import '../Module1_User_Management/Services/AuthServices.dart';
+
 class StudentHomePage extends StatefulWidget {
   const StudentHomePage({super.key});
 
@@ -183,7 +185,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                 ),
 
               ),
-            ),
           ],
         ),
       ),

@@ -78,12 +78,12 @@ class RegisterView extends StatelessWidget {
                     children: const <Widget>[
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 124.0, vertical: 8.0),
+                            horizontal: 100.0, vertical: 8.0),
                         child: Text('Student'),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 124.0, vertical: 8.0),
+                            horizontal: 100.0, vertical: 8.0),
                         child: Text('Teacher'),
                       ),
                     ],

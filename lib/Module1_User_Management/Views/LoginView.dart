@@ -54,147 +54,152 @@ class LoginView extends StatelessWidget {
               ),
               Expanded(
                 flex: 4,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 50),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Consumer<LoginViewModel>(
-                        builder: (context, loginViewModel, child) {
-                      return ToggleButtons(
-                        isSelected: [
-                          loginViewModel.userType == UserType.student,
-                          loginViewModel.userType == UserType.teacher,
-                        ],
-                        onPressed: (int index) {
-                          loginViewModel.userType =
-                              index == 0 ? UserType.student : UserType.teacher;
-                        },
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 124.0, vertical: 8.0),
-                            child: Text('Student'),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 124.0, vertical: 8.0),
-                            child: Text('Teacher'),
-                          ),
-                        ],
-                      );
-                    }),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: 600.0,
-                      child: TextField(
-                        onChanged: (value) {
-                          viewModel.email = value;
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          floatingLabelStyle: TextStyle(
-                            color: ThemeColor.blueTheme,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: ThemeColor
-                                    .darkgreyTheme), // Default border color
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: ThemeColor.blueTheme,
-                                width: 2), // Border color when focused
-                          ),
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      const Text(
+                        'Login',
+                        style: TextStyle(fontSize: 50),
                       ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    SizedBox(
-                      width: 600.0,
-                      child: TextField(
-                        onChanged: (value) {
-                          viewModel.password = value;
-                        },
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          floatingLabelStyle: TextStyle(
-                            color: ThemeColor.blueTheme,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: ThemeColor
-                                    .darkgreyTheme), // Default border color
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: ThemeColor.blueTheme,
-                                width: 2), // Border color when focused
-                          ),
-                        ),
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    const SizedBox(height: 60.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              'Don\'t have an account? ',
-                              style: TextStyle(fontSize: 16),
+                      Consumer<LoginViewModel>(
+                          builder: (context, loginViewModel, child) {
+                        return SizedBox(
+                          height: 50,
+                          child: ToggleButtons(
+                            isSelected: [
+                              loginViewModel.userType == UserType.student,
+                              loginViewModel.userType == UserType.teacher,
+                            ],
+                            onPressed: (int index) {
+                              loginViewModel.userType =
+                                  index == 0 ? UserType.student : UserType.teacher;
+                            },
+                            children: const <Widget>[
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 100),
+                              child: Text('Student', textAlign: TextAlign.center),
+                              ),
+                              Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 100),
+                              child: Text('Teacher', textAlign: TextAlign.center),
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        width: 600.0,
+                        child: TextField(
+                          onChanged: (value) {
+                            viewModel.email = value;
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            floatingLabelStyle: TextStyle(
+                              color: ThemeColor.blueTheme,
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                    context, '/register');
-                              },
-                              child: const Text(
-                                'Register',
-                                style: TextStyle(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .darkgreyTheme), // Default border color
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
                                   color: ThemeColor.blueTheme,
-                                  fontSize: 16,
+                                  width: 2), // Border color when focused
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      SizedBox(
+                        width: 600.0,
+                        child: TextField(
+                          onChanged: (value) {
+                            viewModel.password = value;
+                          },
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                            floatingLabelStyle: TextStyle(
+                              color: ThemeColor.blueTheme,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .darkgreyTheme), // Default border color
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor.blueTheme,
+                                  width: 2), // Border color when focused
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 60.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                'Don\'t have an account? ',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/register');
+                                },
+                                child: const Text(
+                                  'Register',
+                                  style: TextStyle(
+                                    color: ThemeColor.blueTheme,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            bool validInput = viewModel.validate();
-                            if (!validInput) {
-                              msgDialogShow(context,
-                                  'Make sure the fields are all filled correctly. Email must have the correct format. Password must not be blank');
-                            } else {
-                              bool isLoggedIn = await viewModel.login();
-                              if (isLoggedIn) {
-                                Navigator.pushReplacementNamed(
-                                    context, '/Home');
-                              } else {
-                                msgDialogShow(
-                                    context, 'Login Failed! Pls try again');
-                              }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 92, vertical: 16),
-                            backgroundColor: ThemeColor.darkgreyTheme,
-                            foregroundColor: ThemeColor.offwhiteTheme,
+                            ],
                           ),
-                          child: const Text('Login',
-                              style: TextStyle(fontSize: 18)),
-                        ),
-                      ],
-                    ),
-                  ],
+                          ElevatedButton(
+                            onPressed: () async {
+                              bool validInput = viewModel.validate();
+                              if (!validInput) {
+                                msgDialogShow(context,
+                                    'Make sure the fields are all filled correctly. Email must have the correct format. Password must not be blank');
+                              } else {
+                                bool isLoggedIn = await viewModel.login();
+                                if (isLoggedIn) {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/Home');
+                                } else {
+                                  msgDialogShow(
+                                      context, 'Login Failed! Pls try again');
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                              backgroundColor: ThemeColor.darkgreyTheme,
+                              foregroundColor: ThemeColor.offwhiteTheme,
+                            ),
+                            child: const Text('Login',
+                                style: TextStyle(fontSize: 18)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
