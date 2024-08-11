@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Models/AssessmentModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 
@@ -6,6 +7,8 @@ class FeedbackModel {
   late String courseID;
   late String lessonID;
   late String userID;
+  late String feedbackTitle;
+  late DateTime createdDate;
   late List<Map<String, dynamic>> suggestedLessons;
   late String diagnosedLearningStyle;
   late Map<String, double> lessonConceptFailureRates;
@@ -20,6 +23,8 @@ class FeedbackModel {
     required this.courseID,
     required this.lessonID,
     required this.userID,
+    required this.feedbackTitle,
+    required this.createdDate,
     required this.suggestedLessons,
     required this.diagnosedLearningStyle,
     required this.lessonConceptFailureRates,
@@ -47,6 +52,8 @@ class FeedbackModel {
       courseID: json['courseID'],
       lessonID: json['lessonID'],
       userID: json['userID'],
+      feedbackTitle: json['feedbackTitle'],
+      createdDate: (json['createdDate'] as Timestamp).toDate(),
       suggestedLessons: List<Map<String, dynamic>>.from(json["suggestedLessons"]),
       diagnosedLearningStyle: json['diagnosedLearningStyle'],
       lessonConceptFailureRates: Map<String, double>.from(json['lessonConceptFailureRates']),
@@ -78,6 +85,8 @@ class FeedbackModel {
       "courseID": courseID,
       "lessonID": lessonID,
       "userID": userID,
+      "feedbackTitle": feedbackTitle,
+      "createdDate": Timestamp.fromDate(createdDate),
       "suggestedLessons": modifiedLessonMap,
       "diagnosedLearningStyle": diagnosedLearningStyle,
       "lessonConceptFailureRates": lessonConceptFailureRates,
