@@ -16,7 +16,7 @@ class TeacherHomePage extends StatelessWidget {
     final authServices = Provider.of<AuthServices>(context);
     return TemplateView(
         highlighted: SELECTED.HOME,
-        topRight: authOptions(context, ''),
+        topRight: userInfo(context),
         child: SingleChildScrollView(
             child: Stack(
             children: [
