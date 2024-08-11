@@ -13,14 +13,17 @@ class FeedbackService {
 
   Future<bool> addFeedbackAndLessons(FeedbackModel feedback) async {
     try {
+      List<LessonMaterialModel> materialsAsList = feedback.lessonsAsList();
+      print('feedback started');
       DocumentReference docRef = await FirebaseFirestore.instance
           .collection("Feedback")
           .withConverter(fromFirestore: (snapshot, _) => FeedbackModel.fromJson(snapshot.data()!, snapshot.id), toFirestore: (model, _) => model.toJson())
           .add(feedback);
+      print('feedback done');
       var batch = FirebaseFirestore.instance.batch();
       var lessonsRef = docRef.collection("Materials");
-      for (var material in feedback.lessonsAsList()) {
-        batch.set(lessonsRef.doc(), material);
+      for (var material in materialsAsList) {
+        batch.set(lessonsRef.doc(material.id), material.toJson());
       }
       await batch.commit();
       return true;
@@ -66,12 +69,13 @@ class FeedbackService {
       QuerySnapshot materialsSnapshot = await FirebaseFirestore.instance
           .collection("Feedback")
           .doc(feedbackID)
-          .collection(feedbackID)
+          .collection("Materials")
           .withConverter(fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(snapshot.data()!, null, lessonID, snapshot.id), toFirestore: (model, _) => model.toJson())
           .get();
       for (var snapshot in materialsSnapshot.docs) {
         materials.add(snapshot.data() as LessonMaterialModel);
       }
+      return materials;
     } catch (e) {
       print("Error getting feedback materials: $e");
     }

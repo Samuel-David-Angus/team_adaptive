@@ -44,9 +44,11 @@ class FeedbackModel {
     categorizedSkillLevel = assessment.categorizeSkillLevel(skillLevel);
     lessonConceptFailureRates = calculateLessonConceptFailureRates(assessment);
     weakConceptsAndTheirPrereqs = calculateWeakConceptsAndTheirPrereqs(assessment);
+    createdDate = DateTime.now();
   }
 
   factory FeedbackModel.fromJson(Map<String, dynamic> json, String id) {
+    print('here');
     return FeedbackModel.setAll(
       id: id,
       courseID: json['courseID'],
@@ -71,16 +73,17 @@ class FeedbackModel {
   }
 
   Map<String, dynamic> toJson() {
-    List<Map<String, dynamic>> modifiedLessonMap = List<Map<String, dynamic>>.from(suggestedLessons);
-    for (var map in modifiedLessonMap) {
-      map["main"]["lesson"] = map["main"]["lesson"].id;
+    List<Map<String, dynamic>> modifiedLessonMap = [];
+    for (var map in suggestedLessons) {
+      Map<String, dynamic> mapCopy = {};
+      mapCopy["main"] = {"concept": map["main"]};
+      map["main"]["lesson"] =
       map["prereqs"].forEach(
               (item) {
             item["lesson"] = item["lesson"].id;
           }
       );
     }
-
     return {
       "courseID": courseID,
       "lessonID": lessonID,
@@ -115,7 +118,9 @@ class FeedbackModel {
     Map<String, LessonMaterialModel> materialMap = {
       for (var lessonMaterial in materials) lessonMaterial.id!: lessonMaterial
     };
+    print(materialMap);
     for (var map in suggestedLessons) {
+      print(map);
       map["main"]["lesson"] = materialMap[map["main"]["lesson"]];
       map["prereqs"].forEach(
               (item) {

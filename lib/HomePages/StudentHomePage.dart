@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
 
 import '../Module1_User_Management/Services/AuthServices.dart';
 
@@ -34,9 +35,14 @@ class StudentHomePage extends StatelessWidget {
                   )
               ),
               const SizedBox(width: 16.0),
-              const Expanded(
+              Expanded(
                 flex: 4,
-                child: Placeholder(),
+                child: Center(
+                  child: ElevatedButton(onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedbackListView()));
+                  }, 
+                      child: const Text('Feedback')),
+                ),
               ),
             ],
           ),

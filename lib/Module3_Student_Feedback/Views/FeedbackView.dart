@@ -12,10 +12,10 @@ var color = Colors.grey[400];
 
 class FeedbackView extends StatelessWidget {
   final FeedbackModel? feedback;
-  final AssessmentModel assessment;
+  final AssessmentModel? assessment;
   late Future<bool> successfulFeedbackGenerated;
   bool justInitialized = true;
-  FeedbackView({super.key, required this.assessment, this.feedback});
+  FeedbackView({super.key, this.assessment, this.feedback});
 
 
   @override
@@ -23,8 +23,8 @@ class FeedbackView extends StatelessWidget {
     final FeedbackViewModel viewModel = Provider.of<FeedbackViewModel>(context);
     if (justInitialized) {
       justInitialized = false;
-      if (feedback == null) {
-        successfulFeedbackGenerated = viewModel.createFeedback(assessment);
+      if (feedback == null && assessment != null) {
+        successfulFeedbackGenerated = viewModel.createFeedback(assessment!);
       } else {
         successfulFeedbackGenerated = viewModel.retrieveFeedbackMaterials(feedback!);
       }
@@ -62,9 +62,9 @@ class FeedbackView extends StatelessWidget {
                                   const SizedBox(height: 15,),
                                   Text('Score: ${viewModel.feedback.learnerScore}', style: const TextStyle(fontSize: 24.0),),
                                   const SizedBox(height: 15,),
-                                  Text('Learner Skill level: ${assessment.calculateSkillLevel()}', style: const TextStyle(fontSize: 24.0),),
+                                  Text('Learner Skill level: ${viewModel.feedback.skillLevel}', style: const TextStyle(fontSize: 24.0),),
                                   const SizedBox(height: 15,),
-                                  Text('Category: ${assessment.categorizeSkillLevel(assessment.calculateSkillLevel())}', style: const TextStyle(fontSize: 24.0),),
+                                  Text('Category: ${viewModel.feedback.categorizedSkillLevel}', style: const TextStyle(fontSize: 24.0),),
                                   const SizedBox(height: 15,),
                                   Text('Suggested Learning Style: ${viewModel.feedback.diagnosedLearningStyle}', style: const TextStyle(fontSize: 24.0),),
                                   const SizedBox(height: 15,),

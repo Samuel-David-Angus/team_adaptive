@@ -15,13 +15,21 @@ class FeedbackViewModel extends ChangeNotifier{
   late FeedbackModel feedback;
   TeacherLessonService lessonService = TeacherLessonService();
   FeedbackService feedbackService = FeedbackService();
+  AuthServices authServices = AuthServices();
   AIServices aiService = AIServices();
 
   Future<bool> createFeedback(AssessmentModel assessment) async {
     try {
-      feedback = FeedbackModel.createFromAssessment(assessment: assessment, userID: AuthServices().userInfo!.id!);
+      feedback = FeedbackModel.createFromAssessment(assessment: assessment, userID: authServices.userInfo!.id!);
+      feedback.feedbackTitle = "${assessment.lesson.lessonTitle!} Feedback";
       feedback.diagnosedLearningStyle = await determineLearningStyle("random args");
-      feedback.suggestedLessons = await getSuggestedMaterials();
+      AuthServices().userInfo!.learningStyle = feedback.diagnosedLearningStyle;
+      var res = await Future.wait([
+        feedbackService.updateUserLearningStyle(authServices.userInfo!.id!, feedback.diagnosedLearningStyle),
+        getSuggestedMaterials()
+      ]);
+      feedback.suggestedLessons = res[1] as List<Map<String, dynamic>>;
+      await feedbackService.addFeedbackAndLessons(feedback);
       return true;
     } on Exception catch (e) {
       print(e);
@@ -79,5 +87,9 @@ class FeedbackViewModel extends ChangeNotifier{
 
   Map<String, double> getConceptFailureRates() {
     return feedback.lessonConceptFailureRates;
+  }
+
+  Future<List<FeedbackModel>?> getUserFeedbacks() async {
+    return await feedbackService.getFeedbackByLearnerID(authServices.userInfo!.id!);
   }
 }
