@@ -236,14 +236,14 @@ class QuestionModel{
     _difficulty = (10 * _relatedConceptCount) ~/ conceptMap.conceptCount;
     adjustDifficulty();
 
-    // Print stuff
+    // debugPrint stuff
     List<String> letters = ["A", "B", "C", "D"];
-    print("\nQuestion: $sentence");
-    print("\n\tChoices:");
+    debugPrint("\nQuestion: $sentence");
+    debugPrint("\n\tChoices:");
     for (int i = 0; i < _choices.length; i++) {
-      print("\n\t${letters[i]}. ${_choices[i]}");
+      debugPrint("\n\t${letters[i]}. ${_choices[i]}");
     }
-    print("\n\tDifficulty of QuestionModel(QDRT): $_difficulty \n\tAdjusted Difficulty: $_adjustedDifficulty"
+    debugPrint("\n\tDifficulty of QuestionModel(QDRT): $_difficulty \n\tAdjusted Difficulty: $_adjustedDifficulty"
         "\n\tRelatedness of QuestionModelto Concept (TIRT):");
 
     // SET TEST ITEM RELATIONSHIPS (TIRT)
@@ -252,7 +252,7 @@ class QuestionModel{
       if (_testItemRelationships[i] != 0) {
         _testItemRelationships[i] = (5 * conceptMap.conceptDepths[i]) ~/ questionDepth;
       }
-      print("\n\t\t ${conceptMap.concepts[i]} : ${_testItemRelationships[i]}");
+      debugPrint("\n\t\t ${conceptMap.concepts[i]} : ${_testItemRelationships[i]}");
     }
   }
 

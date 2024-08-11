@@ -40,7 +40,7 @@ class StudentLessonViewModel extends ChangeNotifier {
       await dataService.editStudentData(studentData);
       return materials[0];
     } on Exception catch (e) {
-      print("Error getting main lesson in viewmodel: $e");
+      debugPrint("Error getting main lesson in viewmodel: $e");
     }
   }
 
@@ -54,7 +54,7 @@ class StudentLessonViewModel extends ChangeNotifier {
       dataService.editStudentData(studentData);
       return true;
     } on Exception catch (e) {
-      print("Error completing main lesson in viewmodel: $e");
+      debugPrint("Error completing main lesson in viewmodel: $e");
     }
     return false;
   }

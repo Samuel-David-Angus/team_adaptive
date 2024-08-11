@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import '../../Module1_User_Management/Models/User.dart';
 import '../Models/CourseModel.dart';
@@ -29,7 +30,7 @@ class StudentCourseServices {
       return courses;
 
     } catch (e) {
-      print('Error getting courses: $e');
+      debugPrint('Error getting courses: $e');
     }
     return null;
   }
@@ -42,7 +43,7 @@ class StudentCourseServices {
           .update({'students': FieldValue.arrayUnion([user.id])});
       return true;
     } catch (e) {
-      print('Error in enrolling: $e');
+      debugPrint('Error in enrolling: $e');
     }
     return false;
   }
@@ -61,7 +62,7 @@ class StudentCourseServices {
         return data as Course;
       }
     } catch (e) {
-      print('Error getting course: $e');
+      debugPrint('Error getting course: $e');
     }
     return null;
 

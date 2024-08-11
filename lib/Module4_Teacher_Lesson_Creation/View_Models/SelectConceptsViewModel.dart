@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
-import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel_old.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
 class SelectConceptsViewModel extends ChangeNotifier {
@@ -35,7 +34,7 @@ class SelectConceptsViewModel extends ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print("Error loading concept data: $e");
+      debugPrint("Error loading concept data: $e");
     }
   }
 
@@ -65,13 +64,13 @@ class SelectConceptsViewModel extends ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print("Error loading concept data: $e");
+      debugPrint("Error loading concept data: $e");
     }
   }
 
   void addToSelected(String concept) {
     selectedItems!.add(concept);
-    print(selectedItems);
+    debugPrint("$selectedItems");
     notifyListeners();
   }
 

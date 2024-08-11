@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 
 class ConceptMapService {
@@ -21,7 +22,7 @@ class ConceptMapService {
           .set(map);
       return true;
     } catch (e) {
-      print("Error editing concept map: $e ");
+      debugPrint("Error editing concept map: $e ");
     }
     return false;
   }
@@ -38,7 +39,7 @@ class ConceptMapService {
           .set(map);
       return true;
     } catch (e) {
-      print("Error adding concept map: $e ");
+      debugPrint("Error adding concept map: $e ");
     }
     return false;
   }
@@ -60,7 +61,7 @@ class ConceptMapService {
       }
 
     } catch (e) {
-      print("Error getting concept map: $e");
+      debugPrint("Error getting concept map: $e");
     }
     return null;
   }

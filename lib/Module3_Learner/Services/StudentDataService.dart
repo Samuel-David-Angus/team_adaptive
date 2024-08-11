@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module3_Learner/Models/StudentDataModel.dart';
 
 class StudentDataService {
@@ -30,10 +31,10 @@ class StudentDataService {
       if (docSnapshot.exists) {
         return docSnapshot.data();
       } else {
-        print("Failed to retrieve the newly added document.");
+        debugPrint("Failed to retrieve the newly added document.");
       }
     } catch (e) {
-      print("Error adding student data: $e");
+      debugPrint("Error adding student data: $e");
     }
     return null;
   }
@@ -49,7 +50,7 @@ class StudentDataService {
           .set(studentData);
       return true;
     } catch (e) {
-      print("Error editing student data: $e");
+      debugPrint("Error editing student data: $e");
     }
     return false;
   }
@@ -67,7 +68,7 @@ class StudentDataService {
         return documentSnapshot.data() as StudentDataModel;
       }
     } catch (e) {
-      print("Error getting student data: $e");
+      debugPrint("Error getting student data: $e");
     }
     return null;
   }

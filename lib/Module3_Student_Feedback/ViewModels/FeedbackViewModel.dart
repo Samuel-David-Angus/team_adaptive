@@ -22,7 +22,7 @@ class FeedbackViewModel extends ChangeNotifier{
       feedback.suggestedLessons = await getSuggestedMaterials();
       return true;
     } on Exception catch (e) {
-      print(e);
+      debugPrint("$e");
     }
     return false;
   }
