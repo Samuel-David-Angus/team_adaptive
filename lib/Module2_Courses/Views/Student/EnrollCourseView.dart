@@ -33,7 +33,7 @@ class EnrollCourseView extends StatelessWidget {
                     if (enrolled) {
                       Navigator.pushNamed(context, '/Courses');
                     } else {
-                      msgDialogShow(context, 'Enrolling failed. Pls check the id');
+                      msgDialogShow(context, 'Enrolling failed. Pls check the code');
                     }
                   },
                   child: const Text('Enroll')),

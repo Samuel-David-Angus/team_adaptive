@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../Models/LessonModel.dart';
 import '../View_Models/AtomicInputMaterialInfoViewModel.dart';
 
@@ -25,7 +26,7 @@ class AtomicInputMaterialInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
