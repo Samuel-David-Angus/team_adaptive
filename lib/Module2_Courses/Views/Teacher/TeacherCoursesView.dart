@@ -52,7 +52,8 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                         spacing: 70.0,
                         runSpacing: 70.0,
                         alignment: WrapAlignment.start,
-                        children: [ Container(
+                        children: [ 
+                          Container(
                             width: MediaQuery.of(context).size.width / 5 - 20,
                             height: MediaQuery.of(context).size.height / 4 - 20,
                             decoration: BoxDecoration(
