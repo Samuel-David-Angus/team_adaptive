@@ -25,6 +25,7 @@ class TeacherLessonViewModel extends ChangeNotifier {
   }
 
   Future<List<LessonModel>> getLessonByCourse(String courseID) async {
+    canAddMoreLessons = true;
     List<LessonModel> lessons = await service.getLessonsByCourse(courseID);
     for (var lesson in lessons) {
       if (!lesson.isSetupComplete!) {
