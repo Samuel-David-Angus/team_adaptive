@@ -123,7 +123,7 @@ class RegisterView extends StatelessWidget {
                   width: 600,
                   child: TextField(
                     onChanged: (value) {
-                      viewModel.firstname = value;
+                      viewModel.lastname = value;
                     },
                     decoration: const InputDecoration(
                       fillColor: ThemeColor.offwhiteTheme,
@@ -152,7 +152,7 @@ class RegisterView extends StatelessWidget {
                   width: 600,
                   child: TextField(
                     onChanged: (value) {
-                      viewModel.firstname = value;
+                      viewModel.username = value;
                     },
                     decoration: const InputDecoration(
                       fillColor: ThemeColor.offwhiteTheme,
@@ -179,7 +179,7 @@ class RegisterView extends StatelessWidget {
                   width: 600,
                   child: TextField(
                     onChanged: (value) {
-                      viewModel.firstname = value;
+                      viewModel.email = value;
                     },
                     decoration: const InputDecoration(
                       fillColor: ThemeColor.offwhiteTheme,
@@ -206,7 +206,7 @@ class RegisterView extends StatelessWidget {
                   width: 600,
                   child: TextField(
                     onChanged: (value) {
-                      viewModel.firstname = value;
+                      viewModel.password = value;
                     },
                     obscureText: true,
                     decoration: const InputDecoration(
