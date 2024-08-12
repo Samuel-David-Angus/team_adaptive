@@ -33,7 +33,7 @@ class StudentLessonViewModel extends ChangeNotifier {
             materialID: studentData.currentLessons![lessonID]!);
       }
       materials = await lessonService.getLessonMaterialsByTypeAndStyle(
-          courseID, lessonID, "main", studentData.currentLearningStyle!);
+          courseID, lessonID, "main", AuthServices().userInfo!.learningStyle!);
       materials.shuffle();
       studentData.currentLessons ??= {};
       studentData.currentLessons![lessonID] = materials[0]!.id!;
