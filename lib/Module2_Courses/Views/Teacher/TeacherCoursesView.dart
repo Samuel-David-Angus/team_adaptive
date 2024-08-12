@@ -32,7 +32,7 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
         highlighted: SELECTED.COURSES,
         topRight: userInfo(context),
         child: Padding(
-          padding: const EdgeInsets.all(100.0),
+          padding: const EdgeInsets.only(top: 100.0, left: 100.0, right: 100.0),
           child: FutureBuilder<List<Course>?>(
             future: viewModel.getCourses(),
             builder: (context, snapshot) {
@@ -48,7 +48,8 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                     Wrap(
                       direction: Axis.horizontal,
                       spacing: 70.0,
-                      alignment: WrapAlignment.center,
+                      runSpacing: 70.0,
+                      alignment: WrapAlignment.start,
                       children: [ Container(
                           width: MediaQuery.of(context).size.width / 5 - 20,
                           height: MediaQuery.of(context).size.height / 4 - 20,
@@ -101,6 +102,7 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                                 child: Container(
                                   width: MediaQuery.of(context).size.width / 5 - 20,
                                   height: MediaQuery.of(context).size.height / 4 - 20,
+                                  padding: const EdgeInsets.symmetric(vertical: 70.0),
                                   decoration: BoxDecoration(
                                     color: ThemeColor.lightgreyTheme,
                                     borderRadius: BorderRadius.circular(12.0), // Rounded edges
