@@ -5,6 +5,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../../Components/TemplateView.dart';
 import '../../Components/TopRightOptions.dart';
@@ -36,6 +37,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 50.0),
                     ElevatedButton(
                         onPressed: () {
                           showDialog(
@@ -52,13 +54,27 @@ class TeacherLessonHomeView extends StatelessWidget {
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('Close'),
+                                            child: const Text('Close'),
                                           ),
                                         ],
                                       );
                               });
                         },
-                        child: const Text('Add Lesson')),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ThemeColor.darkgreyTheme,
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Text(
+                            '+ Add Lesson',
+                            style: TextStyle(
+                              color: ThemeColor.offwhiteTheme,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        )
+                      ),
+                    const SizedBox(height: 50.0),
                     Wrap(
                       spacing: 10,
                       children: List.generate(lessons.length, (index) {
