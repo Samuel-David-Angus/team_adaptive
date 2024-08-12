@@ -6,6 +6,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class TeacherViewQuestionView extends StatelessWidget {
   final LessonModel lesson;
@@ -119,7 +120,11 @@ class TeacherViewQuestionView extends StatelessWidget {
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          ElevatedButton(
+                          const SizedBox(height: 50.0),
+                          SizedBox(
+                            width: 150.0,
+                            height: 40.0,
+                            child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
                                     context,
@@ -128,7 +133,18 @@ class TeacherViewQuestionView extends StatelessWidget {
                                             TeacherAddQuestionView(
                                                 lessonModel: lesson)));
                               },
-                              child: const Text('Add Question')),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ThemeColor.darkgreyTheme,
+                              ),
+                              child: const Text(
+                                '+ Add Question',
+                                style: TextStyle(
+                                  color: ThemeColor.offwhiteTheme,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 50.0),
                           const TabBar(tabs: [
                             Tab(
                               text: "My Questions",
