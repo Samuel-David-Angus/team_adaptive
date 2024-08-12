@@ -5,7 +5,6 @@ class ConceptMapModel {
   late List<List<bool>> _conceptMatrix;
   late int _conceptCount;
   late List<int> _conceptDepths;
-  late int _treeHeight;
 
   ConceptMapModel.setAll(
       {required String id,
@@ -18,7 +17,7 @@ class ConceptMapModel {
     _conceptMatrix = conceptMatrix;
     _conceptCount = _concepts.length;
     _conceptDepths = List<int>.filled(_concepts.length, 0);
-    setDepthsAndHeight();
+    setDepths();
   }
 
   int findIndexOfConcept(String concept) {
@@ -68,14 +67,11 @@ class ConceptMapModel {
     return 1;
   }
 
-  void setDepthsAndHeight() {
-    int maxDepth = 0;
+  void setDepths() {
     for (int conceptIndex = 0; conceptIndex < _conceptCount; conceptIndex++) {
       int depth = getDepth(conceptIndex);
       _conceptDepths[conceptIndex] = depth;
-      if (depth > maxDepth) maxDepth = depth;
     }
-    _treeHeight = maxDepth;
   }
 
   // Getter and Setter for _id
