@@ -8,6 +8,7 @@ import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapSer
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class TeacherAddQuestionView extends StatelessWidget {
   final LessonModel lessonModel;
@@ -59,17 +60,20 @@ class TeacherAddQuestionView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Add Question',
-                          style: TextStyle(
-                            fontSize: 20,
+                    Center(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 30.0),
+                          Text(
+                            isEditing ? 'Edit Question' : 'Add Question',
+                            style: const TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 30.0)
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Padding(
@@ -226,32 +230,47 @@ class TeacherAddQuestionView extends StatelessWidget {
                         },
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                        onPressed: () async {
-                          if (context.mounted) {
-                            if (addEditViewModel.validateBeforeSubmitting()) {
-                              String userID = teacherQuestionViewModel
-                                  .authService.userInfo!.id!;
-                              ConceptMapModel conceptMapModel = snapshot.data!;
-                              QuestionModel createdQuestion = addEditViewModel
-                                  .createQuestionModel(userID, conceptMapModel);
-                              debugPrint("$createdQuestion");
-                              bool result = await submit(createdQuestion);
-                              debugPrint('finish');
-                              if (result) {
-                                showMessageDialog(
-                                    context, "Successfully added question");
+                    Center(
+                      child: SizedBox(
+                        width: 150.0,
+                        height: 40.0,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (context.mounted) {
+                              if (addEditViewModel.validateBeforeSubmitting()) {
+                                String userID = teacherQuestionViewModel
+                                    .authService.userInfo!.id!;
+                                ConceptMapModel conceptMapModel = snapshot.data!;
+                                QuestionModel createdQuestion = addEditViewModel
+                                    .createQuestionModel(userID, conceptMapModel);
+                                debugPrint("$createdQuestion");
+                                bool result = await submit(createdQuestion);
+                                debugPrint('finish');
+                                if (result) {
+                                  showMessageDialog(
+                                      context, "Successfully added question");
+                                } else {
+                                  showMessageDialog(
+                                      context, "Failed to add question");
+                                }
                               } else {
-                                showMessageDialog(
-                                    context, "Failed to add question");
+                                showMessageDialog(context, "stuff missing");
                               }
-                            } else {
-                              showMessageDialog(context, "stuff missing");
                             }
-                          }
-                        },
-                        child: Text(isEditing ? 'Edit' : 'Add'))
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ThemeColor.darkgreyTheme,
+                          ),
+                          child: Text(
+                            isEditing ? 'Edit' : 'Add',
+                            style: const TextStyle(
+                              color: ThemeColor.offwhiteTheme,
+                            ),
+                          ),
+                        )
+                      )
+                    )
+                    
                   ],
                 ),
               );
