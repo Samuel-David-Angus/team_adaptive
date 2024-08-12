@@ -98,6 +98,20 @@ class ConceptMapModel {
     return _conceptMap[concept1]![indexOfConcept(concept2)];
   }
 
+  bool willBeProperTree(String concept, String prereq) {
+    List<String> conceptPrereqs = List.empty();
+    findAllPrerequisites(concept, conceptPrereqs);
+    if (conceptPrereqs.contains(prereq)) {
+      return false;
+    }
+    List<String> prereqPrereqs = List.empty();
+    findAllPrerequisites(prereq, prereqPrereqs);
+    if (prereqPrereqs.contains(concept)) {
+      return false;
+    }
+    return true;
+  }
+
   bool setPrerequisite(String concept, String prereq) {
     int index = indexOfConcept(prereq);
     if (index == -1) {
@@ -105,6 +119,9 @@ class ConceptMapModel {
     }
     int value = areConnected(concept, index);
     if (value == 0) {
+      if (!willBeProperTree(concept, prereq)) {
+        return false;
+      }
       _conceptMap[concept]![index] = 1;
     } else {
       _conceptMap[concept]![index] = 0;
@@ -133,15 +150,5 @@ class ConceptMapModel {
       }
     }
     return 1;
-  }
-
-  List<String> findDirectPrerequisites(String concept) {
-    List<String> prereqs = [];
-    for (int i = 0; i < conceptMap.length; i++) {
-      if (conceptMap[concept]![i] == 1) {
-        prereqs.add(conceptOfIndex(i));
-      }
-    }
-    return prereqs;
   }
 }
