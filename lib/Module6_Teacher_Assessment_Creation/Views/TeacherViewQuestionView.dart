@@ -38,6 +38,13 @@ class TeacherViewQuestionView extends StatelessWidget {
                           ...question.wrongChoices.map((choice) {
                             return choiceOption(choice, Colors.red);
                           }),
+                          if (question.numberOfCorrectAnswers + question.numberOfWrongAnswers > 0) ...
+                            [Text("${question.numberOfCorrectAnswers / (question.numberOfCorrectAnswers + question.numberOfWrongAnswers) * 100}% got this correct"),
+                            Text("Difficulty level: ${question.adjustedDifficulty}")]
+                          else ... [
+                            const Text("No one has answered this question yet"),
+                            Text("Difficulty level: ${question.baseDifficulty}")
+                          ]
                         ]),
                     if (canEdit)
                       Align(
