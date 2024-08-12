@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonMaterialView.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../../Module3_Student_Feedback/Views/LessonMaterialView.dart';
 import '../View_Models/TeacherLessonViewModel.dart';
@@ -38,7 +39,20 @@ class TeacherLessonMaterialListView extends StatelessWidget {
                           }
                       );
                     },
-                    child: Text('Add $type lesson')),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ThemeColor.darkgreyTheme,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        '+ Add $type lesson',
+                        style: const TextStyle(
+                          color: ThemeColor.offwhiteTheme,
+                        ),
+                      ),
+                    )
+                ),
+                const SizedBox(height: 20.0),
                 Wrap(
                   spacing: 10,
                   children: List.generate(

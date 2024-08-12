@@ -16,7 +16,7 @@ class TeacherLessonMaterialHomeView extends StatelessWidget {
         child: DefaultTabController(
             length: 2,
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   const TabBar(

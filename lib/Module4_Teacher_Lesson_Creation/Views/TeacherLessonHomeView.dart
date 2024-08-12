@@ -38,7 +38,10 @@ class TeacherLessonHomeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(height: 50.0),
-                    ElevatedButton(
+                    SizedBox(
+                      width: 150.0,
+                      height: 40.0,
+                      child: ElevatedButton(
                         onPressed: () {
                           showDialog(
                               context: context,
@@ -63,17 +66,14 @@ class TeacherLessonHomeView extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ThemeColor.darkgreyTheme,
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Text(
-                            '+ Add Lesson',
-                            style: TextStyle(
-                              color: ThemeColor.offwhiteTheme,
-                              fontSize: 20.0,
-                            ),
+                        child: const Text(
+                          '+ Add Lesson',
+                          style: TextStyle(
+                            color: ThemeColor.offwhiteTheme,
                           ),
-                        )
+                        ),
                       ),
+                    ),
                     const SizedBox(height: 50.0),
                     Wrap(
                       spacing: 10,
