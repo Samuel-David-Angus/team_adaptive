@@ -82,6 +82,8 @@ class TeacherAddLessonView extends StatelessWidget {
                                   descriptionController.text,
                                   course.id!,
                                   selectedItems!);
+                              viewModel.allLessons = viewModel.getLessonByCourse(course.id!);
+                              viewModel.refresh();
                               Navigator.of(context).pop();
                             } else {
                               showDialog(

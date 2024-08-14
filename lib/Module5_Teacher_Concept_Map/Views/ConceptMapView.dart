@@ -53,12 +53,28 @@ class ConceptMapView extends StatelessWidget {
                           const SizedBox(width: 10),
                           Consumer<ConceptMapViewModel>(
                             builder: (context, viewModel, child) {
-                              return viewModel.map != null && viewModel.map!.conceptMap.isNotEmpty
-                                  ? // Your existing code here
-                                  Container() // Placeholder for the existing code
-                                  : Container(); // Placeholder for the existing code
-                            },
-                          ),
+                              return viewModel.map != null && viewModel.map!.conceptMap.isNotEmpty ?
+                              PopupMenuButton<String>(
+                                child: const Text("Delete Concept"),
+                                itemBuilder: (BuildContext context) {
+                                  Map<String, List<int>> cmap = viewModel.map!.conceptMap;
+                                  return List.generate(
+                                      cmap.length,
+                                          (index) {
+                                        String val = cmap.keys.toList()[index];
+                                        return PopupMenuItem(
+                                            value: val,
+                                            child: Text(val));
+                                      }
+                                  );
+                                },
+                                onSelected: (String val) {
+                                  viewModel.deleteConcept(val);
+                                },
+                              )
+                                  : const Text('No concepts to delete');
+                            }
+                          )
                         ],
                       ),
                     ],
@@ -76,7 +92,7 @@ class ConceptMapView extends StatelessWidget {
                 return SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
-                    child: buildTable(conceptMap, viewModel, course == null),
+                    child: buildTable(context, conceptMap, viewModel, course == null),
                   ),
                 );
               },
@@ -100,7 +116,7 @@ class ConceptMapView extends StatelessWidget {
     return view;
   }
 
-  Widget buildTable(Map<String, List<int>>? data, ConceptMapViewModel viewModel, bool canEdit) {
+  Widget buildTable(BuildContext context, Map<String, List<int>>? data, ConceptMapViewModel viewModel, bool canEdit) {
 
     if (data == null) {
       return const CircularProgressIndicator();
@@ -112,7 +128,28 @@ class ConceptMapView extends StatelessWidget {
         cells: [DataCell(Text(keys[rowIndex]))] + List.generate(
               data[keys[rowIndex]]!.length,
               (colIndex) => DataCell(GestureDetector(
-                onTap: canEdit ? (){viewModel.setPrerequisite(keys[rowIndex], keys[colIndex]);} : (){},
+                onTap: canEdit ? (){
+                  bool isValid = viewModel.setPrerequisite(keys[rowIndex], keys[colIndex]);
+                  if (!isValid) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Error'),
+                          content: const Text('Invalid prerequisite'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                } : (){},
                 child: Text(data[keys[rowIndex]]![colIndex].toString()))),
         ),
       ),

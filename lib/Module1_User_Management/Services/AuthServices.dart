@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fauth;
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+
 import '../Models/User.dart';
 
 
@@ -58,6 +58,7 @@ class AuthServices with ChangeNotifier{
       fauth.UserCredential credential = await fauth.FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: user.email ?? '', password: user.password ?? '');
       fauth.User? credUser = credential.user;
+      user.learningStyle = "Text";
       if (credUser != null) {
         user.id = credUser.uid;
         await addUserInfo(user);

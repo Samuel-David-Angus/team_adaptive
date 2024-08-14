@@ -3,9 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
-import 'package:team_adaptive/Theme/ThemeColor.dart';
-import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../Module1_User_Management/Services/AuthServices.dart';
 
@@ -147,7 +146,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         },
                             child: const Text('Feedback')),
                         const SizedBox(width: 20,),
-                        Text("Current learning style: ${AuthServices().userInfo!.learningStyle}"),
+                        Text(
+                          "Current learning style: ${AuthServices().userInfo!.learningStyle}",
+                          style: const TextStyle(
+                            color: ThemeColor.offwhiteTheme,
+                          ),
+                        )
                       ],
                     ),
                   ),

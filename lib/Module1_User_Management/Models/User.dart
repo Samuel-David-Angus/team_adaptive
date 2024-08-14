@@ -70,7 +70,8 @@ class User {
         'lastname': lastname,
         'username': username,
         'email': email,
-        'type': type
+        'type': type,
+        "learningStyle": learningStyle
       };
     } else {
       return {
@@ -78,7 +79,8 @@ class User {
         'lastname': lastname,
         'username': username,
         'email': email,
-        'type': type
+        'type': type,
+        'learningStyle': learningStyle
       };
     }
   }

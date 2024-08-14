@@ -14,19 +14,25 @@ import './InitialAddMaterialsView.dart';
 
 class TeacherLessonHomeView extends StatelessWidget {
   final Course course;
-  const TeacherLessonHomeView({super.key, required this.course});
+  bool justLoaded = true;
+  TeacherLessonHomeView({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {
     final TeacherLessonViewModel viewModel =
         Provider.of<TeacherLessonViewModel>(context);
+    if (justLoaded) {
+      justLoaded = false;
+      viewModel.allLessons = viewModel.getLessonByCourse(course.id!);
+    }
+    
     return TemplateView(
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FutureBuilder<List<LessonModel>>(
-            future: viewModel.getLessonByCourse(course.id!),
+            future: viewModel.allLessons,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator(); // or any loading indicator

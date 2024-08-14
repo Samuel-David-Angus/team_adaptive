@@ -99,12 +99,12 @@ class ConceptMapModel {
   }
 
   bool willBeProperTree(String concept, String prereq) {
-    List<String> conceptPrereqs = List.empty();
+    List<String> conceptPrereqs = [];
     findAllPrerequisites(concept, conceptPrereqs);
     if (conceptPrereqs.contains(prereq)) {
       return false;
     }
-    List<String> prereqPrereqs = List.empty();
+    List<String> prereqPrereqs = [];
     findAllPrerequisites(prereq, prereqPrereqs);
     if (prereqPrereqs.contains(concept)) {
       return false;

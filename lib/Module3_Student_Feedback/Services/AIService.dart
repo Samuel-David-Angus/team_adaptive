@@ -24,16 +24,19 @@ class AIServices {
         },
         body: jsonEncode({
           "model": "gpt-4o",
-          "messages": "The user has completed an assessment to determine their preferred learning styles. Please analyze the results of the assessment with the following information in mind:\n\n" 
-                      "Learning Styles:\n"
-                      "1. Visual: The user prefers to learn through seeing. This includes the use of images or videos.\n"
-                      "2. Reading: The user prefers to learn through reading and writing. This includes text-based materials.\n"
-                      "3. Kinesthetic: The user prefers to learn through physical activity and hands-on experiences. This includes practical activities.\n\n"
-                      "$prompt"
-                      "After analyzing the assessment results, provide the response in the following format:\n\n"
-                      "{\n   "
-                      "  response: \"(Visual, Reading, Kinesthetic)\"\n"
-                      "}"
+          "messages": [
+            {'role': 'user', 'content':
+              "The user has completed an assessment to determine their preferred learning styles. Please analyze the results of the assessment with the following information in mind:\n\n" 
+              "Learning Styles:\n"
+              "1. Visual: The user prefers to learn through seeing. This includes the use of images or videos.\n"
+              "2. Reading: The user prefers to learn through reading and writing. This includes text-based materials.\n"
+              "3. Kinesthetic: The user prefers to learn through physical activity and hands-on experiences. This includes practical activities.\n\n"
+              "$prompt"
+              "After analyzing the assessment results, provide the response in the following format:\n\n"
+              "{\n   "
+              "  response: \"(Visual, Reading, Kinesthetic)\"\n"
+              "}"},
+              ]
         }),
       );
 

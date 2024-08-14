@@ -22,11 +22,13 @@ class TeacherQuestionViewModel extends ChangeNotifier {
       otherQuestionPool = [];
       for (QuestionModel question in allQuestions!) {
         if (question.authorID == userID) {
+          debugPrint("$userID  ${question.authorID}");
           myQuestionPool.add(question);
         } else {
           otherQuestionPool.add(question);
         }
       }
+      this.lessonID  = null;
       notifyListeners();
     }
   }
