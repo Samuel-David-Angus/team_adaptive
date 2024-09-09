@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
@@ -31,7 +32,7 @@ class TeacherJoinCourseView extends StatelessWidget {
                   onPressed: () async {
                     bool enrolled = await viewModel.joinCourse(textController.text);
                     if (enrolled) {
-                      Navigator.pushNamed(context, '/Courses');
+                        GoRouter.of(context).push('/Courses');
                     } else {
                       msgDialogShow(context, 'Joining failed. Pls check the id');
                     }

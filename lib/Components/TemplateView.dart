@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../Module1_User_Management/Services/AuthServices.dart';
@@ -10,7 +11,7 @@ class TemplateView extends StatelessWidget {
   List<Widget> topRight;
   SELECTED highlighted;
 
-  List<String> navBtns = ['Home', 'Courses', 'About'];
+  List<String> navBtns = ['home', 'courses', 'about'];
 
   TemplateView({
     super.key,
@@ -35,7 +36,7 @@ class TemplateView extends StatelessWidget {
       }
       return TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/${navBtns[index]}');
+            GoRouter.of(context).push("/${navBtns[index]}");
           },
           child: text);
     }));

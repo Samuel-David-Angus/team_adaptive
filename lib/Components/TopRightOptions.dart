@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 
@@ -7,7 +8,7 @@ List<Widget> authOptions(context, String highlighted) {
   return [
     ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/register');
+        GoRouter.of(context).push('/register');
       },
       style: ButtonStyle(
         backgroundColor: highlighted == 'register' ? const WidgetStatePropertyAll<Color>(Colors.black): null,
@@ -18,7 +19,7 @@ List<Widget> authOptions(context, String highlighted) {
     const SizedBox(width: 10,),
     ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, '/login');
+        GoRouter.of(context).push('/login');
       },
       style: ButtonStyle(
         backgroundColor: highlighted == 'login' ? const WidgetStatePropertyAll<Color>(Colors.black): null,

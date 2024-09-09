@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
@@ -63,7 +64,7 @@ class TeacherAddCourseView extends StatelessWidget {
                                 borderSide: BorderSide(color: ThemeColor.offwhiteTheme), // Change the outline color
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)), 
+                                borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: ThemeColor.lightgreyTheme), // Change the outline color when focused
@@ -84,7 +85,7 @@ class TeacherAddCourseView extends StatelessWidget {
                                 borderSide: BorderSide(color: ThemeColor.offwhiteTheme), // Change the outline color
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)), 
+                                borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: ThemeColor.lightgreyTheme), // Change the outline color when focused
@@ -107,7 +108,7 @@ class TeacherAddCourseView extends StatelessWidget {
                                   borderSide: BorderSide(color: ThemeColor.offwhiteTheme), // Change the outline color
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)), 
+                                  borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: ThemeColor.lightgreyTheme), // Change the outline color when focused
@@ -148,7 +149,7 @@ class TeacherAddCourseView extends StatelessWidget {
                         Course? added = await teacherCourseViewModel.addCourse(course);
                         if (added != null) {
                           await conceptMapViewModel.uploadConceptMap(added.id!);
-                          Navigator.pushNamed(context, '/courseOverview', arguments: added);
+GoRouter.of(context).push('/courseOverview');
                         } else {
                           msgDialogShow(context, "Course failed to be added");
                         }
@@ -169,7 +170,7 @@ class TeacherAddCourseView extends StatelessWidget {
                     )
                   ),
                 )
-                
+
               ],
             )
           ],

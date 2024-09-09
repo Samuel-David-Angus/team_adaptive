@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
@@ -59,7 +60,7 @@ class HomePage extends StatelessWidget {
                     const SizedBox(height: 50),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/register');
+                        GoRouter.of(context).push('/register');
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(

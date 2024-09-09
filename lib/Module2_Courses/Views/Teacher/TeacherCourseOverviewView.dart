@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
@@ -74,8 +75,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
                 height: 60.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/conceptMap',
-                        arguments: course);
+                    GoRouter.of(context).push('/conceptMap');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ThemeColor.offwhiteTheme,

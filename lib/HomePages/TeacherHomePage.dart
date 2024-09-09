@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
@@ -58,7 +59,7 @@ class TeacherHomePage extends StatelessWidget {
                         )
                       ],
                     ),
-                    
+
                     const SizedBox(height: 60),
                     const Text(
                       'Empower your students with personalized learning experiences. '
@@ -73,7 +74,7 @@ class TeacherHomePage extends StatelessWidget {
                     const SizedBox(height: 60),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/Courses');
+                        GoRouter.of(context).push('/Courses');
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
