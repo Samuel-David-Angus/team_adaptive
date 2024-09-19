@@ -33,63 +33,44 @@ import 'package:go_router/go_router.dart';
 final GoRouter _router = GoRouter(
   initialLocation: "/home",
   routes: [
-    // Home route
     GoRoute(
       path: '/home',
       builder: (context, state) => const HomePage(),
     ),
-
-    // Courses route
     GoRoute(
       path: '/courses',
       builder: (context, state) => const CoursesPage(),
     ),
-
-    // About route
     GoRoute(
       path: '/about',
       builder: (context, state) => const AboutPage(),
     ),
-
-    // Login route
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginView(),
     ),
-
-    // Register route
     GoRoute(
       path: '/register',
       builder: (context, state) => const RegisterView(),
     ),
-
-    // Enroll route
     GoRoute(
       path: '/enroll',
       builder: (context, state) => EnrollCourseView(),
     ),
-
-    // Course Overview route with course as argument
     GoRoute(
       path: '/courseOverview',
       builder: (context, state) => CourseOverviewPage(
         course: state.extra as Course, // Pass arguments using state.extra
       ),
     ),
-
-    // Add Course route
     GoRoute(
       path: '/addCourse',
       builder: (context, state) => TeacherAddCourseView(),
     ),
-
-    // Join Course route
     GoRoute(
       path: '/joinCourse',
       builder: (context, state) => TeacherJoinCourseView(),
     ),
-
-    // Concept Map route with course as argument
     GoRoute(
       path: '/conceptMap',
       builder: (context, state) => ConceptMapView(
@@ -137,31 +118,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: ThemeColor.blueTheme),
-        useMaterial3: true,
-        textTheme: GoogleFonts.exoTextTheme(),
-      ),
-      routerConfig: _router
-      //replace routes if there is time since it is apparently not recommended bruh
-      // routes: {
-      //   '/Home': (context) => const HomePage(),
-      //   '/Courses': (context) => const CoursesPage(),
-      //   '/About': (context) => const AboutPage(),
-      //   '/login': (context) => const LoginView(),
-      //   '/register': (context) => const RegisterView(),
-      //   '/enroll': (context) => EnrollCourseView(),
-      //   '/courseOverview': (context) => CourseOverviewPage(
-      //       course: ModalRoute.of(context)?.settings.arguments as Course),
-      //   '/addCourse': (context) => TeacherAddCourseView(),
-      //   '/joinCourse': (context) => TeacherJoinCourseView(),
-      //   '/conceptMap': (context) => ConceptMapView(
-      //         course: ModalRoute.of(context)?.settings.arguments as Course,
-      //       ),
-      // },
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: ThemeColor.blueTheme),
+          useMaterial3: true,
+          textTheme: GoogleFonts.exoTextTheme(),
+        ),
+        routerConfig: _router
+        //replace routes if there is time since it is apparently not recommended bruh
+        // routes: {
+        //   '/Home': (context) => const HomePage(),
+        //   '/Courses': (context) => const CoursesPage(),
+        //   '/About': (context) => const AboutPage(),
+        //   '/login': (context) => const LoginView(),
+        //   '/register': (context) => const RegisterView(),
+        //   '/enroll': (context) => EnrollCourseView(),
+        //   '/courseOverview': (context) => CourseOverviewPage(
+        //       course: ModalRoute.of(context)?.settings.arguments as Course),
+        //   '/addCourse': (context) => TeacherAddCourseView(),
+        //   '/joinCourse': (context) => TeacherJoinCourseView(),
+        //   '/conceptMap': (context) => ConceptMapView(
+        //         course: ModalRoute.of(context)?.settings.arguments as Course,
+        //       ),
+        // },
 
-      // initialRoute: '/Home', // Specify the initial route
-    );
+        // initialRoute: '/Home', // Specify the initial route
+        );
   }
 }
