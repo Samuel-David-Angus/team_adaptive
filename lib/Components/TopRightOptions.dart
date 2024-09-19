@@ -36,7 +36,7 @@ List<Widget> userInfo(BuildContext context) {
   return [
     Text(user!.username!),
     const SizedBox(width: 10,),
-    Text(user!.type!),
+    Text(user.type!),
     const SizedBox(width: 10,),
     ElevatedButton(
       onPressed: () async {

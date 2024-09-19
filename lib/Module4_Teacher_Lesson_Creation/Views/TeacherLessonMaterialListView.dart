@@ -17,7 +17,7 @@ class TeacherLessonMaterialListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final TeacherLessonViewModel viewModel = Provider.of<TeacherLessonViewModel>(context, listen: false);
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: FutureBuilder<List<LessonMaterialModel>>(
         future: viewModel.getLessonMaterialsByType(lesson.courseID!, lesson.id!, type),
         builder: (context, snapshot) {

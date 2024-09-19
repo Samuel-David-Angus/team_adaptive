@@ -33,7 +33,7 @@ class TeacherSelectConceptsView extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         return AlertDialog(
-          title: Text('Select Options'),
+          title: const Text('Select Options'),
           content: SingleChildScrollView(
             child: ListBody(
               children: viewModel.items!.map((item) {
@@ -53,14 +53,14 @@ class TeacherSelectConceptsView extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 viewModel.cancelSelected();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 var results = [...?viewModel.selectedItems];
                 viewModel.confirmSelected();

@@ -19,7 +19,7 @@ class StudentLessonListView extends StatelessWidget {
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: FutureBuilder<List<LessonModel>>(
             future: viewModel.getCourseLessons(course.id!),
             builder: (context, snapshot) {

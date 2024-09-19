@@ -21,11 +21,11 @@ class ViewLessonView extends StatelessWidget {
         future: viewModel.getMainLesson(lesson.courseID!, lesson.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text('No lesson material found.'));
+            return const Center(child: Text('No lesson material found.'));
           } else {
             // When data is fetched successfully
             final lessonMaterial = snapshot.data!;
@@ -43,14 +43,14 @@ class ViewLessonView extends StatelessWidget {
                                 builder: (context) {
                                   return PointerInterceptor(
                                     child: AlertDialog(
-                                      title: Text('Heads Up!'),
-                                      content: Text('After completing you will be redirected to an assessment.'),
+                                      title: const Text('Heads Up!'),
+                                      content: const Text('After completing you will be redirected to an assessment.'),
                                       actions: [
                                         ElevatedButton(
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('Cancel')
+                                            child: const Text('Cancel')
                                         ),
                                         ElevatedButton(
                                             onPressed: () async {
@@ -58,7 +58,7 @@ class ViewLessonView extends StatelessWidget {
                                               Navigator.of(context).pop();
                                               Navigator.push(context, MaterialPageRoute(builder: (context) => AssessmentView(lessonModel: lesson)));
                                             },
-                                            child: Text('Ok')
+                                            child: const Text('Ok')
                                         )
                                       ],
                                     ),
@@ -69,7 +69,7 @@ class ViewLessonView extends StatelessWidget {
 
 
                           },
-                          child: Text('Complete Lesson')
+                          child: const Text('Complete Lesson')
                       ),
                       Expanded(
                         child: IframeView(

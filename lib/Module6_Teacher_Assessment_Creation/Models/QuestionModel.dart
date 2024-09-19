@@ -151,9 +151,6 @@ class QuestionModel {
   }
 
   int calculateAdjustedDifficulty(ConceptMapModel conceptMapModel) {
-    if (_baseDifficulty == null) {
-      throw Exception("Base difficulty of question is still not set");
-    }
     if (numberOfCorrectAnswers + numberOfWrongAnswers < 1) {
       _adjustedDifficulty = _baseDifficulty;
     } else {

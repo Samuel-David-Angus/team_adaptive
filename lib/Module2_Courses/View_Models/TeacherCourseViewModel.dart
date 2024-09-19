@@ -3,7 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 
-import '../../Module1_User_Management/Models/User.dart';
 import '../../Module1_User_Management/Services/AuthServices.dart';
 import '../Models/CourseModel.dart';
 import '../Services/TeacherCourseServices.dart';

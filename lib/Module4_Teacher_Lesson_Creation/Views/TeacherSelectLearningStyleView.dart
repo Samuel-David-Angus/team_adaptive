@@ -10,10 +10,10 @@ class TeacherSelectLearningStyleView extends StatelessWidget {
     return Consumer<SelectLearningStyleViewModel>(
         builder: (context, viewModel, child) {
       return AlertDialog(
-        title: Text('Select Options'),
+        title: const Text('Select Options'),
         content: SingleChildScrollView(
           child: ListBody(
-            children: viewModel.learningStyles!.map((item) {
+            children: viewModel.learningStyles.map((item) {
               return CheckboxListTile(
                 title: Text(item),
                 value: viewModel.selectedStyle == item,
@@ -28,14 +28,14 @@ class TeacherSelectLearningStyleView extends StatelessWidget {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () {
               viewModel.cancelStyle();
               Navigator.of(context).pop();
             },
           ),
           TextButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () {
               String result = viewModel.selectedStyle;
               viewModel.confirmStyle();

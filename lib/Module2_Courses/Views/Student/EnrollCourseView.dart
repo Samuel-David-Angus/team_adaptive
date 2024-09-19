@@ -17,7 +17,7 @@ class EnrollCourseView extends StatelessWidget {
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

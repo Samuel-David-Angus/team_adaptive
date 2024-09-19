@@ -74,11 +74,9 @@ class TeacherQuestionService {
           fromFirestore: (snapshot, _) => QuestionModel.fromJson(snapshot.data()!, snapshot.id),
           toFirestore: (model, _) => {})
           .get();
-      querySnapshot.docs.forEach(
-          (QueryDocumentSnapshot docSnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
             questions.add(docSnapshot.data() as QuestionModel);
           }
-      );
       return questions;
     } catch (e) {
       debugPrint("Error getting questions: $e");

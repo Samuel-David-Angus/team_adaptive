@@ -59,6 +59,7 @@ class FeedbackService {
     } catch (e) {
       print("Error get feedback: $e");
     }
+    return null;
   }
 
   Future<List<LessonMaterialModel>?> getFeedbackMaterials(String feedbackID, String lessonID) async {
@@ -77,5 +78,6 @@ class FeedbackService {
     } catch (e) {
       print("Error getting feedback materials: $e");
     }
+    return null;
   }
 }
