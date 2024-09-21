@@ -14,7 +14,7 @@ class StudentCourseOverviewView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User? user = AuthServices().userInfo;
-    return TemplateView(highlighted: SELECTED.NONE, topRight: userInfo(context), child: Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -36,13 +36,13 @@ class StudentCourseOverviewView extends StatelessWidget {
           ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                    context, 
+                    context,
                     MaterialPageRoute(builder: (context) => StudentLessonListView(course: course))
                 );
               },
               child: const Text('Lessons'))
         ],
       ),
-    ));
+    );
   }
 }

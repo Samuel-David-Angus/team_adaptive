@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
@@ -7,26 +8,28 @@ import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 
 import '../ViewModels/FeedbackViewModel.dart';
 
-
 class FeedbackListView extends StatelessWidget {
   const FeedbackListView({super.key});
 
   @override
   Widget build(BuildContext context) {
     var viewModel = Provider.of<FeedbackViewModel>(context, listen: false);
-    return TemplateView(highlighted: SELECTED.NONE, topRight: userInfo(context), child: Padding(
+    return Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<List<FeedbackModel>?>(
             future: viewModel.getUserFeedbacks(),
-            builder: (BuildContext context, AsyncSnapshot<List<FeedbackModel>?> snapshot) {
+            builder: (BuildContext context,
+                AsyncSnapshot<List<FeedbackModel>?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasError) {
                 return Center(
-                  child: Text('Error: ${snapshot.error}',
-                    style: const TextStyle(color: Colors.red),),
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 );
               } else if (snapshot.hasData && snapshot.data != null) {
                 var feedbackList = snapshot.data!;
@@ -40,8 +43,10 @@ class FeedbackListView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     var feedback = feedbackList[index];
                     return Card(
-                      elevation: 4.0, // Elevation gives a shadow effect to the card
-                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      elevation:
+                          4.0, // Elevation gives a shadow effect to the card
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
                       child: ListTile(
                         title: Text(feedback.feedbackTitle),
                         trailing: SizedBox(
@@ -50,7 +55,9 @@ class FeedbackListView extends StatelessWidget {
                             children: [
                               TextButton(
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackView(feedback: feedbackList[index],)));
+                                    GoRouter.of(context).go(
+                                        '/feedbacks/${feedback.id}',
+                                        extra: feedback);
                                   },
                                   child: const Text('View'))
                             ],
@@ -65,7 +72,6 @@ class FeedbackListView extends StatelessWidget {
                   child: Text('No feedback found.'),
                 );
               }
-            })
-    ));
+            }));
   }
 }

@@ -18,7 +18,10 @@ import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
@@ -44,6 +47,8 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
         CourseOverviewPage(course: snapshot.data! as Course),
     ConceptMapView: (snapshot) =>
         ConceptMapView(course: snapshot.data! as Course),
+    FeedbackView : (snapshot) =>
+        FeedbackView(feedback: snapshot.data! as FeedbackModel)
   };
 
   // Look up the page type in the map
@@ -143,6 +148,16 @@ final GoRouter _router = GoRouter(
                                   dataHandler.getCourse(state))),
                     ]),
               ]),
+              GoRoute(
+                path: '/feedbacks',
+                builder: (context, state) => const FeedbackListView(),
+                routes: <RouteBase> [
+                    GoRoute(
+                        path: ':feedbackID',
+                        builder: (context, state) => routeBuilder<FeedbackModel?, FeedbackView>(dataHandler.getFeedback(state))
+                    )
+                ]
+              )
         ]),
   ],
 );

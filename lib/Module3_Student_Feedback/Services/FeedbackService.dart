@@ -11,12 +11,15 @@ class FeedbackService {
     return _instance;
   }
 
-  Future<bool> addFeedbackAndLessons(FeedbackModel feedback) async {
+  Future<String?> addFeedbackAndLessons(FeedbackModel feedback) async {
     try {
       List<LessonMaterialModel> materialsAsList = feedback.lessonsAsList();
       DocumentReference docRef = await FirebaseFirestore.instance
           .collection("Feedback")
-          .withConverter(fromFirestore: (snapshot, _) => FeedbackModel.fromJson(snapshot.data()!, snapshot.id), toFirestore: (model, _) => model.toJson())
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  FeedbackModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .add(feedback);
       var batch = FirebaseFirestore.instance.batch();
       var lessonsRef = docRef.collection("Materials");
@@ -24,14 +27,15 @@ class FeedbackService {
         batch.set(lessonsRef.doc(material.id), material.toJson());
       }
       await batch.commit();
-      return true;
+      return docRef.id;
     } catch (e) {
       print("Error adding feedback: $e");
     }
-    return false;
+    return null;
   }
 
-  Future<bool> updateUserLearningStyle(String userID, String learningStyle) async {
+  Future<bool> updateUserLearningStyle(
+      String userID, String learningStyle) async {
     try {
       await FirebaseFirestore.instance
           .collection("User")
@@ -48,10 +52,13 @@ class FeedbackService {
     try {
       List<FeedbackModel> feedbackList = [];
       QuerySnapshot rawFeedbacks = await FirebaseFirestore.instance
-        .collection("Feedback")
-        .withConverter(fromFirestore: (snapshot, _) => FeedbackModel.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (model, _) => model.toJson())
-        .where("userID", isEqualTo: userID).get();
+          .collection("Feedback")
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  FeedbackModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
+          .where("userID", isEqualTo: userID)
+          .get();
       for (QueryDocumentSnapshot doc in rawFeedbacks.docs) {
         feedbackList.add(doc.data() as FeedbackModel);
       }
@@ -62,14 +69,18 @@ class FeedbackService {
     return null;
   }
 
-  Future<List<LessonMaterialModel>?> getFeedbackMaterials(String feedbackID, String lessonID) async {
+  Future<List<LessonMaterialModel>?> getFeedbackMaterials(
+      String feedbackID, String lessonID) async {
     try {
       List<LessonMaterialModel> materials = [];
       QuerySnapshot materialsSnapshot = await FirebaseFirestore.instance
           .collection("Feedback")
           .doc(feedbackID)
           .collection("Materials")
-          .withConverter(fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(snapshot.data()!, null, lessonID, snapshot.id), toFirestore: (model, _) => model.toJson())
+          .withConverter(
+              fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
+                  snapshot.data()!, null, lessonID, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .get();
       for (var snapshot in materialsSnapshot.docs) {
         materials.add(snapshot.data() as LessonMaterialModel);
@@ -77,6 +88,23 @@ class FeedbackService {
       return materials;
     } catch (e) {
       print("Error getting feedback materials: $e");
+    }
+    return null;
+  }
+
+  Future<FeedbackModel?> getFeedbackByID(String feedbackID) async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("Feedback")
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  FeedbackModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
+          .doc(feedbackID)
+          .get();
+      return snapshot.data() as FeedbackModel;
+    } catch (e) {
+      print("Error getting feedback: $e");
     }
     return null;
   }
