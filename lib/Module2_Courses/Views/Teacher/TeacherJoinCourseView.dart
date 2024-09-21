@@ -12,7 +12,8 @@ class TeacherJoinCourseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TeacherCourseViewModel viewModel = Provider.of<TeacherCourseViewModel>(context);
+    TeacherCourseViewModel viewModel =
+        Provider.of<TeacherCourseViewModel>(context);
     return TemplateView(
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
@@ -22,19 +23,20 @@ class TeacherJoinCourseView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
-                decoration: const InputDecoration (
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Enter a Course ID'
-                ),
+                    hintText: 'Enter a Course ID'),
                 controller: textController,
               ),
               ElevatedButton(
                   onPressed: () async {
-                    bool enrolled = await viewModel.joinCourse(textController.text);
+                    bool enrolled =
+                        await viewModel.joinCourse(textController.text);
                     if (enrolled) {
-                        GoRouter.of(context).push('/Courses');
+                      GoRouter.of(context).go('/courses');
                     } else {
-                      msgDialogShow(context, 'Joining failed. Pls check the id');
+                      msgDialogShow(
+                          context, 'Joining failed. Pls check the id');
                     }
                   },
                   child: const Text('Join')),
@@ -42,6 +44,7 @@ class TeacherJoinCourseView extends StatelessWidget {
           ),
         ));
   }
+
   void msgDialogShow(BuildContext context, String message) {
     showDialog(
       context: context,

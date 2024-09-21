@@ -76,7 +76,7 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                             children: [
                               ElevatedButton(
                                   onPressed: () {
-                                    GoRouter.of(context).push('/addCourse');
+                                    GoRouter.of(context).go('/courses/add');
                                   },
                                   child: const Text('Add Course')),
                               const SizedBox(height: 20.0),
@@ -97,7 +97,9 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(
                                 onTap: () {
-                                  GoRouter.of(context).push('/courseOverview');
+                                  GoRouter.of(context).go(
+                                      '/courses/${courses[index].id}',
+                                      extra: courses[index]);
                                 },
                                 child: Container(
                                   width: MediaQuery.of(context).size.width / 5 -
@@ -181,7 +183,7 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                         bool enrolled =
                             await viewModel.joinCourse(textController.text);
                         if (enrolled) {
-                          GoRouter.of(context).push('/Courses');
+                          GoRouter.of(context).go('/courses');
                         } else {
                           setState(() {
                             isCodeIncorrect = true;

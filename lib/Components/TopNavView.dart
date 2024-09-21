@@ -1,42 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Components/TopNavViewModel.dart';
+import 'package:team_adaptive/Components/TopRightOptions.dart';
+import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 
-import '../Module1_User_Management/Services/AuthServices.dart';
-
-enum SELECTED { HOME, COURSES, ABOUT, NONE }
-
-class TemplateView extends StatelessWidget {
-  Widget child;
-  List<Widget> topRight;
-  SELECTED highlighted;
-
-  List<String> navBtns = ['home', 'courses', 'about'];
-
-  TemplateView({
-    super.key,
-    required this.child,
-    required this.highlighted,
-    required this.topRight,
-  });
+class TopNavView extends StatelessWidget {
+  final Widget child;
+  const TopNavView({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     final authServices = Provider.of<AuthServices>(context);
+    final viewModel = Provider.of<TopNavViewmodel>(context);
 
     List<Widget> topLeft = [
       const Text('AdaptiveEdu'),
     ];
-    topLeft.addAll(List.generate(navBtns.length, (index) {
-      Text text = Text(navBtns[index]);
-      if (index == highlighted.index && index != SELECTED.NONE.index) {
+    topLeft.addAll(List.generate(viewModel.navBtns.length, (index) {
+      Text text = Text(viewModel.navBtns[index]);
+      if (index == viewModel.highlighted.index &&
+          index != SELECTED.NONE.index) {
         text = Text(
-          navBtns[index],
+          viewModel.navBtns[index],
+          style: const TextStyle(
+              decoration: TextDecoration.underline,
+              fontWeight: FontWeight.bold),
         );
       }
       return TextButton(
           onPressed: () {
-            GoRouter.of(context).push("/${navBtns[index]}");
+            viewModel.setSelected(SELECTED.values[index]);
+            GoRouter.of(context).push("/${viewModel.navBtns[index]}");
           },
           child: text);
     }));
@@ -59,7 +54,9 @@ class TemplateView extends StatelessWidget {
             ),
             child: AppBar(
               title: Wrap(spacing: 100, children: topLeft),
-              actions: topRight,
+              actions: authServices.userInfo == null
+                  ? authOptions(context)
+                  : userInfo(context),
             ),
           ),
         ),

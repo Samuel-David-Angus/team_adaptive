@@ -12,7 +12,8 @@ class EnrollCourseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    StudentCourseViewModel viewModel = Provider.of<StudentCourseViewModel>(context);
+    StudentCourseViewModel viewModel =
+        Provider.of<StudentCourseViewModel>(context);
     return TemplateView(
         highlighted: SELECTED.NONE,
         topRight: userInfo(context),
@@ -22,19 +23,19 @@ class EnrollCourseView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
-                decoration: const InputDecoration (
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a Course ID'
-                ),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter a Course ID'),
                 controller: textController,
               ),
               ElevatedButton(
                   onPressed: () async {
                     bool enrolled = await viewModel.enroll(textController.text);
                     if (enrolled) {
-GoRouter.of(context).push('/Courses');
+                      GoRouter.of(context).go('/courses');
                     } else {
-                      msgDialogShow(context, 'Enrolling failed. Pls check the code');
+                      msgDialogShow(
+                          context, 'Enrolling failed. Pls check the code');
                     }
                   },
                   child: const Text('Enroll')),
@@ -42,6 +43,7 @@ GoRouter.of(context).push('/Courses');
           ),
         ));
   }
+
   void msgDialogShow(BuildContext context, String message) {
     showDialog(
       context: context,
