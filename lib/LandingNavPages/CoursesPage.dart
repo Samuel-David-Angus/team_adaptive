@@ -63,7 +63,7 @@ class CoursesPage extends StatelessWidget {
                       const SizedBox(height: 50),
                       ElevatedButton(
                         onPressed: () {
-                          GoRouter.of(context).push('/register');
+                          GoRouter.of(context).go('/register');
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(

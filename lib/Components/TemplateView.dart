@@ -36,7 +36,7 @@ class TemplateView extends StatelessWidget {
       }
       return TextButton(
           onPressed: () {
-            GoRouter.of(context).push("/${navBtns[index]}");
+            GoRouter.of(context).go("/${navBtns[index]}");
           },
           child: text);
     }));

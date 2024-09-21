@@ -75,7 +75,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
                 height: 60.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    GoRouter.of(context).push('/conceptMap');
+                    GoRouter.of(context).go('/conceptMap');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ThemeColor.offwhiteTheme,

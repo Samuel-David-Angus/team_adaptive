@@ -31,7 +31,7 @@ class TopNavView extends StatelessWidget {
       return TextButton(
           onPressed: () {
             viewModel.setSelected(SELECTED.values[index]);
-            GoRouter.of(context).push("/${viewModel.navBtns[index]}");
+            GoRouter.of(context).go("/${viewModel.navBtns[index]}");
           },
           child: text);
     }));
