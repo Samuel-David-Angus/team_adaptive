@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
@@ -12,7 +13,8 @@ class StudentLessonListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final StudentLessonViewModel viewModel = Provider.of<StudentLessonViewModel>(context, listen: false);
+    final StudentLessonViewModel viewModel =
+        Provider.of<StudentLessonViewModel>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: FutureBuilder<List<LessonModel>>(
@@ -29,27 +31,24 @@ class StudentLessonListView extends StatelessWidget {
               children: [
                 Wrap(
                   spacing: 10,
-                  children: List.generate(
-                      lessons.length,
-                          (index) {
-                        return Card(
-                            child: ListTile(
-                              title: Text(lessons[index].lessonTitle!),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => ViewLessonView(lesson: lessons[index])));
-                                    },
-                                    child: const Text('Take Lesson'),
-                                  ),
-                                ],
-                              ),
-                            ));
-                      }),
+                  children: List.generate(lessons.length, (index) {
+                    return Card(
+                        child: ListTile(
+                      title: Text(lessons[index].lessonTitle!),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              GoRouter.of(context).go(
+                                  '/courses/${course.id}/lessons/${lessons[index].id}/main', extra: lessons[index]);
+                            },
+                            child: const Text('Take Lesson'),
+                          ),
+                        ],
+                      ),
+                    ));
+                  }),
                 ),
               ],
             );

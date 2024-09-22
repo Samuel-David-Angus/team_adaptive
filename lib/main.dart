@@ -18,11 +18,15 @@ import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dar
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
+import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Assessment/Views/AssessmentView.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/LessonMaterialView.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
@@ -50,7 +54,9 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
         ConceptMapView(course: snapshot.data! as Course),
     FeedbackView : (snapshot) =>
         FeedbackView(feedback: snapshot.data! as FeedbackModel),
-    LessonListPage: (snapshot) => LessonListPage(course: snapshot.data! as Course)
+    LessonListPage: (snapshot) => LessonListPage(course: snapshot.data! as Course),
+    ViewLessonView: (snapshot) => ViewLessonView(lesson: snapshot.data! as LessonModel),
+    AssessmentView: (snapshot) => AssessmentView(lessonModel: snapshot.data! as LessonModel)
   };
 
   // Look up the page type in the map
@@ -150,7 +156,23 @@ final GoRouter _router = GoRouter(
                                   dataHandler.getCourse(state))),
                       GoRoute(
                         path: 'lessons',
-                        builder: (context, state) => routeBuilder<Course?, LessonListPage>(dataHandler.getCourse(state))
+                        builder: (context, state) => routeBuilder<Course?, LessonListPage>(dataHandler.getCourse(state)),
+                        routes: <RouteBase> [
+                          GoRoute(
+                            path: ':lessonID',
+                            routes: <RouteBase> [
+                              GoRoute( // student route only
+                                path: 'main',
+                                builder: (context, state) => routeBuilder<LessonModel?, ViewLessonView>(dataHandler.getLesson(state))
+                              ),
+                              GoRoute( // student route only
+                                path: 'assessment',
+                                builder: (context, state) => routeBuilder<LessonModel?, AssessmentView>(dataHandler.getLesson(state))
+                              ),
+
+                            ]
+                          )
+                        ]
                       )
                     ]),
               ]),

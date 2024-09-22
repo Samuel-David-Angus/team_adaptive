@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
@@ -16,7 +17,8 @@ class ViewLessonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<StudentLessonViewModel>(context, listen: false);
+    final viewModel =
+        Provider.of<StudentLessonViewModel>(context, listen: false);
     return FutureBuilder<LessonMaterialModel?>(
         future: viewModel.getMainLesson(lesson.courseID!, lesson.id!),
         builder: (context, snapshot) {
@@ -39,38 +41,37 @@ class ViewLessonView extends StatelessWidget {
                     children: [
                       ElevatedButton(
                           onPressed: () {
-                            showDialog(context: context,
+                            showDialog(
+                                context: context,
                                 builder: (context) {
                                   return PointerInterceptor(
                                     child: AlertDialog(
                                       title: const Text('Heads Up!'),
-                                      content: const Text('After completing you will be redirected to an assessment.'),
+                                      content: const Text(
+                                          'After completing you will be redirected to an assessment.'),
                                       actions: [
                                         ElevatedButton(
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: const Text('Cancel')
-                                        ),
+                                            child: const Text('Cancel')),
                                         ElevatedButton(
                                             onPressed: () async {
-                                              await viewModel.completeMainLesson(lesson.id!);
+                                              await viewModel
+                                                  .completeMainLesson(
+                                                      lesson.id!);
                                               Navigator.of(context).pop();
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => AssessmentView(lessonModel: lesson)));
+                                              GoRouter.of(context).go(
+                                                  '/courses/${lesson.courseID}/lessons/${lesson.id}/assessment',
+                                                  extra: lesson);
                                             },
-                                            child: const Text('Ok')
-                                        )
+                                            child: const Text('Ok'))
                                       ],
                                     ),
-
                                   );
-                                }
-                            );
-
-
+                                });
                           },
-                          child: const Text('Complete Lesson')
-                      ),
+                          child: const Text('Complete Lesson')),
                       Expanded(
                         child: IframeView(
                           source: lessonMaterial.src!,
@@ -78,10 +79,8 @@ class ViewLessonView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
-            );
+                ));
           }
-        }
-    );
+        });
   }
 }
