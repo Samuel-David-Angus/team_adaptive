@@ -7,6 +7,7 @@ import 'package:team_adaptive/Components/DataHandler.dart';
 import 'package:team_adaptive/Components/TopNavView.dart';
 import 'package:team_adaptive/Components/TopNavViewModel.dart';
 import 'package:team_adaptive/LandingNavPages/CourseOverviewPage.dart';
+import 'package:team_adaptive/LandingNavPages/LessonList.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module1_User_Management/View_Models/LoginViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
@@ -48,7 +49,8 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
     ConceptMapView: (snapshot) =>
         ConceptMapView(course: snapshot.data! as Course),
     FeedbackView : (snapshot) =>
-        FeedbackView(feedback: snapshot.data! as FeedbackModel)
+        FeedbackView(feedback: snapshot.data! as FeedbackModel),
+    LessonListPage: (snapshot) => LessonListPage(course: snapshot.data! as Course)
   };
 
   // Look up the page type in the map
@@ -146,6 +148,10 @@ final GoRouter _router = GoRouter(
                           builder: (context, state) =>
                               routeBuilder<Course?, ConceptMapView>(
                                   dataHandler.getCourse(state))),
+                      GoRoute(
+                        path: 'lessons',
+                        builder: (context, state) => routeBuilder<Course?, LessonListPage>(dataHandler.getCourse(state))
+                      )
                     ]),
               ]),
               GoRoute(

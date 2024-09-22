@@ -51,11 +51,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
             height: 60.0,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            TeacherLessonHomeView(course: course)));
+                GoRouter.of(context).go('/courses/${course.id}/lessons');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: ThemeColor.darkgreyTheme,

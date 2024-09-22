@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module3_Learner/Views/StudentLessonListView.dart';
@@ -35,10 +35,7 @@ class StudentCourseOverviewView extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StudentLessonListView(course: course))
-                );
+                GoRouter.of(context).go('/courses/${course.id}/lessons');
               },
               child: const Text('Lessons'))
         ],
