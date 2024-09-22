@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
+import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 
@@ -13,6 +14,13 @@ class FeedbackListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var authUserInfo = Provider.of<AuthServices>(context).userInfo;
+    if (authUserInfo == null) {
+      return const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Center(child: Text("Please Login to see your feedbacks"))
+      );
+    }
     var viewModel = Provider.of<FeedbackViewModel>(context, listen: false);
     return Padding(
         padding: const EdgeInsets.all(16.0),

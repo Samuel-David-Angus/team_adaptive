@@ -106,7 +106,10 @@ class FeedbackViewModel extends ChangeNotifier {
   }
 
   Future<List<FeedbackModel>?> getUserFeedbacks() async {
-    return await feedbackService
-        .getFeedbackByLearnerID(authServices.userInfo!.id!);
+    if (authServices.userInfo != null) {
+      return await feedbackService
+          .getFeedbackByLearnerID(authServices.userInfo!.id!);
+    }
+    return null;
   }
 }
