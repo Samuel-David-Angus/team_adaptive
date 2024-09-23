@@ -6,13 +6,12 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonMaterialView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
-import '../../Module3_Student_Feedback/Views/LessonMaterialView.dart';
 import '../View_Models/TeacherLessonViewModel.dart';
 
 class TeacherLessonMaterialListView extends StatelessWidget {
-  LessonModel lesson;
-  String type;
-  TeacherLessonMaterialListView(
+  final LessonModel lesson;
+  final String type;
+  const TeacherLessonMaterialListView(
       {super.key, required this.lesson, required this.type});
 
   @override

@@ -4,7 +4,7 @@ import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 
 class ConceptMapView extends StatelessWidget {
-  Course? course;
+  final Course? course;
   final TextEditingController conceptController = TextEditingController();
 
   ConceptMapView({super.key, required this.course});

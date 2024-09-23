@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
-import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class TeacherViewQuestionView extends StatelessWidget {

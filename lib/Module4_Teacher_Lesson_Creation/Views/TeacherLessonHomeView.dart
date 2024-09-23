@@ -5,11 +5,8 @@ import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonView.dart';
-import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
-import '../../Module6_Teacher_Assessment_Creation/Views/TeacherViewQuestionView.dart';
-import './InitialAddMaterialsView.dart';
 
 class TeacherLessonHomeView extends StatelessWidget {
   final Course course;

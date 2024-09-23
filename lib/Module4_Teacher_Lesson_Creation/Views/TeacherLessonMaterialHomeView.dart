@@ -3,8 +3,8 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialListView.dart';
 
 class TeacherLessonMaterialHomeView extends StatelessWidget {
-  LessonModel lesson;
-  TeacherLessonMaterialHomeView({super.key, required this.lesson});
+  final LessonModel lesson;
+  const TeacherLessonMaterialHomeView({super.key, required this.lesson});
 
   @override
   Widget build(BuildContext context) {

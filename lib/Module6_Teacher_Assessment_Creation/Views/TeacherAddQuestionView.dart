@@ -47,7 +47,6 @@ class TeacherAddQuestionView extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData && snapshot.data != null) {
-          ConceptMapModel conceptMapModel = snapshot.data!;
           return Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

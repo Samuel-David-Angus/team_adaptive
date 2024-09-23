@@ -4,14 +4,13 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Learner/Views/Iframe.dart';
-import 'package:team_adaptive/Module3_Student_Assessment/Views/AssessmentView.dart';
 
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 
 class ViewLessonView extends StatelessWidget {
-  LessonModel lesson;
-  ViewLessonView({super.key, required this.lesson});
+  final LessonModel lesson;
+  const ViewLessonView({super.key, required this.lesson});
 
   @override
   Widget build(BuildContext context) {

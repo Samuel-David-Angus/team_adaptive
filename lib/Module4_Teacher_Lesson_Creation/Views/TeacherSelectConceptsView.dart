@@ -6,10 +6,10 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/Select
 import '../Models/LessonMaterialModel.dart';
 
 class TeacherSelectConceptsView extends StatelessWidget {
-  String? courseID;
-  LessonModel? lesson;
-  LessonMaterialModel? material;
-  TeacherSelectConceptsView(
+  final String? courseID;
+  final LessonModel? lesson;
+  final LessonMaterialModel? material;
+  const TeacherSelectConceptsView(
       {super.key, this.courseID, this.lesson, this.material});
 
   @override

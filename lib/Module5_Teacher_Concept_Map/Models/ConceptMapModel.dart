@@ -32,7 +32,7 @@ class ConceptMapModel {
     Map<String, List<int>> conceptMapUnordered =
         (json['conceptMap'] as Map<String, dynamic>? ?? {}).map(
       (key, value) {
-        final nonNullKey = key ?? '';
+        final nonNullKey = key;
         final nonNullValue =
             (value as List<dynamic>?)?.map((e) => e as int).toList() ?? [];
         return MapEntry(nonNullKey, nonNullValue);

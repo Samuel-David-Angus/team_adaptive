@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
-import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonHomeView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
-import '../../../Module1_User_Management/Models/User.dart';
-import '../../../Module1_User_Management/Services/AuthServices.dart';
 
 class TeacherCourseOverviewView extends StatelessWidget {
-  Course course;
-  TeacherCourseOverviewView({super.key, required this.course});
+  final Course course;
+  const TeacherCourseOverviewView({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {
-    User? user = AuthServices().userInfo;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

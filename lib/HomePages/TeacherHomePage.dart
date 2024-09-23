@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
-import '../Module1_User_Management/Services/AuthServices.dart';
 
 class TeacherHomePage extends StatelessWidget {
   const TeacherHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authServices = Provider.of<AuthServices>(context);
     return SingleChildScrollView(
       child: Stack(
         children: [

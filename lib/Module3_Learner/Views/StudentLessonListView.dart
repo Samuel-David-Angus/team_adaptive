@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
-import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 
 import '../../Module2_Courses/Models/CourseModel.dart';
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 
 class StudentLessonListView extends StatelessWidget {
-  Course course;
-  StudentLessonListView({super.key, required this.course});
+  final Course course;
+  const StudentLessonListView({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {

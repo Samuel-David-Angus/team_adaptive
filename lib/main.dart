@@ -11,7 +11,6 @@ import 'package:team_adaptive/LandingNavPages/LessonList.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module1_User_Management/View_Models/LoginViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
-import 'package:team_adaptive/Module2_Courses/Services/StudentCourseServices.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';

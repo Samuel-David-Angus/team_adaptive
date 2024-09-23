@@ -61,7 +61,7 @@ List<Widget> userInfo(BuildContext context) {
     const SizedBox(
       width: 10,
     ),
-    Text(user!.type!),
+    Text(user.type!),
     const SizedBox(
       width: 10,
     ),
