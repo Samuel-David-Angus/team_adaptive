@@ -34,6 +34,7 @@ import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMap
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherViewQuestionView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import 'LandingNavPages/AboutPage.dart';
@@ -59,7 +60,8 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
     ViewLessonView: (snapshot) => ViewLessonView(lesson: snapshot.data! as LessonModel),
     AssessmentView: (snapshot) => AssessmentView(lessonModel: snapshot.data! as LessonModel),
     LessonMaterialView: (snapshot) => LessonMaterialView(lessonMaterial: snapshot.data! as LessonMaterialModel),
-    TeacherLessonMaterialHomeView: (snapshot) => TeacherLessonMaterialHomeView(lesson: snapshot.data! as LessonModel)
+    TeacherLessonMaterialHomeView: (snapshot) => TeacherLessonMaterialHomeView(lesson: snapshot.data! as LessonModel),
+    TeacherViewQuestionView: (snapshot) => TeacherViewQuestionView(lesson: snapshot.data! as LessonModel)
   };
 
   // Look up the page type in the map
@@ -175,6 +177,10 @@ final GoRouter _router = GoRouter(
                               GoRoute(
                                 path: 'materials',
                                 builder: (context, state) => routeBuilder<LessonModel?, TeacherLessonMaterialHomeView>(dataHandler.getLesson(state))
+                              ),
+                              GoRoute(
+                                path: 'questions',
+                                builder: (context, state) => routeBuilder<LessonModel?, TeacherViewQuestionView>(dataHandler.getLesson(state))
                               )
                             ]
                           )

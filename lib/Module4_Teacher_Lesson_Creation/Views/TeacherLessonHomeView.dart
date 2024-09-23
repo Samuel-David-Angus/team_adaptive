@@ -96,12 +96,9 @@ class TeacherLessonHomeView extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          TeacherViewQuestionView(
-                                              lesson: lessons[index])));
+                              GoRouter.of(context).go(
+                                  '/courses/${course.id}/lessons/${lessons[index].id}/questions',
+                                  extra: lessons[index]);
                             },
                             child: const Text('Create Assessment Questions'),
                           ),
