@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
@@ -87,12 +88,9 @@ class TeacherLessonHomeView extends StatelessWidget {
                         children: [
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          TeacherLessonMaterialHomeView(
-                                              lesson: lessons[index])));
+                              GoRouter.of(context).go(
+                                  '/courses/${course.id}/lessons/${lessons[index].id}/materials',
+                                  extra: lessons[index]);
                             },
                             child: const Text('See materials'),
                           ),
@@ -105,8 +103,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                                           TeacherViewQuestionView(
                                               lesson: lessons[index])));
                             },
-                            child:
-                                const Text('Create Assessment Questions'),
+                            child: const Text('Create Assessment Questions'),
                           ),
                           if (!lessons[index].isSetupComplete!)
                             TextButton(

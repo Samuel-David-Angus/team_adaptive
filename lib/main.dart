@@ -29,6 +29,7 @@ import 'package:team_adaptive/Module3_Student_Feedback/Views/LessonMaterialView.
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
@@ -57,7 +58,8 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
     LessonListPage: (snapshot) => LessonListPage(course: snapshot.data! as Course),
     ViewLessonView: (snapshot) => ViewLessonView(lesson: snapshot.data! as LessonModel),
     AssessmentView: (snapshot) => AssessmentView(lessonModel: snapshot.data! as LessonModel),
-    LessonMaterialView: (snapshot) => LessonMaterialView(lessonMaterial: snapshot.data! as LessonMaterialModel)
+    LessonMaterialView: (snapshot) => LessonMaterialView(lessonMaterial: snapshot.data! as LessonMaterialModel),
+    TeacherLessonMaterialHomeView: (snapshot) => TeacherLessonMaterialHomeView(lesson: snapshot.data! as LessonModel)
   };
 
   // Look up the page type in the map
@@ -170,7 +172,10 @@ final GoRouter _router = GoRouter(
                                 path: 'assessment',
                                 builder: (context, state) => routeBuilder<LessonModel?, AssessmentView>(dataHandler.getLesson(state))
                               ),
-
+                              GoRoute(
+                                path: 'materials',
+                                builder: (context, state) => routeBuilder<LessonModel?, TeacherLessonMaterialHomeView>(dataHandler.getLesson(state))
+                              )
                             ]
                           )
                         ]
