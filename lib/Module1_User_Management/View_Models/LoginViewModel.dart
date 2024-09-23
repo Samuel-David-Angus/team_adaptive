@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 
 import '../Others/enums.dart';

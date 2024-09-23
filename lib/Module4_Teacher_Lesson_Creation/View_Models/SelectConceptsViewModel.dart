@@ -14,8 +14,8 @@ class SelectConceptsViewModel extends ChangeNotifier {
       assert(courseID != null || lesson != null);
       ConceptMapModel? conceptMapModel = await ConceptMapService()
           .getConceptMap(courseID ?? lesson!.courseID!);
-      List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
-      Map<String, List<int>> map = conceptMapModel.conceptMap!;
+      List<String> keys = conceptMapModel!.conceptMap.keys.toList();
+      Map<String, List<int>> map = conceptMapModel.conceptMap;
       selectedItems = [];
       if (lesson == null) {
         items = keys;
@@ -43,8 +43,8 @@ class SelectConceptsViewModel extends ChangeNotifier {
     try {
       ConceptMapModel? conceptMapModel =
           await ConceptMapService().getConceptMap(lesson.courseID!);
-      List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
-      Map<String, List<int>> map = conceptMapModel.conceptMap!;
+      List<String> keys = conceptMapModel!.conceptMap.keys.toList();
+      Map<String, List<int>> map = conceptMapModel.conceptMap;
       selectedItems = [];
       if (material == null) {
         items = keys;

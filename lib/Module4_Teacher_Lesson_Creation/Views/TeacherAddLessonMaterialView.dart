@@ -92,12 +92,12 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Message'),
+                            title: const Text('Message'),
                             content:
-                                Text('Pls fill all fields and select concepts'),
+                                const Text('Pls fill all fields and select concepts'),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('OK'),
+                                child: const Text('OK'),
                                 onPressed: () {
                                   Navigator.of(context)
                                       .pop(); // Close the dialog
@@ -110,7 +110,7 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                     }
                   }
                 },
-                child: Text('Save'))
+                child: const Text('Save'))
           ],
         ),
       ),

@@ -8,14 +8,14 @@ import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherCourseOvervie
 import '../Module1_User_Management/Services/AuthServices.dart';
 
 class CourseOverviewPage extends StatelessWidget {
-  Course course;
-  CourseOverviewPage({super.key, required this.course});
+  final Course course;
+  const CourseOverviewPage({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {
     final authServices = Provider.of<AuthServices>(context);
     String? type = authServices.userInfo?.type;
-    if (authServices.currentUser == null || type == null || course == null) {
+    if (authServices.currentUser == null || type == null) {
       return const LoginView();
     }
     return type == 'teacher' ? TeacherCourseOverviewView(course: course) : StudentCourseOverviewView(course: course);

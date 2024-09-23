@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
-import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../Module1_User_Management/Services/AuthServices.dart';
@@ -27,26 +25,25 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    StudentCourseViewModel viewModel = Provider.of<StudentCourseViewModel>(context);
+    StudentCourseViewModel viewModel =
+        Provider.of<StudentCourseViewModel>(context);
 
-    return TemplateView(
-      highlighted: SELECTED.HOME,
-      topRight: userInfo(context),
-      child: SingleChildScrollView(
-        child: Stack(
-          children: [
-            // Background Image
-            Container(
-              height: MediaQuery.of(context).size.height - kToolbarHeight,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/hero-home-authenticated.png'),
-                  fit: BoxFit.cover,
-                ),
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          // Background Image
+          Container(
+            height: MediaQuery.of(context).size.height - kToolbarHeight,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/hero-home-authenticated.png'),
+                fit: BoxFit.cover,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 100.0, vertical: 200.0),
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 100.0, vertical: 200.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -82,7 +79,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       fontSize: 16,
                       height: 1.5,
                     ),
-
                   ),
                   const SizedBox(height: 50.0),
                   Row(children: [
@@ -95,12 +91,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
                           hintText: 'Course Code',
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: ThemeColor.darkgreyTheme), // Default border color
+                                color: ThemeColor
+                                    .darkgreyTheme), // Default border color
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: ThemeColor.darkgreyTheme,
-                              width: 2), // Border color when focused
+                                color: ThemeColor.darkgreyTheme,
+                                width: 2), // Border color when focused
                           ),
                         ),
                         controller: textController,
@@ -109,15 +106,17 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     const SizedBox(width: 20.0),
                     ElevatedButton(
                       onPressed: () async {
-                        bool enrolled = await viewModel.enroll(textController.text);
+                        bool enrolled =
+                            await viewModel.enroll(textController.text);
                         if (enrolled) {
-                          Navigator.pushNamed(context, '/Courses');
+                          GoRouter.of(context).go('/courses');
                         } else {
                           invalidCode();
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 36, vertical: 16),
                         backgroundColor: ThemeColor.darkgreyTheme,
                       ),
                       child: const Text(
@@ -141,11 +140,14 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ElevatedButton(onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const FeedbackListView()));
-                        },
+                        ElevatedButton(
+                            onPressed: () {
+                              GoRouter.of(context).go('/feedbacks');
+                            },
                             child: const Text('Feedback')),
-                        const SizedBox(width: 20,),
+                        const SizedBox(
+                          width: 20,
+                        ),
                         Text(
                           "Current learning style: ${AuthServices().userInfo!.learningStyle}",
                           style: const TextStyle(
@@ -171,7 +173,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         height: 50.0,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/Courses');
+                            GoRouter.of(context).go('/courses');
                           },
                           child: Transform.scale(
                             scale: 13.0,
@@ -184,12 +186,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ],
                   ),
                 ],
-
-                  )
-              ),
-              const SizedBox(width: 16.0),
-          ],
-        ),
+              )),
+          const SizedBox(width: 16.0),
+        ],
       ),
     );
   }

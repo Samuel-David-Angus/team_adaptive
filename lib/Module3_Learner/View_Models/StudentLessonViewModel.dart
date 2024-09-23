@@ -42,6 +42,7 @@ class StudentLessonViewModel extends ChangeNotifier {
     } on Exception catch (e) {
       debugPrint("Error getting main lesson in viewmodel: $e");
     }
+    return null;
   }
 
   Future<bool> completeMainLesson(String lessonID) async {

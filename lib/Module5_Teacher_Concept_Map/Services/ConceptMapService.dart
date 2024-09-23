@@ -55,7 +55,6 @@ class ConceptMapService {
           .withConverter(
             fromFirestore: (snapshot, _) => ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (model, _) => model.toJson());
-          QuerySnapshot querySnapshot = await ref.get();
           await ref.add(conceptMap);
       return true;
     } catch (e) {

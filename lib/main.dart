@@ -3,7 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Components/DataHandler.dart';
+import 'package:team_adaptive/Components/TopNavView.dart';
+import 'package:team_adaptive/Components/TopNavViewModel.dart';
 import 'package:team_adaptive/LandingNavPages/CourseOverviewPage.dart';
+import 'package:team_adaptive/LandingNavPages/LessonList.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module1_User_Management/View_Models/LoginViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
@@ -13,13 +17,26 @@ import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dar
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
+import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Assessment/Views/AssessmentView.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/LessonMaterialView.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/InitialAddMaterialsView.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherViewQuestionView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import 'LandingNavPages/AboutPage.dart';
@@ -28,6 +45,212 @@ import 'LandingNavPages/HomePage.dart';
 import 'Module1_User_Management/View_Models/RegisterViewModel.dart';
 import 'Module1_User_Management/Views/LoginView.dart';
 import 'Module1_User_Management/Views/RegisterView.dart';
+import 'package:go_router/go_router.dart';
+
+final TopNavViewmodel topNavViewmodel = TopNavViewmodel();
+final DataHandler dataHandler = DataHandler();
+
+Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
+  final Map<Type, Widget Function(AsyncSnapshot)> pageMap = {
+    CourseOverviewPage: (snapshot) =>
+        CourseOverviewPage(course: snapshot.data! as Course),
+    ConceptMapView: (snapshot) =>
+        ConceptMapView(course: snapshot.data! as Course),
+    FeedbackView: (snapshot) =>
+        FeedbackView(feedback: snapshot.data! as FeedbackModel),
+    LessonListPage: (snapshot) =>
+        LessonListPage(course: snapshot.data! as Course),
+    ViewLessonView: (snapshot) =>
+        ViewLessonView(lesson: snapshot.data! as LessonModel),
+    AssessmentView: (snapshot) =>
+        AssessmentView(lessonModel: snapshot.data! as LessonModel),
+    LessonMaterialView: (snapshot) => LessonMaterialView(
+        lessonMaterial: snapshot.data! as LessonMaterialModel),
+    TeacherLessonMaterialHomeView: (snapshot) =>
+        TeacherLessonMaterialHomeView(lesson: snapshot.data! as LessonModel),
+    TeacherViewQuestionView: (snapshot) =>
+        TeacherViewQuestionView(lesson: snapshot.data! as LessonModel),
+    TeacherAddQuestionView: (snapshot) {
+      if (snapshot.data! is LessonModel) {
+        return TeacherAddQuestionView(
+            lessonModel: snapshot.data! as LessonModel);
+      }
+      (QuestionModel, LessonModel) res =
+          snapshot.data! as (QuestionModel, LessonModel);
+      return TeacherAddQuestionView(lessonModel: res.$2, question: res.$1);
+    },
+    InitialAddMaterialsView: (snapshot) =>
+        InitialAddMaterialsView(lesson: snapshot.data! as LessonModel)
+  };
+
+  // Look up the page type in the map
+  if (pageMap.containsKey(pageType)) {
+    return pageMap[pageType]!(snapshot);
+  } else {
+    throw UnimplementedError('Unknown pageType: $pageType');
+  }
+}
+
+FutureBuilder<futureType> routeBuilder<futureType, pageType>(
+    Future<futureType> future) {
+  return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text("Error: ${snapshot.error}"),
+          );
+        } else if (snapshot.hasData) {
+          return pageHandler<pageType>(snapshot);
+        } else {
+          return const Center(child: Text("Data Not Found"));
+        }
+      });
+}
+
+final GoRouter _router = GoRouter(
+  initialLocation: "/home",
+  routes: [
+    ShellRoute(
+        builder: (context, state, child) => TopNavView(child: child),
+        routes: <RouteBase>[
+          GoRoute(
+              path: '/home',
+              builder: (context, state) {
+                return const HomePage();
+              }),
+          GoRoute(
+            path: '/about',
+            builder: (context, state) {
+              return const AboutPage();
+            },
+          ),
+          GoRoute(
+            path: '/login',
+            builder: (context, state) {
+              return const LoginView();
+            },
+          ),
+          GoRoute(
+            path: '/register',
+            builder: (context, state) {
+              return const RegisterView();
+            },
+          ),
+          GoRoute(
+              path: '/courses',
+              builder: (context, state) {
+                return const CoursesPage();
+              },
+              routes: <RouteBase>[
+                // join and enroll might not be necessary, confirm and remove or keep later
+                GoRoute(
+                  path: 'add',
+                  builder: (context, state) => TeacherAddCourseView(),
+                ),
+                GoRoute(
+                  path: 'join',
+                  builder: (context, state) => TeacherJoinCourseView(),
+                ),
+                GoRoute(
+                  path: 'enroll',
+                  builder: (context, state) => EnrollCourseView(),
+                ),
+                GoRoute(
+                    path: ':courseID',
+                    builder: (context, state) {
+                      return routeBuilder<Course?, CourseOverviewPage>(
+                          dataHandler.getCourse(state));
+                    },
+                    routes: <RouteBase>[
+                      GoRoute(
+                          path: 'conceptMap',
+                          builder: (context, state) =>
+                              routeBuilder<Course?, ConceptMapView>(
+                                  dataHandler.getCourse(state))),
+                      GoRoute(
+                          path: 'lessons',
+                          builder: (context, state) =>
+                              routeBuilder<Course?, LessonListPage>(
+                                  dataHandler.getCourse(state)),
+                          routes: <RouteBase>[
+                            GoRoute(
+                                path: ':lessonID',
+                                builder: (context, state) => routeBuilder<
+                                        LessonModel?, ViewLessonView>(
+                                    dataHandler.getLesson(state)),
+                                routes: <RouteBase>[
+                                  GoRoute(
+                                      // student route only
+                                      path: 'assessment',
+                                      builder: (context, state) => routeBuilder<
+                                              LessonModel?, AssessmentView>(
+                                          dataHandler.getLesson(state))),
+                                  GoRoute(
+                                      path: 'materials',
+                                      builder: (context, state) => routeBuilder<
+                                              LessonModel?,
+                                              TeacherLessonMaterialHomeView>(
+                                          dataHandler.getLesson(state))),
+                                  GoRoute(
+                                      path: 'initialize',
+                                      builder: (context, state) => routeBuilder<
+                                              LessonModel?,
+                                              InitialAddMaterialsView>(
+                                          dataHandler.getLesson(state))),
+                                  GoRoute(
+                                      path: 'questions',
+                                      builder: (context, state) => routeBuilder<
+                                              LessonModel?,
+                                              TeacherViewQuestionView>(
+                                          dataHandler.getLesson(state)),
+                                      routes: <RouteBase>[
+                                        GoRoute(
+                                            path: 'add',
+                                            builder: (context, state) =>
+                                                routeBuilder<LessonModel?,
+                                                        TeacherAddQuestionView>(
+                                                    dataHandler
+                                                        .getLesson(state))),
+                                        GoRoute(
+                                            path: 'edit/:questionID',
+                                            builder: (context, state) =>
+                                                routeBuilder<
+                                                        (
+                                                          QuestionModel,
+                                                          LessonModel
+                                                        )?,
+                                                        TeacherAddQuestionView>(
+                                                    dataHandler
+                                                        .getQuestionAndLesson(
+                                                            state)))
+                                      ])
+                                ])
+                          ])
+                    ]),
+              ]),
+          GoRoute(
+              path: '/feedbacks',
+              builder: (context, state) => const FeedbackListView(),
+              routes: <RouteBase>[
+                GoRoute(
+                    path: ':feedbackID',
+                    builder: (context, state) =>
+                        routeBuilder<FeedbackModel?, FeedbackView>(
+                            dataHandler.getFeedback(state))),
+              ]),
+          GoRoute(
+              path: '/material/:courseID/:lessonID/:type/:materialID',
+              builder: (context, state) =>
+                  routeBuilder<LessonMaterialModel?, LessonMaterialView>(
+                      dataHandler.getLessonMaterial(state)))
+        ]),
+  ],
+);
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,9 +277,11 @@ Future main() async {
       ChangeNotifierProvider(create: (_) => CreateEditQuestionViewModel()),
       ChangeNotifierProvider(create: (_) => AssessmentViewModel()),
       ChangeNotifierProvider(create: (_) => FeedbackViewModel()),
+      ChangeNotifierProvider.value(value: topNavViewmodel)
     ],
     child: const MyApp(),
   ));
+  GoRouter.optionURLReflectsImperativeAPIs = true;
 }
 
 class MyApp extends StatelessWidget {
@@ -65,31 +290,32 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: ThemeColor.blueTheme),
-        useMaterial3: true,
-        textTheme: GoogleFonts.exoTextTheme(),
-      ),
-      //replace routes if there is time since it is apparently not recommended bruh
-      routes: {
-        '/Home': (context) => const HomePage(),
-        '/Courses': (context) => const CoursesPage(),
-        '/About': (context) => const AboutPage(),
-        '/login': (context) => const LoginView(),
-        '/register': (context) => const RegisterView(),
-        '/enroll': (context) => EnrollCourseView(),
-        '/courseOverview': (context) => CourseOverviewPage(
-            course: ModalRoute.of(context)?.settings.arguments as Course),
-        '/addCourse': (context) => TeacherAddCourseView(),
-        '/joinCourse': (context) => TeacherJoinCourseView(),
-        '/conceptMap': (context) => ConceptMapView(
-              course: ModalRoute.of(context)?.settings.arguments as Course,
-            ),
-      },
+    return MaterialApp.router(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: ThemeColor.blueTheme),
+          useMaterial3: true,
+          textTheme: GoogleFonts.exoTextTheme(),
+        ),
+        routerConfig: _router
+        //replace routes if there is time since it is apparently not recommended bruh
+        // routes: {
+        //   '/Home': (context) => const HomePage(),
+        //   '/Courses': (context) => const CoursesPage(),
+        //   '/About': (context) => const AboutPage(),
+        //   '/login': (context) => const LoginView(),
+        //   '/register': (context) => const RegisterView(),
+        //   '/enroll': (context) => EnrollCourseView(),
+        //   '/courseOverview': (context) => CourseOverviewPage(
+        //       course: ModalRoute.of(context)?.settings.arguments as Course),
+        //   '/addCourse': (context) => TeacherAddCourseView(),
+        //   '/joinCourse': (context) => TeacherJoinCourseView(),
+        //   '/conceptMap': (context) => ConceptMapView(
+        //         course: ModalRoute.of(context)?.settings.arguments as Course,
+        //       ),
+        // },
 
-      initialRoute: '/Home', // Specify the initial route
-    );
+        // initialRoute: '/Home', // Specify the initial route
+        );
   }
 }
