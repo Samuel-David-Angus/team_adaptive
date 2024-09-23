@@ -4,6 +4,7 @@ import 'package:team_adaptive/Module2_Courses/Services/StudentCourseServices.dar
 import 'package:team_adaptive/Module3_Learner/Services/StudentLessonService.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Services/FeedbackService.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 
 class DataHandler {
@@ -15,6 +16,9 @@ class DataHandler {
 
   late Future<FeedbackModel?> _feedback;
   bool _isFeedbackLoading = false;
+
+  late Future<LessonMaterialModel?> _lessonMaterial;
+  bool _isMaterialLoading = false;
 
   Future<Course?> getCourse(GoRouterState state) async {
     if (_isCourseLoading) {
@@ -75,5 +79,35 @@ class DataHandler {
         await StudentLessonService().getLessonByID(courseID, lessonID);
     _isLessonLoading = false;
     return retrievedLesson;
+  }
+
+  Future<LessonMaterialModel?> getLessonMaterial(GoRouterState state) async {
+    if (_isMaterialLoading) {
+      return _lessonMaterial;
+    }
+    _isMaterialLoading = true;
+    if (state.extra != null) {
+      _isMaterialLoading = false;
+      return state.extra as LessonMaterialModel;
+    }
+    String? courseID = state.pathParameters['courseID'];
+    String? lessonID = state.pathParameters['lessonID'];
+    String? materialID = state.pathParameters['materialID'];
+    String? type = state.pathParameters['type'];
+    if (courseID == null ||
+        lessonID == null ||
+        materialID == null ||
+        type == null) {
+      _isMaterialLoading = false;
+      return null;
+    }
+    LessonMaterialModel? retrievedMaterial = await StudentLessonService()
+        .getLessonMaterialByTypeAndID(
+            courseID: courseID,
+            lessonID: lessonID,
+            type: type,
+            materialID: materialID);
+    _isMaterialLoading = false;
+    return retrievedMaterial;
   }
 }

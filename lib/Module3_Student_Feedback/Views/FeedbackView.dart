@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
@@ -23,7 +24,8 @@ class FeedbackView extends StatelessWidget {
     final FeedbackViewModel viewModel = Provider.of<FeedbackViewModel>(context);
     if (justInitialized) {
       justInitialized = false;
-      successfulFeedbackGenerated = viewModel.retrieveFeedbackMaterials(feedback!);
+      successfulFeedbackGenerated =
+          viewModel.retrieveFeedbackMaterials(feedback!);
     }
     return FutureBuilder(
       future: successfulFeedbackGenerated,
@@ -32,8 +34,11 @@ class FeedbackView extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error occurred: ${snapshot.error}'));
-        } else if (snapshot.hasData && snapshot.data != null && snapshot.data!) {
-          Map<String, double> conceptsAndFailureRates = viewModel.feedback.lessonConceptFailureRates;
+        } else if (snapshot.hasData &&
+            snapshot.data != null &&
+            snapshot.data!) {
+          Map<String, double> conceptsAndFailureRates =
+              viewModel.feedback.lessonConceptFailureRates;
           return DefaultTabController(
             length: 2,
             child: Padding(
@@ -55,55 +60,78 @@ class FeedbackView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 15),
-                              Text('Score: ${viewModel.feedback.learnerScore}', style: const TextStyle(fontSize: 24.0)),
+                              Text('Score: ${viewModel.feedback.learnerScore}',
+                                  style: const TextStyle(fontSize: 24.0)),
                               const SizedBox(height: 15),
-                              Text('Learner Skill level: ${viewModel.feedback.skillLevel}', style: const TextStyle(fontSize: 24.0)),
+                              Text(
+                                  'Learner Skill level: ${viewModel.feedback.skillLevel}',
+                                  style: const TextStyle(fontSize: 24.0)),
                               const SizedBox(height: 15),
-                              Text('Category: ${viewModel.feedback.categorizedSkillLevel}', style: const TextStyle(fontSize: 24.0)),
+                              Text(
+                                  'Category: ${viewModel.feedback.categorizedSkillLevel}',
+                                  style: const TextStyle(fontSize: 24.0)),
                               const SizedBox(height: 15),
-                              Text('Suggested Learning Style: ${viewModel.feedback.diagnosedLearningStyle}', style: const TextStyle(fontSize: 24.0)),
+                              Text(
+                                  'Suggested Learning Style: ${viewModel.feedback.diagnosedLearningStyle}',
+                                  style: const TextStyle(fontSize: 24.0)),
                               const SizedBox(height: 15),
                               Table(
                                 children: [
                                   TableRow(
                                     children: [
                                       Container(
-                                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
                                         padding: const EdgeInsets.all(10.0),
-                                        child: const Text("Concept", style: TextStyle(fontSize: 24.0)),
+                                        child: const Text("Concept",
+                                            style: TextStyle(fontSize: 24.0)),
                                       ),
                                       Container(
-                                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
                                         padding: const EdgeInsets.all(10.0),
-                                        child: const Text("Failure Rate", style: TextStyle(fontSize: 24.0)),
+                                        child: const Text("Failure Rate",
+                                            style: TextStyle(fontSize: 24.0)),
                                       ),
                                     ],
                                   ),
-                                  ...conceptsAndFailureRates.entries.map<TableRow>(
+                                  ...conceptsAndFailureRates.entries
+                                      .map<TableRow>(
                                     (entry) {
                                       return TableRow(
                                         children: [
                                           Container(
-                                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
                                             color: color,
                                             padding: const EdgeInsets.all(10.0),
-                                            child: Text(entry.key, style: const TextStyle(fontSize: 20.0)),
+                                            child: Text(entry.key,
+                                                style: const TextStyle(
+                                                    fontSize: 20.0)),
                                           ),
                                           Container(
-                                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
                                             color: color,
                                             padding: const EdgeInsets.all(10.0),
                                             child: Row(
                                               children: [
                                                 SizedBox(
-                                                  width: 200, // specify the width you want
-                                                  child: LinearProgressIndicator(
+                                                  width:
+                                                      200, // specify the width you want
+                                                  child:
+                                                      LinearProgressIndicator(
                                                     minHeight: 20,
                                                     value: entry.value / 100,
                                                   ),
                                                 ),
-                                                const SizedBox(width: 10), // Optional: Add spacing between the progress bar and text
-                                                Text("${entry.value.toStringAsFixed(2)}%", style: const TextStyle(fontSize: 20.0)),
+                                                const SizedBox(
+                                                    width:
+                                                        10), // Optional: Add spacing between the progress bar and text
+                                                Text(
+                                                    "${entry.value.toStringAsFixed(2)}%",
+                                                    style: const TextStyle(
+                                                        fontSize: 20.0)),
                                               ],
                                             ),
                                           ),
@@ -114,7 +142,8 @@ class FeedbackView extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 15),
-                              const Text('Weak Concepts:', style: TextStyle(fontSize: 24.0)),
+                              const Text('Weak Concepts:',
+                                  style: TextStyle(fontSize: 24.0)),
                               const SizedBox(height: 15),
                               ...viewModel.feedback.findWeakConcepts().map(
                                 (concept) {
@@ -136,33 +165,39 @@ class FeedbackView extends StatelessWidget {
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.all(10.0),
-                                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
                                         decoration: BoxDecoration(
                                           color: ThemeColor.lightgreyTheme,
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                         ),
                                         child: Column(
                                           children: [
-                                            const Text("Main Lesson:", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+                                            const Text("Main Lesson:",
+                                                style: TextStyle(
+                                                    fontSize: 24.0,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             Text("${item["main"]["concept"]}"),
                                             Card(
                                               child: SizedBox(
                                                 width: 800,
                                                 child: ListTile(
-                                                  title: Text(item["main"]["lesson"].title!),
+                                                  title: Text(item["main"]
+                                                          ["lesson"]
+                                                      .title!),
                                                   trailing: Row(
-                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
                                                     children: [
                                                       TextButton(
                                                         onPressed: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) => LessonMaterialView(lessonMaterial: item["main"]["lesson"]),
-                                                            ),
-                                                          );
+                                                          GoRouter.of(context).go(
+                                                              '/materials/${feedback!.courseID}/${feedback!.lessonID}/main/${item["main"]["lesson"].id!}', extra: item['main']['lesson']);
                                                         },
-                                                        child: const Text('View'),
+                                                        child:
+                                                            const Text('View'),
                                                       ),
                                                     ],
                                                   ),
@@ -170,31 +205,38 @@ class FeedbackView extends StatelessWidget {
                                               ),
                                             ),
                                             if (item["prereqs"].isNotEmpty)
-                                              const Text("Prerequisites:", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+                                              const Text("Prerequisites:",
+                                                  style: TextStyle(
+                                                      fontSize: 20.0,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                             ...item["prereqs"].map(
                                               (item2) {
                                                 return Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(item2["concept"]),
                                                     Card(
                                                       child: SizedBox(
                                                         width: 800,
                                                         child: ListTile(
-                                                          title: Text(item2["lesson"].title!),
+                                                          title: Text(
+                                                              item2["lesson"]
+                                                                  .title!),
                                                           trailing: Row(
-                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
                                                             children: [
                                                               TextButton(
                                                                 onPressed: () {
-                                                                  Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder: (context) => LessonMaterialView(lessonMaterial: item2["lesson"]),
-                                                                    ),
-                                                                  );
+                                                                GoRouter.of(context).go(
+                                                                    '/materials/${feedback!.courseID}/${feedback!.lessonID}/sub/${item2['lesson'].id!}', extra: item2['lesson']);
                                                                 },
-                                                                child: const Text('View'),
+                                                                child:
+                                                                    const Text(
+                                                                        'View'),
                                                               ),
                                                             ],
                                                           ),

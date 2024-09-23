@@ -56,7 +56,8 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
         FeedbackView(feedback: snapshot.data! as FeedbackModel),
     LessonListPage: (snapshot) => LessonListPage(course: snapshot.data! as Course),
     ViewLessonView: (snapshot) => ViewLessonView(lesson: snapshot.data! as LessonModel),
-    AssessmentView: (snapshot) => AssessmentView(lessonModel: snapshot.data! as LessonModel)
+    AssessmentView: (snapshot) => AssessmentView(lessonModel: snapshot.data! as LessonModel),
+    LessonMaterialView: (snapshot) => LessonMaterialView(lessonMaterial: snapshot.data! as LessonMaterialModel)
   };
 
   // Look up the page type in the map
@@ -183,8 +184,12 @@ final GoRouter _router = GoRouter(
                     GoRoute(
                         path: ':feedbackID',
                         builder: (context, state) => routeBuilder<FeedbackModel?, FeedbackView>(dataHandler.getFeedback(state))
-                    )
+                    ),
                 ]
+              ),
+              GoRoute(
+                path: '/material/:courseID/:lessonID/:type/:materialID',
+                builder: (context, state) => routeBuilder<LessonMaterialModel?, LessonMaterialView>(dataHandler.getLessonMaterial(state))
               )
         ]),
   ],
