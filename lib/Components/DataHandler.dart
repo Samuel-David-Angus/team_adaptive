@@ -6,6 +6,8 @@ import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart
 import 'package:team_adaptive/Module3_Student_Feedback/Services/FeedbackService.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Services/TeacherQuestionService.dart';
 
 class DataHandler {
   late Future<Course?> _course;
@@ -19,6 +21,9 @@ class DataHandler {
 
   late Future<LessonMaterialModel?> _lessonMaterial;
   bool _isMaterialLoading = false;
+
+  late Future<(QuestionModel, LessonModel)?> _questionAndLesson;
+  bool _isQuestionAndLessonLoading = false;
 
   Future<Course?> getCourse(GoRouterState state) async {
     if (_isCourseLoading) {
@@ -109,5 +114,33 @@ class DataHandler {
             materialID: materialID);
     _isMaterialLoading = false;
     return retrievedMaterial;
+  }
+
+  Future<(QuestionModel, LessonModel)?> getQuestionAndLesson(
+      GoRouterState state) async {
+    if (_isQuestionAndLessonLoading) {
+      return _questionAndLesson;
+    }
+    _isQuestionAndLessonLoading = true;
+    if (state.extra != null) {
+      _isQuestionAndLessonLoading = false;
+      return state.extra as (QuestionModel, LessonModel);
+    }
+    String? lessonID = state.pathParameters['lessonID'];
+    String? questionID = state.pathParameters['questionID'];
+    if (lessonID == null || questionID == null) {
+      _isQuestionAndLessonLoading = false;
+      return null;
+    }
+    List<Object?> res = await Future.wait([
+      TeacherQuestionService().getQuestionByID(lessonID, questionID),
+      getLesson(state),
+    ]);
+    if (res[0] == null || res[1] == null) {
+      _isQuestionAndLessonLoading = false;
+      return null;
+    }
+    _isQuestionAndLessonLoading = false;
+    return (res[0] as QuestionModel, res[1] as LessonModel);
   }
 }

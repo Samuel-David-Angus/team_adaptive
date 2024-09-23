@@ -32,8 +32,10 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/Teache
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
+import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherViewQuestionView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
@@ -61,7 +63,14 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
     AssessmentView: (snapshot) => AssessmentView(lessonModel: snapshot.data! as LessonModel),
     LessonMaterialView: (snapshot) => LessonMaterialView(lessonMaterial: snapshot.data! as LessonMaterialModel),
     TeacherLessonMaterialHomeView: (snapshot) => TeacherLessonMaterialHomeView(lesson: snapshot.data! as LessonModel),
-    TeacherViewQuestionView: (snapshot) => TeacherViewQuestionView(lesson: snapshot.data! as LessonModel)
+    TeacherViewQuestionView: (snapshot) => TeacherViewQuestionView(lesson: snapshot.data! as LessonModel),
+    TeacherAddQuestionView: (snapshot) {
+      if (snapshot.data! is LessonModel) {
+        return TeacherAddQuestionView(lessonModel: snapshot.data! as LessonModel);
+      }
+      (QuestionModel, LessonModel) res = snapshot.data! as (QuestionModel, LessonModel);
+      return TeacherAddQuestionView(lessonModel: res.$2, question: res.$1 );
+    }
   };
 
   // Look up the page type in the map
@@ -180,7 +189,17 @@ final GoRouter _router = GoRouter(
                               ),
                               GoRoute(
                                 path: 'questions',
-                                builder: (context, state) => routeBuilder<LessonModel?, TeacherViewQuestionView>(dataHandler.getLesson(state))
+                                builder: (context, state) => routeBuilder<LessonModel?, TeacherViewQuestionView>(dataHandler.getLesson(state)),
+                                routes: <RouteBase> [
+                                  GoRoute(
+                                    path: 'add',
+                                    builder: (context, state) => routeBuilder<LessonModel?, TeacherAddQuestionView>(dataHandler.getLesson(state))
+                                  ),
+                                  GoRoute(
+                                    path: 'edit/:questionID',
+                                    builder: (context, state) => routeBuilder<(QuestionModel, LessonModel)?, TeacherAddQuestionView>(dataHandler.getQuestionAndLesson(state))
+                                  )
+                                ]
                               )
                             ]
                           )

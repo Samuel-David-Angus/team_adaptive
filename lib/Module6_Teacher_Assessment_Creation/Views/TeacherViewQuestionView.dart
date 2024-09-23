@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
@@ -47,14 +48,9 @@ class TeacherViewQuestionView extends StatelessWidget {
                           children: [
                             TextButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TeacherAddQuestionView(
-                                              lessonModel: lesson,
-                                              question: question,
-                                            )));
+                                GoRouter.of(context).go(
+                                    '/courses/${lesson.courseID}/lessons/${lesson.id}/questions/edit/${question.id}',
+                                    extra: (question, lesson));
                               },
                               child: const Text('Edit'),
                             ),
@@ -126,12 +122,7 @@ class TeacherViewQuestionView extends StatelessWidget {
                             height: 40.0,
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TeacherAddQuestionView(
-                                                lessonModel: lesson)));
+                                GoRouter.of(context).go('/courses/${lesson.courseID}/lessons/${lesson.id}/questions/add',extra: lesson);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: ThemeColor.darkgreyTheme,

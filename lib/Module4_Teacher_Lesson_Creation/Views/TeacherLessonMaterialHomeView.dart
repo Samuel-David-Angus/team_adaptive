@@ -10,36 +10,33 @@ class TeacherLessonMaterialHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TemplateView(
-        highlighted: SELECTED.NONE,
-        topRight: userInfo(context),
-        child: DefaultTabController(
-            length: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const TabBar(
-                      tabs: [
-                        Tab(
-                          text: "Main Lessons",
-                        ),
-                        Tab(
-                          text: "Sub Lessons",
-                        )
-                      ]
-                  ),
-                  Expanded(
-                      child: TabBarView(
-                          children: [
-                            TeacherLessonMaterialListView(lesson: lesson, type: "main"),
-                            TeacherLessonMaterialListView(lesson: lesson, type: "sub"),
-                          ]
-                      )
-                  )
-                ],
+    return DefaultTabController(
+        length: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const TabBar(
+                  tabs: [
+                    Tab(
+                      text: "Main Lessons",
+                    ),
+                    Tab(
+                      text: "Sub Lessons",
+                    )
+                  ]
               ),
-            )
-        ));
+              Expanded(
+                  child: TabBarView(
+                      children: [
+                        TeacherLessonMaterialListView(lesson: lesson, type: "main"),
+                        TeacherLessonMaterialListView(lesson: lesson, type: "sub"),
+                      ]
+                  )
+              )
+            ],
+          ),
+        )
+    );
   }
 }

@@ -105,6 +105,24 @@ class TeacherQuestionService {
     }
     return false;
   }
+
+  Future<QuestionModel?> getQuestionByID(String lessonID, String questionID) async {
+  try {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection("Question")
+        .doc(lessonID)
+        .collection("Pool")
+        .withConverter(
+        fromFirestore: (snapshot, _) => QuestionModel.fromJson(snapshot.data()!, snapshot.id),
+        toFirestore: (model, _) => {})
+        .doc(questionID)
+        .get();
+    return documentSnapshot.data() as QuestionModel;
+  } catch (e) {
+    debugPrint("Error getting questions: $e");
+  }
+  return null;
+  }
 }
 
 /*
@@ -114,7 +132,7 @@ import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/Questio
 
 class TeacherQuestionService {
   static final TeacherQuestionService _instance = TeacherQuestionService._internal();
-  
+
   TeacherQuestionService._internal();
 
   factory TeacherQuestionService() {
