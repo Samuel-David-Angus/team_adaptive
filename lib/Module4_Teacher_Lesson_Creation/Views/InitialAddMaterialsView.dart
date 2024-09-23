@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../Components/TemplateView.dart';
-import '../../Components/TopRightOptions.dart';
 import '../Models/LessonModel.dart';
 import '../View_Models/InitialAddMaterialsViewModel.dart';
 import '../View_Models/AtomicInputMaterialInfoViewModel.dart';
@@ -85,60 +83,57 @@ class InitialAddMaterialsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TemplateView(
-        highlighted: SELECTED.NONE,
-        topRight: userInfo(context),
-        child: ChangeNotifierProvider.value(
-            value: viewModel,
-            child: Consumer<InitialAddMaterialsViewModel>(
-                builder: (context, viewmodel, child) {
-              return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Row(children: [
-                          ElevatedButton(
-                              child: const Text('Main lessons'),
-                              onPressed: () {
-                                viewModel.index = 0;
-                              }),
-                          ElevatedButton(
-                              child: const Text('Sub lessons'),
-                              onPressed: () {
-                                viewModel.index = 1;
-                              }),
-                          ElevatedButton(
-                              child: const Text('Submit lessons'),
-                              onPressed: () async {
-                                if (viewModel.validate()) {
-                                  if (await viewModel
-                                          .addMultipleMaterials(lesson) &&
-                                      await viewmodel
-                                          .confirmSetupComplete(lesson)) {
-                                    Navigator.pop(context);
-                                  } else {
-                                    showMessage(
-                                        'Error submitting lessons and completing setup',
-                                        context);
-                                  }
-                                } else {
-                                  showMessage(
-                                      'Some fields are missing', context);
-                                }
-                              }),
-                        ]),
-                        Expanded(
-                            child:
-                                IndexedStack(index: viewModel.index, children: [
-                          mainLessonTab,
-                          subLessonTab,
-                        ]))
-                      ],
-                    ),
-                  ));
-            })));
+    return ChangeNotifierProvider.value(
+        value: viewModel,
+        child: Consumer<InitialAddMaterialsViewModel>(
+            builder: (context, viewmodel, child) {
+          return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(children: [
+                      ElevatedButton(
+                          child: const Text('Main lessons'),
+                          onPressed: () {
+                            viewModel.index = 0;
+                          }),
+                      ElevatedButton(
+                          child: const Text('Sub lessons'),
+                          onPressed: () {
+                            viewModel.index = 1;
+                          }),
+                      ElevatedButton(
+                          child: const Text('Submit lessons'),
+                          onPressed: () async {
+                            if (viewModel.validate()) {
+                              if (await viewModel
+                                      .addMultipleMaterials(lesson) &&
+                                  await viewmodel
+                                      .confirmSetupComplete(lesson)) {
+                                Navigator.pop(context);
+                              } else {
+                                showMessage(
+                                    'Error submitting lessons and completing setup',
+                                    context);
+                              }
+                            } else {
+                              showMessage(
+                                  'Some fields are missing', context);
+                            }
+                          }),
+                    ]),
+                    Expanded(
+                        child:
+                            IndexedStack(index: viewModel.index, children: [
+                      mainLessonTab,
+                      subLessonTab,
+                    ]))
+                  ],
+                ),
+              ));
+        }));
   }
 }
 

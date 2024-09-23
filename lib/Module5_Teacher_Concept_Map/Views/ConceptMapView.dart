@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 
@@ -106,11 +104,7 @@ class ConceptMapView extends StatelessWidget {
       if (viewModel.map == null || viewModel.map!.courseID != course!.id) {
         viewModel.getConceptMap(course!.id!);
       }
-      return TemplateView(
-          highlighted: SELECTED.NONE,
-          topRight: userInfo(context),
-          child: view
-      );
+      return view;
     }
     viewModel.createConceptMap();
     return view;

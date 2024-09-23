@@ -105,12 +105,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                           if (!lessons[index].isSetupComplete!)
                             TextButton(
                                 onPressed: () async {
-                                  await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              InitialAddMaterialsView(
-                                                  lesson: lessons[index])));
+                                  await context.push('/courses/${course.id}/lessons/${lessons[index].id}/initialize', extra: lessons[index]);
                                   viewModel.refresh();
                                 },
                                 child: const Text('Setup'))

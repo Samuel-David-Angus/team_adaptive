@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
@@ -26,71 +24,68 @@ class AssessmentView extends StatelessWidget {
       successfulGeneratedAssessment =
           viewModel.createNewAssessment(lessonModel, assessmentLength);
     }
-    return TemplateView(
-        highlighted: SELECTED.NONE,
-        topRight: userInfo(context),
-        child: FutureBuilder<bool>(
-          future: successfulGeneratedAssessment,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error occurred: ${snapshot.error}'),
-              );
-            } else if (snapshot.hasData &&
-                snapshot.data != null &&
-                snapshot.data!) {
-              return SingleChildScrollView(
-                  child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Text('Assessment'),
-                    ...generateTestItems(viewModel),
-                    ElevatedButton(
-                        onPressed: () async {
-                          bool? confirmSubmit = await showConfirmationDialog(
-                              context, "Are you sure you want to submit");
-                          if (confirmSubmit == true) {
-                            bool success = await viewModel.submitAssessment();
-                            if (success) {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) => Container(
-                                      decoration: const BoxDecoration(
-                                          color: Color.fromRGBO(0, 0, 0, 0.5)),
-                                      child: const Center(
-                                          child: CircularProgressIndicator())));
-                              String? feedbackID = await feedBackViewModel
-                                  .createFeedback(viewModel.assessmentModel);
-                              Navigator.pop(context);
-                              if (feedbackID != null) {
-                                GoRouter.of(context).go(
-                                    '/feedbacks/$feedbackID',
-                                    extra: feedBackViewModel.feedback);
-                              } else {
-                                showConfirmationDialog(
-                                    context, "Error generating feedback");
-                              }
-                            } else {
-                              showConfirmationDialog(
-                                  context, "Error submitting assessment");
-                            }
+    return FutureBuilder<bool>(
+      future: successfulGeneratedAssessment,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error occurred: ${snapshot.error}'),
+          );
+        } else if (snapshot.hasData &&
+            snapshot.data != null &&
+            snapshot.data!) {
+          return SingleChildScrollView(
+              child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const Text('Assessment'),
+                ...generateTestItems(viewModel),
+                ElevatedButton(
+                    onPressed: () async {
+                      bool? confirmSubmit = await showConfirmationDialog(
+                          context, "Are you sure you want to submit");
+                      if (confirmSubmit == true) {
+                        bool success = await viewModel.submitAssessment();
+                        if (success) {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) => Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(0, 0, 0, 0.5)),
+                                  child: const Center(
+                                      child: CircularProgressIndicator())));
+                          String? feedbackID = await feedBackViewModel
+                              .createFeedback(viewModel.assessmentModel);
+                          Navigator.pop(context);
+                          if (feedbackID != null) {
+                            GoRouter.of(context).go(
+                                '/feedbacks/$feedbackID',
+                                extra: feedBackViewModel.feedback);
+                          } else {
+                            showConfirmationDialog(
+                                context, "Error generating feedback");
                           }
-                        },
-                        child: const Text('Submit'))
-                  ],
-                ),
-              ));
-            } else {
-              return const Center(child: Text('Unable to load assessment'));
-            }
-          },
-        ));
+                        } else {
+                          showConfirmationDialog(
+                              context, "Error submitting assessment");
+                        }
+                      }
+                    },
+                    child: const Text('Submit'))
+              ],
+            ),
+          ));
+        } else {
+          return const Center(child: Text('Unable to load assessment'));
+        }
+      },
+    );
   }
 }
 

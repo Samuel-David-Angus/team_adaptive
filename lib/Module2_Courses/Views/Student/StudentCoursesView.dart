@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';

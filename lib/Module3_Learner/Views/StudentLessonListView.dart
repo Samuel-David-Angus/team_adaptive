@@ -41,7 +41,7 @@ class StudentLessonListView extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               GoRouter.of(context).go(
-                                  '/courses/${course.id}/lessons/${lessons[index].id}/main', extra: lessons[index]);
+                                  '/courses/${course.id}/lessons/${lessons[index].id}', extra: lessons[index]);
                             },
                             child: const Text('Take Lesson'),
                           ),

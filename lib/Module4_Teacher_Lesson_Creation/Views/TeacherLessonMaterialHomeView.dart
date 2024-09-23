@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialListView.dart';
 

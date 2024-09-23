@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonHomeView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
@@ -51,7 +49,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
             height: 60.0,
             child: ElevatedButton(
               onPressed: () {
-                GoRouter.of(context).go('/courses/${course.id}/lessons');
+                GoRouter.of(context).go('/courses/${course.id}/lessons', extra: course);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: ThemeColor.darkgreyTheme,
@@ -68,7 +66,7 @@ class TeacherCourseOverviewView extends StatelessWidget {
             height: 60.0,
             child: ElevatedButton(
               onPressed: () {
-                GoRouter.of(context).go('/conceptMap');
+                GoRouter.of(context).go('/courses/${course.id}/conceptMap', extra: course);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: ThemeColor.offwhiteTheme,

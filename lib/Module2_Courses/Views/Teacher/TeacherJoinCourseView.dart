@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 
 import '../../View_Models/TeacherCourseViewModel.dart';
 
@@ -14,35 +12,32 @@ class TeacherJoinCourseView extends StatelessWidget {
   Widget build(BuildContext context) {
     TeacherCourseViewModel viewModel =
         Provider.of<TeacherCourseViewModel>(context);
-    return TemplateView(
-        highlighted: SELECTED.NONE,
-        topRight: userInfo(context),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter a Course ID'),
-                controller: textController,
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    bool enrolled =
-                        await viewModel.joinCourse(textController.text);
-                    if (enrolled) {
-                      GoRouter.of(context).go('/courses');
-                    } else {
-                      msgDialogShow(
-                          context, 'Joining failed. Pls check the id');
-                    }
-                  },
-                  child: const Text('Join')),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter a Course ID'),
+            controller: textController,
           ),
-        ));
+          ElevatedButton(
+              onPressed: () async {
+                bool enrolled =
+                    await viewModel.joinCourse(textController.text);
+                if (enrolled) {
+                  GoRouter.of(context).go('/courses');
+                } else {
+                  msgDialogShow(
+                      context, 'Joining failed. Pls check the id');
+                }
+              },
+              child: const Text('Join')),
+        ],
+      ),
+    );
   }
 
   void msgDialogShow(BuildContext context, String message) {

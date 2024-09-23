@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
-import '../../../Components/TemplateView.dart';
-import '../../../Components/TopRightOptions.dart';
 import '../../Models/CourseModel.dart';
 import '../../View_Models/TeacherCourseViewModel.dart';
 

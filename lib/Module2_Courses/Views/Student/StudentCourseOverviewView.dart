@@ -35,7 +35,7 @@ class StudentCourseOverviewView extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
-                GoRouter.of(context).go('/courses/${course.id}/lessons');
+                GoRouter.of(context).go('/courses/${course.id}/lessons', extra: course);
               },
               child: const Text('Lessons'))
         ],

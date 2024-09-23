@@ -10,89 +10,69 @@ import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/Questio
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Services/TeacherQuestionService.dart';
 
 class DataHandler {
-  late Future<Course?> _course;
-  bool _isCourseLoading = false;
-
-  late Future<LessonModel> _lesson;
-  bool _isLessonLoading = false;
-
-  late Future<FeedbackModel?> _feedback;
-  bool _isFeedbackLoading = false;
-
-  late Future<LessonMaterialModel?> _lessonMaterial;
-  bool _isMaterialLoading = false;
-
-  late Future<(QuestionModel, LessonModel)?> _questionAndLesson;
-  bool _isQuestionAndLessonLoading = false;
+  Future<Course?>? _course;
+  Future<LessonModel?>? _lesson;
+  Future<FeedbackModel?>? _feedback;
+  Future<LessonMaterialModel?>? _lessonMaterial;
+  Future<(QuestionModel, LessonModel)?>? _questionAndLesson;
 
   Future<Course?> getCourse(GoRouterState state) async {
-    if (_isCourseLoading) {
+    if (_course != null) {
       return _course;
     }
-    _isCourseLoading = true;
-    if (state.extra != null) {
-      _isCourseLoading = false;
+    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as Course;
     }
     String? courseID = state.pathParameters['courseID'];
     if (courseID == null) {
-      _isCourseLoading = false;
       return null;
     }
-    Course? retrievedCourse =
-        await StudentCourseServices().getCourseByID(courseID);
-    _isCourseLoading = false;
+    _course = StudentCourseServices().getCourseByID(courseID);
+    Course? retrievedCourse = await _course;
+    _course = null;
     return retrievedCourse;
   }
 
   Future<FeedbackModel?> getFeedback(GoRouterState state) async {
-    if (_isFeedbackLoading) {
+    if (_feedback != null) {
       return _feedback;
     }
-    _isFeedbackLoading = true;
-    if (state.extra != null) {
-      _isFeedbackLoading = false;
+    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as FeedbackModel;
     }
     String? feedbackID = state.pathParameters['feedbackID'];
     if (feedbackID == null) {
-      _isFeedbackLoading = false;
       return null;
     }
-    FeedbackModel? retrievedFeedback =
-        await FeedbackService().getFeedbackByID(feedbackID);
-    _isFeedbackLoading = false;
+    _feedback = FeedbackService().getFeedbackByID(feedbackID);
+    FeedbackModel? retrievedFeedback = await _feedback;
+    _feedback = null;
     return retrievedFeedback;
   }
 
   Future<LessonModel?> getLesson(GoRouterState state) async {
-    if (_isLessonLoading) {
+    if (_lesson != null) {
       return _lesson;
     }
-    _isLessonLoading = true;
-    if (state.extra != null) {
-      _isLessonLoading = false;
+    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as LessonModel;
     }
     String? lessonID = state.pathParameters['lessonID'];
     String? courseID = state.pathParameters['courseID'];
     if (lessonID == null || courseID == null) {
-      _isLessonLoading = false;
       return null;
     }
-    LessonModel? retrievedLesson =
-        await StudentLessonService().getLessonByID(courseID, lessonID);
-    _isLessonLoading = false;
+    _lesson = StudentLessonService().getLessonByID(courseID, lessonID);
+    LessonModel? retrievedLesson = await _lesson;
+    _lesson = null;
     return retrievedLesson;
   }
 
   Future<LessonMaterialModel?> getLessonMaterial(GoRouterState state) async {
-    if (_isMaterialLoading) {
+    if (_lessonMaterial != null) {
       return _lessonMaterial;
     }
-    _isMaterialLoading = true;
-    if (state.extra != null) {
-      _isMaterialLoading = false;
+    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as LessonMaterialModel;
     }
     String? courseID = state.pathParameters['courseID'];
@@ -103,44 +83,46 @@ class DataHandler {
         lessonID == null ||
         materialID == null ||
         type == null) {
-      _isMaterialLoading = false;
       return null;
     }
-    LessonMaterialModel? retrievedMaterial = await StudentLessonService()
-        .getLessonMaterialByTypeAndID(
-            courseID: courseID,
-            lessonID: lessonID,
-            type: type,
-            materialID: materialID);
-    _isMaterialLoading = false;
+    _lessonMaterial = StudentLessonService().getLessonMaterialByTypeAndID(
+        courseID: courseID,
+        lessonID: lessonID,
+        type: type,
+        materialID: materialID);
+    LessonMaterialModel? retrievedMaterial = await _lessonMaterial;
+    _lessonMaterial = null;
     return retrievedMaterial;
   }
 
   Future<(QuestionModel, LessonModel)?> getQuestionAndLesson(
       GoRouterState state) async {
-    if (_isQuestionAndLessonLoading) {
+    if (_questionAndLesson != null) {
       return _questionAndLesson;
     }
-    _isQuestionAndLessonLoading = true;
-    if (state.extra != null) {
-      _isQuestionAndLessonLoading = false;
+    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as (QuestionModel, LessonModel);
     }
     String? lessonID = state.pathParameters['lessonID'];
     String? questionID = state.pathParameters['questionID'];
     if (lessonID == null || questionID == null) {
-      _isQuestionAndLessonLoading = false;
       return null;
     }
-    List<Object?> res = await Future.wait([
-      TeacherQuestionService().getQuestionByID(lessonID, questionID),
-      getLesson(state),
-    ]);
-    if (res[0] == null || res[1] == null) {
-      _isQuestionAndLessonLoading = false;
-      return null;
+
+    Future<(QuestionModel, LessonModel)?> getDataPair() async {
+      List<Object?> res = await Future.wait([
+        TeacherQuestionService().getQuestionByID(lessonID, questionID),
+        getLesson(state),
+      ]);
+      if (res[0] == null || res[1] == null) {
+        return null;
+      }
+      return (res[0] as QuestionModel, res[1] as LessonModel);
     }
-    _isQuestionAndLessonLoading = false;
-    return (res[0] as QuestionModel, res[1] as LessonModel);
+
+    _questionAndLesson = getDataPair();
+    var retrievedPair = await _questionAndLesson;
+    _questionAndLesson = null;
+    return retrievedPair;
   }
 }
