@@ -10,8 +10,6 @@ import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';
-import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
-import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
@@ -82,8 +80,8 @@ class MyApp extends StatelessWidget {
         '/enroll': (context) => EnrollCourseView(),
         '/courseOverview': (context) => CourseOverviewPage(
             course: ModalRoute.of(context)?.settings.arguments as Course),
-        '/addCourse': (context) => TeacherAddCourseView(),
-        '/joinCourse': (context) => TeacherJoinCourseView(),
+        // '/addCourse': (context) => TeacherAddCourseView(),
+        // '/joinCourse': (context) => TeacherJoinCourseView(),
         '/conceptMap': (context) => ConceptMapView(
               course: ModalRoute.of(context)?.settings.arguments as Course,
             ),
