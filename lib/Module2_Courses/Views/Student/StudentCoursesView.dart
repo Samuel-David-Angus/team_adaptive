@@ -4,6 +4,7 @@ import 'package:team_adaptive/Components/TemplateView.dart';
 import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/StudentCourseViewModel.dart';
+import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class StudentCoursesView extends StatefulWidget {
@@ -52,7 +53,7 @@ class _StudentCoursesViewState extends State<StudentCoursesView> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            enrollCourseDialog(context, viewModel, "Enter course code");
+                            enrollCourseDialog(context);
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -172,66 +173,12 @@ class _StudentCoursesViewState extends State<StudentCoursesView> {
     );
   }
 
-  void enrollCourseDialog(BuildContext context, StudentCourseViewModel viewModel, String message) {
+  void enrollCourseDialog(BuildContext context) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                content: SizedBox(
-                  height: 200.0,
-                  width: 300.0, // Set your desired width here
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 20.0),
-                      Text(message),
-                      const SizedBox(height: 20.0),
-                      TextField(
-                        controller: textController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      if (isCodeIncorrect)
-                        const Column(
-                          children: [
-                            Text(
-                              'Incorrect course code',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                            SizedBox(height: 10.0),
-                          ],
-                        ),
-                      const SizedBox(height: 20.0),
-                      ElevatedButton(
-                        onPressed: () async {
-                          bool enrolled = await viewModel.enroll(textController.text);
-                          if (enrolled) {
-                            Navigator.pushNamed(context, '/Courses');
-                          } else {
-                            setState(() {
-                              isCodeIncorrect = true;
-                            });
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
-                          backgroundColor: ThemeColor.darkgreyTheme,
-                        ),
-                        child: const Text(
-                          "Enroll",
-                          style: TextStyle(
-                            color: ThemeColor.offwhiteTheme,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
+          return const AlertDialog(
+              content: EnrollCourseView()
           );
         },
       );
