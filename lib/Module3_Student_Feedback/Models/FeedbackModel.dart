@@ -35,7 +35,8 @@ class FeedbackModel {
     required this.assessmentTotal,
   });
 
-  FeedbackModel.createFromAssessment({required AssessmentModel assessment, required this.userID}) {
+  FeedbackModel.createFromAssessment(
+      {required AssessmentModel assessment, required this.userID}) {
     courseID = assessment.lesson.courseID!;
     lessonID = assessment.lesson.id!;
     learnerScore = assessment.score!;
@@ -43,7 +44,8 @@ class FeedbackModel {
     skillLevel = assessment.calculateSkillLevel();
     categorizedSkillLevel = assessment.categorizeSkillLevel(skillLevel);
     lessonConceptFailureRates = calculateLessonConceptFailureRates(assessment);
-    weakConceptsAndTheirPrereqs = calculateWeakConceptsAndTheirPrereqs(assessment);
+    weakConceptsAndTheirPrereqs =
+        calculateWeakConceptsAndTheirPrereqs(assessment);
     createdDate = DateTime.now();
   }
 
@@ -55,14 +57,16 @@ class FeedbackModel {
       userID: json['userID'],
       feedbackTitle: json['feedbackTitle'],
       createdDate: (json['createdDate'] as Timestamp).toDate(),
-      suggestedLessons: List<Map<String, dynamic>>.from(json["suggestedLessons"]),
+      suggestedLessons:
+          List<Map<String, dynamic>>.from(json["suggestedLessons"]),
       diagnosedLearningStyle: json['diagnosedLearningStyle'],
-      lessonConceptFailureRates: Map<String, double>.from(json['lessonConceptFailureRates']),
+      lessonConceptFailureRates:
+          Map<String, double>.from(json['lessonConceptFailureRates']),
       weakConceptsAndTheirPrereqs: Map<String, List<String>>.from(
         json['weakConceptsAndTheirPrereqs'].map((key, value) => MapEntry(
-          key,
-          List<String>.from(value),
-        )),
+              key,
+              List<String>.from(value),
+            )),
       ),
       skillLevel: json['skillLevel'],
       categorizedSkillLevel: json['categorizedSkillLevel'],
@@ -75,13 +79,15 @@ class FeedbackModel {
     List<Map<String, dynamic>> modifiedLessonMap = [];
     for (var map in suggestedLessons) {
       Map<String, dynamic> mapCopy = {};
-      mapCopy["main"] = {"concept": map["main"]["concept"], "lesson": map["main"]["lesson"].id};
+      mapCopy["main"] = {
+        "concept": map["main"]["concept"],
+        "lesson": map["main"]["lesson"].id
+      };
       mapCopy["prereqs"] = [];
-      map["prereqs"].forEach(
-              (item) {
-                mapCopy["prereqs"].add({"concept": item["concept"], "lesson": item["lesson"].id});
-          }
-      );
+      map["prereqs"].forEach((item) {
+        mapCopy["prereqs"]
+            .add({"concept": item["concept"], "lesson": item["lesson"].id});
+      });
       modifiedLessonMap.add(mapCopy);
     }
     return {
@@ -105,11 +111,9 @@ class FeedbackModel {
     List<LessonMaterialModel> materials = [];
     for (var map in suggestedLessons) {
       materials.add(map["main"]["lesson"]);
-      map["prereqs"].forEach(
-              (item) {
-            materials.add(item["lesson"]);
-          }
-      );
+      map["prereqs"].forEach((item) {
+        materials.add(item["lesson"]);
+      });
     }
     return materials;
   }
@@ -122,16 +126,15 @@ class FeedbackModel {
     for (var map in suggestedLessons) {
       print(map);
       map["main"]["lesson"] = materialMap[map["main"]["lesson"]];
-      map["prereqs"].forEach(
-              (item) {
-            item["lesson"] = materialMap[item["lesson"]];
-          }
-      );
+      map["prereqs"].forEach((item) {
+        item["lesson"] = materialMap[item["lesson"]];
+      });
     }
   }
 
-  Map<String, double> calculateLessonConceptFailureRates(AssessmentModel assessment) {
-    List<String> lessonConcepts = assessment.lesson.concepts!;
+  Map<String, double> calculateLessonConceptFailureRates(
+      AssessmentModel assessment) {
+    List<String> lessonConcepts = assessment.lesson.learningOutcomes!;
     Map<String, double> result = {};
     for (String concept in lessonConcepts) {
       result[concept] = assessment.predictFailureRateOfConcept(concept);
@@ -139,7 +142,8 @@ class FeedbackModel {
     return result;
   }
 
-  Map<String, List<String>> calculateWeakConceptsAndTheirPrereqs(AssessmentModel assessment) {
+  Map<String, List<String>> calculateWeakConceptsAndTheirPrereqs(
+      AssessmentModel assessment) {
     Map<String, List<String>> map = {};
     lessonConceptFailureRates.forEach((String concept, double failureRate) {
       if (failureRate >= 50) {
@@ -157,8 +161,7 @@ class FeedbackModel {
 
   List<String> determinePrereqsToLearn() {
     List<String> prereqsToLearn = [];
-    weakConceptsAndTheirPrereqs
-        .forEach((String concept, List<String> prereqs) {
+    weakConceptsAndTheirPrereqs.forEach((String concept, List<String> prereqs) {
       for (var element in prereqs) {
         if (!prereqsToLearn.contains(element)) {
           prereqsToLearn.add(element);
@@ -167,5 +170,4 @@ class FeedbackModel {
     });
     return prereqsToLearn;
   }
-
 }

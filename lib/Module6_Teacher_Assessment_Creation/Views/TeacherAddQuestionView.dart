@@ -116,7 +116,7 @@ class TeacherAddQuestionView extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        selectConcept(lessonModel.concepts!, context);
+                        selectConcept(lessonModel.learningOutcomes!, context);
                       },
                       child: const Text('Choose Concept'),
                     ),
@@ -132,8 +132,8 @@ class TeacherAddQuestionView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            8, 0, 8, 0),
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
                         child: TextFormField(
                           controller: addEditViewModel.choiceController,
                           obscureText: false,
@@ -200,21 +200,19 @@ class TeacherAddQuestionView extends StatelessWidget {
                     itemCount: addEditViewModel.choiceList.length,
                     itemBuilder: (context, index) {
                       return CheckboxListTile(
-                        title:
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(addEditViewModel.choiceList[index].text),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    addEditViewModel.deleteChoice(index);
-                                  },
-                                ),
-                              ],
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(addEditViewModel.choiceList[index].text),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                addEditViewModel.deleteChoice(index);
+                              },
                             ),
-                        value:
-                            index == addEditViewModel.indexOfCorrectAnswer,
+                          ],
+                        ),
+                        value: index == addEditViewModel.indexOfCorrectAnswer,
                         onChanged: (bool? value) {
                           if (value == true) {
                             addEditViewModel.setCorrectAnswer(index);
@@ -225,46 +223,45 @@ class TeacherAddQuestionView extends StatelessWidget {
                   ),
                 ),
                 Center(
-                  child: SizedBox(
-                    width: 150.0,
-                    height: 40.0,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (context.mounted) {
-                          if (addEditViewModel.validateBeforeSubmitting()) {
-                            String userID = teacherQuestionViewModel
-                                .authService.userInfo!.id!;
-                            ConceptMapModel conceptMapModel = snapshot.data!;
-                            QuestionModel createdQuestion = addEditViewModel
-                                .createQuestionModel(userID, conceptMapModel);
-                            debugPrint("$createdQuestion");
-                            bool result = await submit(createdQuestion);
-                            debugPrint('finish');
-                            if (result) {
-                              showMessageDialog(
-                                  context, "Successfully added question");
-                            } else {
-                              showMessageDialog(
-                                  context, "Failed to add question");
+                    child: SizedBox(
+                        width: 150.0,
+                        height: 40.0,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (context.mounted) {
+                              if (addEditViewModel.validateBeforeSubmitting()) {
+                                String userID = teacherQuestionViewModel
+                                    .authService.userInfo!.id!;
+                                ConceptMapModel conceptMapModel =
+                                    snapshot.data!;
+                                QuestionModel createdQuestion =
+                                    addEditViewModel.createQuestionModel(
+                                        userID, conceptMapModel);
+                                debugPrint("$createdQuestion");
+                                bool result = await submit(createdQuestion);
+                                debugPrint('finish');
+                                if (result) {
+                                  showMessageDialog(
+                                      context, "Successfully added question");
+                                } else {
+                                  showMessageDialog(
+                                      context, "Failed to add question");
+                                }
+                              } else {
+                                showMessageDialog(context, "stuff missing");
+                              }
                             }
-                          } else {
-                            showMessageDialog(context, "stuff missing");
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeColor.darkgreyTheme,
-                      ),
-                      child: Text(
-                        isEditing ? 'Edit' : 'Add',
-                        style: const TextStyle(
-                          color: ThemeColor.offwhiteTheme,
-                        ),
-                      ),
-                    )
-                  )
-                )
-
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ThemeColor.darkgreyTheme,
+                          ),
+                          child: Text(
+                            isEditing ? 'Edit' : 'Add',
+                            style: const TextStyle(
+                              color: ThemeColor.offwhiteTheme,
+                            ),
+                          ),
+                        )))
               ],
             ),
           );

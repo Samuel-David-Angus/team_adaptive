@@ -3,7 +3,7 @@ class LessonModel {
   String? _lessonTitle;
   String? _lessonDescription;
   String? _courseID;
-  List<String>? _concepts;
+  List<String>? _learningOutcomes;
   int? _order;
   bool? _isSetupComplete;
 
@@ -20,7 +20,7 @@ class LessonModel {
         _lessonTitle = lessonTitle,
         _lessonDescription = lessonDescription,
         _courseID = courseID,
-        _concepts = concepts,
+        _learningOutcomes = concepts,
         _order = order,
         _isSetupComplete = isSetupComplete;
 
@@ -31,7 +31,7 @@ class LessonModel {
   String? get lessonTitle => _lessonTitle;
   String? get lessonDescription => _lessonDescription;
   String? get courseID => _courseID;
-  List<String>? get concepts => _concepts;
+  List<String>? get learningOutcomes => _learningOutcomes;
   int? get order => _order;
   bool? get isSetupComplete => _isSetupComplete;
 
@@ -52,8 +52,8 @@ class LessonModel {
     _courseID = courseID;
   }
 
-  set concepts(List<String>? concepts) {
-    _concepts = concepts;
+  set learningOutcomes(List<String>? concepts) {
+    _learningOutcomes = concepts;
   }
 
   set order(int? order) {
@@ -81,7 +81,7 @@ class LessonModel {
       'lessonTitle': _lessonTitle,
       'lessonDescription': _lessonDescription,
       'courseID': _courseID,
-      'concepts': _concepts,
+      'concepts': _learningOutcomes,
       'order': _order,
       'isSetupComplete': _isSetupComplete,
     };

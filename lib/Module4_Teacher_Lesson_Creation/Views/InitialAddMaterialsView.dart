@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class InitialAddMaterialsView extends StatelessWidget {
   final LessonModel lesson;
   InitialAddMaterialsView({super.key, required this.lesson}) {
-    viewModel.setPrereqs(lesson.courseID!, lesson.concepts!);
+    viewModel.setPrereqs(lesson.courseID!, lesson.learningOutcomes!);
     mainLessonTab = SingleChildScrollView(
       child: Column(children: [
         ListView.separated(
@@ -22,7 +22,7 @@ class InitialAddMaterialsView extends StatelessWidget {
                 lesson: lesson,
                 lessonType: "main",
                 learningStyle: learningStyles[index],
-                concepts: lesson.concepts!);
+                concepts: lesson.learningOutcomes!);
           },
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
@@ -119,14 +119,12 @@ class InitialAddMaterialsView extends StatelessWidget {
                                     context);
                               }
                             } else {
-                              showMessage(
-                                  'Some fields are missing', context);
+                              showMessage('Some fields are missing', context);
                             }
                           }),
                     ]),
                     Expanded(
-                        child:
-                            IndexedStack(index: viewModel.index, children: [
+                        child: IndexedStack(index: viewModel.index, children: [
                       mainLessonTab,
                       subLessonTab,
                     ]))

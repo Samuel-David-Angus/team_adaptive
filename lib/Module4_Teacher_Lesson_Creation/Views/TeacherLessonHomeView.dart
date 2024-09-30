@@ -7,7 +7,6 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/Teache
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
-
 class TeacherLessonHomeView extends StatelessWidget {
   final Course course;
   bool justLoaded = true;
@@ -42,25 +41,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                   height: 40.0,
                   child: ElevatedButton(
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return viewModel.canAddMoreLessons
-                                ? TeacherAddLessonView(course: course)
-                                : AlertDialog(
-                                    title: const Text('OOPS!'),
-                                    content: const Text(
-                                        'You cannot add more lessons if the latest lesson setup is incomplete'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Close'),
-                                      ),
-                                    ],
-                                  );
-                          });
+                      GoRouter.of(context).go("/test", extra: course);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ThemeColor.darkgreyTheme,
@@ -102,7 +83,9 @@ class TeacherLessonHomeView extends StatelessWidget {
                           if (!lessons[index].isSetupComplete!)
                             TextButton(
                                 onPressed: () async {
-                                  await context.push('/courses/${course.id}/lessons/${lessons[index].id}/initialize', extra: lessons[index]);
+                                  await context.push(
+                                      '/courses/${course.id}/lessons/${lessons[index].id}/initialize',
+                                      extra: lessons[index]);
                                   viewModel.refresh();
                                 },
                                 child: const Text('Setup'))

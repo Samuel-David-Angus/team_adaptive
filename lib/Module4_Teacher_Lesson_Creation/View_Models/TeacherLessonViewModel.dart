@@ -10,12 +10,12 @@ class TeacherLessonViewModel extends ChangeNotifier {
   late Future<List<LessonModel>> allLessons;
 
   Future<bool> addLesson(String title, String description, String courseId,
-      List<String> concepts) async {
+      List<String> learningOutcomes) async {
     LessonModel lesson = LessonModel();
     lesson.lessonTitle = title;
     lesson.lessonDescription = description;
     lesson.courseID = courseId;
-    lesson.concepts = concepts;
+    lesson.learningOutcomes = learningOutcomes;
     lesson.isSetupComplete = false;
     notifyListeners();
     return await service.addLesson(lesson);
@@ -72,6 +72,4 @@ class TeacherLessonViewModel extends ChangeNotifier {
       String courseID, LessonMaterialModel lessonMaterial) async {
     return await service.deleteLessonMaterial(courseID, lessonMaterial);
   }
-
-
 }

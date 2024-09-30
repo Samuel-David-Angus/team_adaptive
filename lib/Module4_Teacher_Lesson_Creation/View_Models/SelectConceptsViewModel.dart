@@ -21,7 +21,7 @@ class SelectConceptsViewModel extends ChangeNotifier {
         items = keys;
       } else {
         items = [];
-        for (var concept in lesson.concepts!) {
+        for (var concept in lesson.learningOutcomes!) {
           items!.add("$concept(main)");
           int indexOfConcept = conceptMapModel.indexOfConcept(concept);
           List<int> val = map[concept]!;
@@ -48,10 +48,10 @@ class SelectConceptsViewModel extends ChangeNotifier {
       selectedItems = [];
       if (material == null) {
         items = keys;
-        selectedItems = lesson.concepts;
+        selectedItems = lesson.learningOutcomes;
       } else {
         items = [];
-        for (var concept in lesson.concepts!) {
+        for (var concept in lesson.learningOutcomes!) {
           items!.add("$concept(main)");
           List<int> val = map[concept]!;
           for (int i = 0; i < val.length; i++) {

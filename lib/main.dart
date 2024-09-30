@@ -29,6 +29,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMater
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/InitialAddMaterialsView.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
@@ -180,9 +181,9 @@ final GoRouter _router = GoRouter(
                           routes: <RouteBase>[
                             GoRoute(
                                 path: ':lessonID',
-                                builder: (context, state) => routeBuilder<
-                                        LessonModel?, ViewLessonView>(
-                                    dataHandler.getLesson(state)),
+                                builder: (context, state) =>
+                                    routeBuilder<LessonModel?, ViewLessonView>(
+                                        dataHandler.getLesson(state)),
                                 routes: <RouteBase>[
                                   GoRoute(
                                       // student route only
@@ -247,7 +248,11 @@ final GoRouter _router = GoRouter(
               path: '/material/:courseID/:lessonID/:type/:materialID',
               builder: (context, state) =>
                   routeBuilder<LessonMaterialModel?, LessonMaterialView>(
-                      dataHandler.getLessonMaterial(state)))
+                      dataHandler.getLessonMaterial(state))),
+          GoRoute(
+              path: '/test',
+              builder: (context, state) =>
+                  TeacherAddLessonView(course: state.extra as Course))
         ]),
   ],
 );
