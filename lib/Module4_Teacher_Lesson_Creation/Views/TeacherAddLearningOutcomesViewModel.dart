@@ -63,7 +63,7 @@ class TeacherAddLearningOutcomesViewModel extends ChangeNotifier {
   String selectedVerb = levelsAndVerbs.values.elementAt(0).first;
   TextEditingController textEditingController = TextEditingController();
   String? errorText = "Please type a learning outcome";
-  List<String> learningOutcomes = [];
+  Map<String, double> learningOutcomesAndPassingFailureRate = {};
 
   void setSelectedLevel(String value) {
     selectedLevel = value;
@@ -81,8 +81,8 @@ class TeacherAddLearningOutcomesViewModel extends ChangeNotifier {
       return;
     }
     String lO = "$selectedVerb ${textEditingController.text}";
-    if (!learningOutcomes.contains(lO)) {
-      learningOutcomes.add(lO);
+    if (!learningOutcomesAndPassingFailureRate.containsKey(lO)) {
+      learningOutcomesAndPassingFailureRate[lO] = 0.4;
     } else {
       errorText = "This learning outcome already exists";
     }
@@ -97,8 +97,12 @@ class TeacherAddLearningOutcomesViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteLearningOutcome(int index) {
-    learningOutcomes.removeAt(index);
+  void deleteLearningOutcome(String lO) {
+    learningOutcomesAndPassingFailureRate.remove(lO);
     notifyListeners();
+  }
+
+  void updateLOFailureRate(String lO, double value) {
+    learningOutcomesAndPassingFailureRate[lO] = value;
   }
 }

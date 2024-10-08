@@ -63,7 +63,8 @@ class TeacherAddLessonView extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (teacherAddLearningOutcomesViewModel
-                                    .learningOutcomes.isNotEmpty &&
+                                    .learningOutcomesAndPassingFailureRate
+                                    .isNotEmpty &&
                                 titleController.text.isNotEmpty &&
                                 descriptionController.text.isNotEmpty) {
                               await viewModel.addLesson(
@@ -71,7 +72,9 @@ class TeacherAddLessonView extends StatelessWidget {
                                   descriptionController.text,
                                   course.id!,
                                   teacherAddLearningOutcomesViewModel
-                                      .learningOutcomes);
+                                      .learningOutcomesAndPassingFailureRate
+                                      .keys
+                                      .toList());
                               viewModel.allLessons =
                                   viewModel.getLessonByCourse(course.id!);
                               viewModel.refresh();

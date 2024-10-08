@@ -128,9 +128,9 @@ class AssessmentModel {
 
     for (int questionIndex = 0; questionIndex < questionCount; questionIndex++) {
       QuestionModel questionModel = _questions[questionIndex];
+      List<int> testItemRelationships = calculateTestItemRelationships(questionModel);
 
       for (int conceptIndex = 0; conceptIndex < conceptCount; conceptIndex++) {
-        List<int> testItemRelationships = calculateTestItemRelationships(questionModel);
         int conceptStrength = totalConceptStrengths[conceptIndex];
         int addedConceptStrength = conceptStrength + testItemRelationships[conceptIndex];
         totalConceptStrengths[conceptIndex] = addedConceptStrength;
