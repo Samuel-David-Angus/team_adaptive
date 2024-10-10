@@ -40,12 +40,14 @@ class LessonMaterialModel {
   List<String>? get concepts => _concepts;
 
   // Setters
-  set id (String? id) {
+  set id(String? id) {
     _id = id;
   }
-  set title (String? title) {
+
+  set title(String? title) {
     _title = title;
   }
+
   set author(String? value) {
     _author = value;
   }
@@ -71,13 +73,14 @@ class LessonMaterialModel {
   }
 
   // fromJson factory method
-  factory LessonMaterialModel.fromJson(Map<String, dynamic> json, String? type, String lessonID, String id) {
+  factory LessonMaterialModel.fromJson(
+      Map<String, dynamic> json, String? type, String id) {
     return LessonMaterialModel.setAll(
       id: id,
       title: json['title'],
       author: json['author'],
       type: type,
-      lessonID: lessonID,
+      lessonID: json['lessonID'],
       src: json['src'],
       learningStyle: json['learningStyle'],
       concepts: List<String>.from(json['concepts']),
@@ -89,6 +92,7 @@ class LessonMaterialModel {
     return {
       'title': _title,
       'author': _author,
+      'lessonID': _lessonID,
       'src': _src,
       'learningStyle': _learningStyle,
       'concepts': _concepts,

@@ -68,7 +68,7 @@ class StudentLessonService {
           .where("learningStyle", isEqualTo: style)
           .withConverter<LessonMaterialModel>(
               fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
-                  snapshot.data()!, type, lessonID, snapshot.id),
+                  snapshot.data()!, type, snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot<LessonMaterialModel> documentSnapshot
@@ -94,7 +94,7 @@ class StudentLessonService {
           .collection(type)
           .withConverter(
               fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
-                  snapshot.data()!, type, lessonID, snapshot.id),
+                  snapshot.data()!, type, snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
@@ -122,7 +122,7 @@ class StudentLessonService {
           .collection(type)
           .withConverter(
               fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
-                  snapshot.data()!, type, lessonID, snapshot.id),
+                  snapshot.data()!, type, snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .doc(materialID)
           .get();
@@ -133,5 +133,23 @@ class StudentLessonService {
       debugPrint("Error getting material by id: $e");
     }
     return null;
+  }
+
+  Future<List<LessonMaterialModel>?> findSubMaterialsByLO(
+      String lO, String lessonID) async {
+    try {
+      List<LessonMaterialModel> materials = [];
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collectionGroup("sub")
+          .where("concepts", arrayContains: lO)
+          .withConverter(
+              fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
+                  snapshot.data()!, "sub", snapshot.id),
+              toFirestore: (model, _) => model.toJson())
+          .get();
+      return materials;
+    } catch (e) {
+      print("Error getting sub materials: $e");
+    }
   }
 }
