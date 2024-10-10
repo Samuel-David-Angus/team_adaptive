@@ -147,9 +147,13 @@ class StudentLessonService {
                   snapshot.data()!, "sub", snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .get();
+      for (DocumentSnapshot documentSnapshot in snapshot.docs) {
+        materials.add(documentSnapshot as LessonMaterialModel);
+      }
       return materials;
     } catch (e) {
       print("Error getting sub materials: $e");
     }
+    return null;
   }
 }
