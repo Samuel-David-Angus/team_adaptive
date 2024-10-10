@@ -20,7 +20,8 @@ class DataHandler {
     if (_course != null) {
       return _course;
     }
-    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
+    if (state.extra != null &&
+        state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as Course;
     }
     String? courseID = state.pathParameters['courseID'];
@@ -37,7 +38,8 @@ class DataHandler {
     if (_feedback != null) {
       return _feedback;
     }
-    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
+    if (state.extra != null &&
+        state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as FeedbackModel;
     }
     String? feedbackID = state.pathParameters['feedbackID'];
@@ -54,7 +56,8 @@ class DataHandler {
     if (_lesson != null) {
       return _lesson;
     }
-    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
+    if (state.extra != null &&
+        state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as LessonModel;
     }
     String? lessonID = state.pathParameters['lessonID'];
@@ -68,17 +71,20 @@ class DataHandler {
     return retrievedLesson;
   }
 
-  Future<LessonMaterialModel?> getLessonMaterial(GoRouterState state) async {
+  Future<LessonMaterialModel?> getLessonMaterial(GoRouterState state,
+      {String? type}) async {
     if (_lessonMaterial != null) {
       return _lessonMaterial;
     }
-    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
+    if (state.extra != null &&
+        state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as LessonMaterialModel;
     }
     String? courseID = state.pathParameters['courseID'];
     String? lessonID = state.pathParameters['lessonID'];
-    String? materialID = state.pathParameters['materialID'];
-    String? type = state.pathParameters['type'];
+    String? materialID = state.pathParameters['materialID'] ??
+        state.uri.queryParameters['material'];
+    type ??= state.pathParameters['type'];
     if (courseID == null ||
         lessonID == null ||
         materialID == null ||
@@ -100,7 +106,8 @@ class DataHandler {
     if (_questionAndLesson != null) {
       return _questionAndLesson;
     }
-    if (state.extra != null && state.extra.runtimeType.toString() != '_JsonMap') {
+    if (state.extra != null &&
+        state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as (QuestionModel, LessonModel);
     }
     String? lessonID = state.pathParameters['lessonID'];
@@ -124,5 +131,22 @@ class DataHandler {
     var retrievedPair = await _questionAndLesson;
     _questionAndLesson = null;
     return retrievedPair;
+  }
+
+  Future<({LessonModel lesson, LessonMaterialModel material})>
+      getLessonAndMainMaterial(GoRouterState state) async {
+    if (state.extra != null &&
+        state.extra.runtimeType.toString() != '_JsonMap') {
+      return state.extra as ({
+        LessonModel lesson,
+        LessonMaterialModel material
+      });
+    }
+    List<Object?> res = await Future.wait(
+        [getLesson(state), getLessonMaterial(state, type: "main")]);
+    return (
+      lesson: res[0] as LessonModel,
+      material: res[1] as LessonMaterialModel
+    );
   }
 }

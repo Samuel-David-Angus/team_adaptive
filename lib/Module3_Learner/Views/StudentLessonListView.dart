@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
+import 'package:team_adaptive/Module3_Learner/Views/StudentMainMaterialsView.dart';
 
 import '../../Module2_Courses/Models/CourseModel.dart';
 import '../../Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
@@ -39,8 +40,17 @@ class StudentLessonListView extends StatelessWidget {
                         children: [
                           TextButton(
                             onPressed: () {
-                              GoRouter.of(context).go(
-                                  '/courses/${course.id}/lessons/${lessons[index].id}', extra: lessons[index]);
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title:
+                                          const Text('Select Lesson Material'),
+                                      content: StudentMainMaterialsView(
+                                        lesson: lessons[index],
+                                      ),
+                                    );
+                                  });
                             },
                             child: const Text('Take Lesson'),
                           ),

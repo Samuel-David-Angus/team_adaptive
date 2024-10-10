@@ -61,8 +61,13 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
         FeedbackView(feedback: snapshot.data! as FeedbackModel),
     LessonListPage: (snapshot) =>
         LessonListPage(course: snapshot.data! as Course),
-    ViewLessonView: (snapshot) =>
-        ViewLessonView(lesson: snapshot.data! as LessonModel),
+    ViewLessonView: (snapshot) {
+      ({LessonModel lesson, LessonMaterialModel material}) res = snapshot.data!;
+      return ViewLessonView(
+        lesson: res.lesson,
+        mainLessonMaterial: res.material,
+      );
+    },
     AssessmentView: (snapshot) =>
         AssessmentView(lessonModel: snapshot.data! as LessonModel),
     LessonMaterialView: (snapshot) => LessonMaterialView(
@@ -181,9 +186,14 @@ final GoRouter _router = GoRouter(
                           routes: <RouteBase>[
                             GoRoute(
                                 path: ':lessonID',
-                                builder: (context, state) =>
-                                    routeBuilder<LessonModel?, ViewLessonView>(
-                                        dataHandler.getLesson(state)),
+                                builder: (context, state) => routeBuilder<
+                                        ({
+                                          LessonModel lesson,
+                                          LessonMaterialModel material
+                                        })?,
+                                        ViewLessonView>(
+                                    dataHandler
+                                        .getLessonAndMainMaterial(state)),
                                 routes: <RouteBase>[
                                   GoRoute(
                                       // student route only
