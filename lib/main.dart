@@ -148,102 +148,94 @@ final GoRouter _router = GoRouter(
             },
           ),
           GoRoute(
-              path: '/courses',
-              builder: (context, state) {
-                return const CoursesPage();
-              },
-              routes: <RouteBase>[
-                // join and enroll might not be necessary, confirm and remove or keep later
-                GoRoute(
-                  path: 'add',
-                  builder: (context, state) => TeacherAddCourseView(),
-                ),
-                GoRoute(
-                  path: 'join',
-                  builder: (context, state) => TeacherJoinCourseView(),
-                ),
-                GoRoute(
-                  path: 'enroll',
-                  builder: (context, state) => EnrollCourseView(),
-                ),
-                GoRoute(
-                    path: ':courseID',
-                    builder: (context, state) {
-                      return routeBuilder<Course?, CourseOverviewPage>(
-                          dataHandler.getCourse(state));
-                    },
-                    routes: <RouteBase>[
-                      GoRoute(
-                          path: 'conceptMap',
-                          builder: (context, state) =>
-                              routeBuilder<Course?, ConceptMapView>(
-                                  dataHandler.getCourse(state))),
-                      GoRoute(
-                          path: 'lessons',
-                          builder: (context, state) =>
-                              routeBuilder<Course?, LessonListPage>(
-                                  dataHandler.getCourse(state)),
-                          routes: <RouteBase>[
-                            GoRoute(
-                                path: ':lessonID',
-                                builder: (context, state) => routeBuilder<
-                                        ({
-                                          LessonModel lesson,
-                                          LessonMaterialModel material
-                                        })?,
-                                        ViewLessonView>(
-                                    dataHandler
-                                        .getLessonAndMainMaterial(state)),
-                                routes: <RouteBase>[
-                                  GoRoute(
-                                      // student route only
-                                      path: 'assessment',
-                                      builder: (context, state) => routeBuilder<
-                                              LessonModel?, AssessmentView>(
-                                          dataHandler.getLesson(state))),
-                                  GoRoute(
-                                      path: 'materials',
-                                      builder: (context, state) => routeBuilder<
-                                              LessonModel?,
-                                              TeacherLessonMaterialHomeView>(
-                                          dataHandler.getLesson(state))),
-                                  GoRoute(
-                                      path: 'initialize',
-                                      builder: (context, state) => routeBuilder<
-                                              LessonModel?,
-                                              InitialAddMaterialsView>(
-                                          dataHandler.getLesson(state))),
-                                  GoRoute(
-                                      path: 'questions',
-                                      builder: (context, state) => routeBuilder<
-                                              LessonModel?,
-                                              TeacherViewQuestionView>(
-                                          dataHandler.getLesson(state)),
-                                      routes: <RouteBase>[
-                                        GoRoute(
-                                            path: 'add',
-                                            builder: (context, state) =>
-                                                routeBuilder<LessonModel?,
-                                                        TeacherAddQuestionView>(
-                                                    dataHandler
-                                                        .getLesson(state))),
-                                        GoRoute(
-                                            path: 'edit/:questionID',
-                                            builder: (context, state) =>
-                                                routeBuilder<
-                                                        (
-                                                          QuestionModel,
-                                                          LessonModel
-                                                        )?,
-                                                        TeacherAddQuestionView>(
-                                                    dataHandler
-                                                        .getQuestionAndLesson(
-                                                            state)))
-                                      ])
-                                ])
-                          ])
-                    ]),
-              ]),
+            path: '/courses',
+            builder: (context, state) {
+              return const CoursesPage();
+            },
+          ),
+          GoRoute(
+            path: '/courses/add',
+            builder: (context, state) => TeacherAddCourseView(),
+          ),
+          GoRoute(
+            path: '/courses/join',
+            builder: (context, state) => TeacherJoinCourseView(),
+          ),
+          GoRoute(
+            path: '/courses/enroll',
+            builder: (context, state) => EnrollCourseView(),
+          ),
+          GoRoute(
+            path: '/courses/:courseID',
+            builder: (context, state) {
+              return routeBuilder<Course?, CourseOverviewPage>(
+                dataHandler.getCourse(state),
+              );
+            },
+          ),
+          GoRoute(
+            path: '/courses/:courseID/conceptMap',
+            builder: (context, state) => routeBuilder<Course?, ConceptMapView>(
+              dataHandler.getCourse(state),
+            ),
+          ),
+          GoRoute(
+            path: '/courses/:courseID/lessons',
+            builder: (context, state) => routeBuilder<Course?, LessonListPage>(
+              dataHandler.getCourse(state),
+            ),
+          ),
+          GoRoute(
+            path: '/courses/:courseID/lessons/:lessonID',
+            builder: (context, state) => routeBuilder<
+                ({LessonModel lesson, LessonMaterialModel material})?,
+                ViewLessonView>(
+              dataHandler.getLessonAndMainMaterial(state),
+            ),
+          ),
+          GoRoute(
+            path: '/courses/:courseID/lessons/:lessonID/assessment',
+            builder: (context, state) =>
+                routeBuilder<LessonModel?, AssessmentView>(
+              dataHandler.getLesson(state),
+            ),
+          ),
+          GoRoute(
+            path: '/courses/:courseID/lessons/:lessonID/materials',
+            builder: (context, state) =>
+                routeBuilder<LessonModel?, TeacherLessonMaterialHomeView>(
+              dataHandler.getLesson(state),
+            ),
+          ),
+          GoRoute(
+            path: '/courses/:courseID/lessons/:lessonID/initialize',
+            builder: (context, state) =>
+                routeBuilder<LessonModel?, InitialAddMaterialsView>(
+              dataHandler.getLesson(state),
+            ),
+          ),
+          GoRoute(
+            path: '/courses/:courseID/lessons/:lessonID/questions',
+            builder: (context, state) =>
+                routeBuilder<LessonModel?, TeacherViewQuestionView>(
+              dataHandler.getLesson(state),
+            ),
+          ),
+          GoRoute(
+            path: '/courses/:courseID/lessons/:lessonID/questions/add',
+            builder: (context, state) =>
+                routeBuilder<LessonModel?, TeacherAddQuestionView>(
+              dataHandler.getLesson(state),
+            ),
+          ),
+          GoRoute(
+            path:
+                '/courses/:courseID/lessons/:lessonID/questions/edit/:questionID',
+            builder: (context, state) => routeBuilder<
+                (QuestionModel, LessonModel)?, TeacherAddQuestionView>(
+              dataHandler.getQuestionAndLesson(state),
+            ),
+          ),
           GoRoute(
               path: '/feedbacks',
               builder: (context, state) => const FeedbackListView(),
