@@ -1,12 +1,15 @@
 class ConceptMapModel {
   late String? _courseID;
   late Map<String, List<int>> _conceptMap;
-  late int _conceptCount;
+  late Map<String, double> _maxFailureRates;
+  late Map<String, List<String>> _lessonPartitions;
 
   // getters
   String? get courseID => _courseID;
   Map<String, List<int>> get conceptMap => _conceptMap;
-  int get conceptCount => _conceptCount;
+  int get conceptCount => _conceptMap.length;
+  Map<String, List<String>> get lessonPartitions => _lessonPartitions;
+  Map<String, double> get maxFailureRates => _maxFailureRates;
 
   //setters
   set courseID(String? courseID) {
@@ -17,18 +20,19 @@ class ConceptMapModel {
     _conceptMap = conceptMap;
   }
 
-  set conceptCount(int conceptCount) {
-    _conceptCount = conceptCount;
-  }
-
   ConceptMapModel.setAll(
-      {required String? courseID, required Map<String, List<int>> conceptMap}) {
+      {required String? courseID,
+      required Map<String, List<int>> conceptMap,
+      required Map<String, List<String>> lessonPartitions,
+      required Map<String, double> maxFailureRates}) {
     _courseID = courseID;
     _conceptMap = conceptMap;
-    _conceptCount = conceptMap.length;
+    _lessonPartitions = lessonPartitions;
+    _maxFailureRates = maxFailureRates;
   }
 
   factory ConceptMapModel.fromJson(Map<String, dynamic> json, String id) {
+    // does not include externalLOToMap. must be set manually since JSON has contains no external map just the id to it. service will handle retrieving it
     Map<String, List<int>> conceptMapUnordered =
         (json['conceptMap'] as Map<String, dynamic>? ?? {}).map(
       (key, value) {
@@ -38,46 +42,86 @@ class ConceptMapModel {
         return MapEntry(nonNullKey, nonNullValue);
       },
     );
+
     List<String> order = List.from(json['order']).cast<String>();
+
     Map<String, List<int>> conceptMapOrdered = {
       for (String concept in order) concept: conceptMapUnordered[concept]!
     };
+
+    Map<String, List<String>> partitions =
+        (json['lessonPartitions'] as Map<String, dynamic>).map((key, value) {
+      return MapEntry(key, List<String>.from(value));
+    });
+
     return ConceptMapModel.setAll(
-      courseID: id,
-      conceptMap: conceptMapOrdered,
-    );
+        courseID: id,
+        conceptMap: conceptMapOrdered,
+        lessonPartitions: partitions,
+        maxFailureRates: json['maxFailureRates']);
   }
 
   Map<String, dynamic> toJson() {
     return {
       'order': _conceptMap.keys,
+      'lessonPartitions': _lessonPartitions,
+      'maxFailureRates': _maxFailureRates,
       'conceptMap': _conceptMap.map((key, value) => MapEntry(key, value)),
     };
   }
 
-  bool addConcept(String concept) {
+  double getMaxFailureRateOfLearningOutcome(String lO) {
+    return _maxFailureRates[lO]!;
+  }
+
+  bool _addConcept(String concept, String lessonID) {
     if (_conceptMap.containsKey(concept)) {
       return false;
     }
+
+    if (!_lessonPartitions.containsKey(lessonID)) {
+      _lessonPartitions[lessonID] = [];
+    }
+    _lessonPartitions[lessonID]!.add(concept);
+
     _conceptMap.forEach((key, value) {
       value.add(0);
     });
-    List<int> emptyList = List.generate(_conceptCount + 1, (i) => 0);
+    List<int> emptyList = List.generate(conceptCount + 1, (i) => 0);
     _conceptMap[concept] = emptyList;
-    _conceptCount++;
     return true;
   }
 
-  bool removeConcept(String concept) {
+  bool addExternalLearningOutcome(
+      String externalLO, String lessonID, String courseID) {
+    if (!externalLO.startsWith('@')) {
+      throw const FormatException(
+          "If you want to add a local learning outcome. use addLocalLearningOutcome instead");
+    }
+    bool result = _addConcept(externalLO, lessonID);
+    return result;
+  }
+
+  bool addLocalLearningOutcome(
+      String localLearningOutcome, double maxFailureRate, String lessonID) {
+    if (localLearningOutcome.startsWith('@')) {
+      throw const FormatException(
+          "If you want to add an external learning outcome. use addExternalLearningOutcome instead");
+    }
+    _maxFailureRates[localLearningOutcome] = maxFailureRate;
+    return _addConcept(localLearningOutcome, lessonID);
+  }
+
+  bool removeConcept(String concept, String lessonID) {
     if (!_conceptMap.containsKey(concept)) {
       return false;
     }
+    _lessonPartitions[lessonID]!.remove(concept);
     int indexToDelete = indexOfConcept(concept);
     _conceptMap.remove(concept);
     _conceptMap.forEach((key, value) {
       value.removeAt(indexToDelete);
     });
-    conceptCount--;
     return true;
   }
 
@@ -99,11 +143,6 @@ class ConceptMapModel {
   }
 
   bool willBeProperTree(String concept, String prereq) {
-    List<String> conceptPrereqs = [];
-    findAllPrerequisites(concept, conceptPrereqs);
-    if (conceptPrereqs.contains(prereq)) {
-      return false;
-    }
     List<String> prereqPrereqs = [];
     findAllPrerequisites(prereq, prereqPrereqs);
     if (prereqPrereqs.contains(concept)) {
@@ -133,7 +172,7 @@ class ConceptMapModel {
     if (!foundPrerequisites.contains(concept)) {
       foundPrerequisites.add(concept);
     }
-    for (int index = 0; index < _conceptCount; index++) {
+    for (int index = 0; index < conceptCount; index++) {
       int value = areConnected(concept, index);
       if (value == 1) {
         String prereq = conceptOfIndex(index);
@@ -143,13 +182,35 @@ class ConceptMapModel {
   }
 
   int findConceptDepth(String concept) {
-    for (int index = 0; index < _conceptCount; index++) {
+    for (int index = 0; index < conceptCount; index++) {
       if (_conceptMap[concept]![index] == 1) {
         String prereq = conceptOfIndex(index);
         return 1 + findConceptDepth(prereq);
       }
     }
     return 1;
+  }
+
+  Map<String, int> findRelativeDistancesOfPrerequisites(String concept,
+      {int startDepth = 0}) {
+    Map<String, int> map = {concept: startDepth};
+
+    List<String> directPrerequisites = findDirectPrerequisites(concept);
+
+    for (String directPrereq in directPrerequisites) {
+      Map<String, int> preprereqs = findRelativeDistancesOfPrerequisites(
+          directPrereq,
+          startDepth: startDepth + 1);
+      for (String concept in preprereqs.keys) {
+        if (map.containsKey(concept)) {
+          map[concept] = map[concept]! < preprereqs[concept]!
+              ? map[concept]!
+              : preprereqs[concept]!;
+        }
+        map[concept] = preprereqs[concept]!;
+      }
+    }
+    return map;
   }
 
   List<String> findDirectPrerequisites(String concept) {

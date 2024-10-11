@@ -8,27 +8,32 @@ class ConceptMapViewModel extends ChangeNotifier {
   ConceptMapModel? map;
 
   void createConceptMap() {
-    map = ConceptMapModel.setAll(courseID: null, conceptMap: {});
+    map = ConceptMapModel.setAll(
+        courseID: null,
+        conceptMap: {},
+        lessonPartitions: {},
+        maxFailureRates: {});
   }
 
   Future<bool> uploadConceptMap(String courseID) async {
     return await service.uploadConceptMap(courseID, map!);
   }
 
-  bool addConcept(String concept) {
+  bool addLocalLearningOutcome(
+      String concept, double maxFailureRate, String lessonID) {
     try {
       notifyListeners();
-      return map!.addConcept(concept);
+      return map!.addLocalLearningOutcome(concept, maxFailureRate, lessonID);
     } catch (e) {
       debugPrint('Concept map is not available.');
     }
     return false;
   }
 
-  bool deleteConcept(String concept) {
+  bool deleteConcept(String concept, String lessonID) {
     try {
       notifyListeners();
-      return map!.removeConcept(concept);
+      return map!.removeConcept(concept, lessonID);
     } catch (e) {
       debugPrint("Error deleting concept: $e");
     }
