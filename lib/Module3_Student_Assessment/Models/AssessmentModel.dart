@@ -15,18 +15,16 @@ class AssessmentModel {
   int? score;
 
   // Constructor
-  AssessmentModel.createNew({
-    required LessonModel lessonID,
-    required List<QuestionModel> questions,
-    required ConceptMapModel conceptMapModel
-    }) :  _lesson = lessonID,
-          _questions = questions,
-          _conceptMapModel = conceptMapModel,
-          _scores = List.filled(questions.length, 0)
-  {
+  AssessmentModel.createNew(
+      {required LessonModel lessonID,
+      required List<QuestionModel> questions,
+      required ConceptMapModel conceptMapModel})
+      : _lesson = lessonID,
+        _questions = questions,
+        _conceptMapModel = conceptMapModel,
+        _scores = List.filled(questions.length, 0) {
     generateProcessedQuestions();
   }
-
 
   // Getter for _lessonID
   LessonModel get lesson => _lesson;
@@ -64,25 +62,24 @@ class AssessmentModel {
     List<Map<String, dynamic>> processedQuestions = [];
     _answers = [];
     for (var question in _questions) {
-          var rng = Random();
-          int correctChoice = rng.nextInt(question.wrongChoices.length + 1);
-          List<String> choices = List.from(question.wrongChoices);
-          choices.shuffle();
-          choices.insert(correctChoice, question.correctAnswer);
-          _answers.add(correctChoice);
-          processedQuestions.add(
-            {
-              "question": question.question,
-              "choices": choices,
-            }
-          );
-        }
+      var rng = Random();
+      int correctChoice = rng.nextInt(question.wrongChoices.length + 1);
+      List<String> choices = List.from(question.wrongChoices);
+      choices.shuffle();
+      choices.insert(correctChoice, question.correctAnswer);
+      _answers.add(correctChoice);
+      processedQuestions.add({
+        "question": question.question,
+        "choices": choices,
+      });
+    }
     this.processedQuestions = processedQuestions;
     return processedQuestions;
   }
 
   int processAssessment(List<int> studentAnswers) {
-    assert(studentAnswers.length == _answers.length, "the answer arrays must have the same length");
+    assert(studentAnswers.length == _answers.length,
+        "the answer arrays must have the same length");
     int overallScore = 0;
     for (int i = 0; i < _answers.length; i++) {
       if (studentAnswers[i] == _answers[i]) {
@@ -96,26 +93,33 @@ class AssessmentModel {
     return overallScore;
   }
 
-
   List<int> calculateTestItemRelationships(QuestionModel question) {
     String questionConcept = question.questionConcept;
-    int questionConceptDepth = conceptMapModel.findConceptDepth(
-        questionConcept);
+    int questionConceptDepth =
+        conceptMapModel.findConceptDepth(questionConcept);
     int conceptCount = conceptMapModel.conceptCount;
 
     // Initialize the list with zeros
     List<int> testItemRelationships = List<int>.filled(conceptCount, 0);
-    List<String> relatedConcepts = question.findAllPrerequisites(conceptMapModel);
+    Map<String, int> allPrereqsWithRelativeDistance =
+        conceptMapModel.findRelativeDistancesOfPrerequisites(questionConcept);
 
-    for (int index = 0; index < conceptCount; index++) {
-      String concept = conceptMapModel.conceptOfIndex(index);
-      if (relatedConcepts.contains(concept)) {
-        int conceptDepth = conceptMapModel.findConceptDepth(concept);
-        int relatedness = (5 * conceptDepth) ~/
-            questionConceptDepth; // Use integer division
-        testItemRelationships[index] = relatedness;
-      }
-    }
+    allPrereqsWithRelativeDistance.forEach((String prereq, int distance) {
+      int relatedness =
+          (5 * (questionConceptDepth - distance)) ~/ questionConceptDepth;
+      testItemRelationships[conceptMapModel.indexOfConcept(prereq)] =
+          relatedness;
+    });
+
+    // for (int index = 0; index < conceptCount; index++) {
+    //   String concept = conceptMapModel.conceptOfIndex(index);
+    //   if (relatedConcepts.contains(concept)) {
+    //     int conceptDepth = conceptMapModel.findConceptDepth(concept);
+    //     int relatedness =
+    //         (5 * conceptDepth) ~/ questionConceptDepth; // Use integer division
+    //     testItemRelationships[index] = relatedness;
+    //   }
+    // }
     return testItemRelationships;
   }
 
@@ -126,13 +130,17 @@ class AssessmentModel {
     List<int> totalConceptStrengths = List<int>.filled(conceptCount, 0);
     int questionCount = _questions.length;
 
-    for (int questionIndex = 0; questionIndex < questionCount; questionIndex++) {
+    for (int questionIndex = 0;
+        questionIndex < questionCount;
+        questionIndex++) {
       QuestionModel questionModel = _questions[questionIndex];
-      List<int> testItemRelationships = calculateTestItemRelationships(questionModel);
+      List<int> testItemRelationships =
+          calculateTestItemRelationships(questionModel);
 
       for (int conceptIndex = 0; conceptIndex < conceptCount; conceptIndex++) {
         int conceptStrength = totalConceptStrengths[conceptIndex];
-        int addedConceptStrength = conceptStrength + testItemRelationships[conceptIndex];
+        int addedConceptStrength =
+            conceptStrength + testItemRelationships[conceptIndex];
         totalConceptStrengths[conceptIndex] = addedConceptStrength;
       }
     }
@@ -148,7 +156,8 @@ class AssessmentModel {
 
     for (int index = 0; index < questionCount; index++) {
       QuestionModel question = _questions[index];
-      List<int> testItemRelationships = calculateTestItemRelationships(question);
+      List<int> testItemRelationships =
+          calculateTestItemRelationships(question);
       weightedSum += (1 - _scores[index]) * testItemRelationships[conceptIndex];
     }
 
