@@ -25,14 +25,13 @@ class FeedbackViewModel extends ChangeNotifier {
       feedback.diagnosedLearningStyle =
           await determineLearningStyle("random args");
       AuthServices().userInfo!.learningStyle = feedback.diagnosedLearningStyle;
-      var res = await Future.wait([
-        feedbackService.updateUserLearningStyle(
-            authServices.userInfo!.id!, feedback.diagnosedLearningStyle),
-        getSuggestedMaterials()
-      ]);
-      feedback.suggestedLessons = res[1] as List<Map<String, dynamic>>;
-      String? feedbackID =
-          await feedbackService.addFeedbackAndLessons(feedback);
+      bool sucessfullyUpdateLearningStyle =
+          await feedbackService.updateUserLearningStyle(
+              authServices.userInfo!.id!, feedback.diagnosedLearningStyle);
+      if (!sucessfullyUpdateLearningStyle) {
+        return null;
+      }
+      String? feedbackID = await feedbackService.addFeedback(feedback);
       return feedbackID;
     } on Exception catch (e) {
       debugPrint("$e");
