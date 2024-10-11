@@ -79,7 +79,7 @@ class FeedbackService {
           .collection("Materials")
           .withConverter(
               fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
-                  snapshot.data()!, null, lessonID, snapshot.id),
+                  snapshot.data()!, null, snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .get();
       for (var snapshot in materialsSnapshot.docs) {

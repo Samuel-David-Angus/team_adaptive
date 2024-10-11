@@ -14,7 +14,7 @@ class LessonMaterialModel {
     required String title,
     required String author,
     required String? type,
-    required String lessonID,
+    required String? lessonID,
     required String src,
     required String learningStyle,
     required List<String> concepts,

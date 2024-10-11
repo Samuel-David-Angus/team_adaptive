@@ -81,7 +81,7 @@ class TeacherLessonService {
           .collection(type)
           .withConverter(
               fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
-                  snapshot.data()!, type, lessonID, snapshot.id),
+                  snapshot.data()!, type, snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
@@ -104,10 +104,7 @@ class TeacherLessonService {
           .collection(lessonMaterial.type!)
           .withConverter(
               fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
-                  snapshot.data()!,
-                  lessonMaterial.type!,
-                  lessonMaterial.lessonID!,
-                  snapshot.id),
+                  snapshot.data()!, lessonMaterial.type!, snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .add(lessonMaterial);
       return true;
@@ -149,10 +146,7 @@ class TeacherLessonService {
           .collection(lessonMaterial.type!)
           .withConverter(
               fromFirestore: (snapshot, _) => LessonMaterialModel.fromJson(
-                  snapshot.data()!,
-                  lessonMaterial.type!,
-                  lessonMaterial.lessonID!,
-                  snapshot.id),
+                  snapshot.data()!, lessonMaterial.type!, snapshot.id),
               toFirestore: (model, _) => model.toJson())
           .doc(lessonMaterial.id)
           .set(lessonMaterial);
