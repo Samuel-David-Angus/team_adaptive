@@ -99,7 +99,7 @@ class FeedbackView extends StatelessWidget {
                   child: Text(concept),
                   onPressed: () {
                     String lO = Uri.encodeQueryComponent(concept);
-                    context.go('/materials?learningOutcome=$lO');
+                    context.go('/materials/learning-outcome/$lO', extra: lO);
                   },
                 ),
               );
