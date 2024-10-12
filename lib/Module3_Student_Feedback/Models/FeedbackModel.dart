@@ -52,8 +52,8 @@ class FeedbackModel {
       lessonID: json['lessonID'],
       userID: json['userID'],
       feedbackTitle: json['feedbackTitle'],
-      createdDate:
-          (json['createdDate'] as DateTime), //replaced just to remove error
+      createdDate: (json['createdDate'] as Timestamp)
+          .toDate(), //replaced just to remove error
       diagnosedLearningStyle: json['diagnosedLearningStyle'],
       lessonConceptFailureRates:
           Map<String, double>.from(json['lessonConceptFailureRates']),
