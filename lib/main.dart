@@ -252,9 +252,11 @@ final GoRouter _router = GoRouter(
                       dataHandler.getLessonMaterial(state))),
           GoRoute(
               path: '/materials/learning-outcome/:LO',
-              builder: (context, state) => LearningOutcomeMaterialsView(
-                  learningOutcome:
-                      (state.extra ?? state.pathParameters['LO']!) as String)),
+              builder: (context, state) {
+                return LearningOutcomeMaterialsView(
+                    learningOutcome:
+                        (state.extra ?? state.pathParameters['LO']!) as String);
+              }),
           GoRoute(
               path: '/test',
               builder: (context, state) =>

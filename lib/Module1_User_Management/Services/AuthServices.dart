@@ -4,8 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../Models/User.dart';
 
-
-class AuthServices with ChangeNotifier{
+class AuthServices with ChangeNotifier {
   static final AuthServices _instance = AuthServices._internal();
 
   fauth.User? _currentUser;
@@ -37,8 +36,8 @@ class AuthServices with ChangeNotifier{
 
   Future<bool> signIn(String email, String password, String type) async {
     try {
-      fauth.UserCredential credential = await fauth.FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email, password: password);
+      fauth.UserCredential credential = await fauth.FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
       fauth.User? credUser = credential.user;
       if (credUser != null) {
         await _fetchUserInfo();
@@ -55,8 +54,9 @@ class AuthServices with ChangeNotifier{
 
   Future<bool> register(User user) async {
     try {
-      fauth.UserCredential credential = await fauth.FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: user.email ?? '', password: user.password ?? '');
+      fauth.UserCredential credential = await fauth.FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: user.email ?? '', password: user.password ?? '');
       fauth.User? credUser = credential.user;
       user.learningStyle = "Text";
       if (credUser != null) {
@@ -65,7 +65,6 @@ class AuthServices with ChangeNotifier{
         return true;
       }
       return false;
-
     } catch (e) {
       debugPrint("some error occured $e ");
       return false;
@@ -83,8 +82,9 @@ class AuthServices with ChangeNotifier{
             .collection('User')
             .doc(_currentUser!.uid)
             .withConverter<User>(
-              fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!, snapshot.id),
-              toFirestore: (user, _) => user.toJson())
+                fromFirestore: (snapshot, _) =>
+                    User.fromJson(snapshot.data()!, snapshot.id),
+                toFirestore: (user, _) => user.toJson())
             .get();
 
         if (documentSnapshot.exists) {
@@ -108,8 +108,9 @@ class AuthServices with ChangeNotifier{
           .collection('User')
           .doc(user.id)
           .withConverter<User>(
-            fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!, snapshot.id),
-            toFirestore: (user, _) => user.toJson())
+              fromFirestore: (snapshot, _) =>
+                  User.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (user, _) => user.toJson())
           .set(user);
       debugPrint('User information added to Firestore');
     } catch (e) {
@@ -117,7 +118,4 @@ class AuthServices with ChangeNotifier{
       // Handle error as needed
     }
   }
-
-
-
 }

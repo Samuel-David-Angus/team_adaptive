@@ -19,11 +19,18 @@ class LearningOutcomeMaterialsView extends StatefulWidget {
 
 class _LearningOutcomeMaterialsViewState
     extends State<LearningOutcomeMaterialsView> {
-  final String learnerLearningStyle = AuthServices().userInfo!.learningStyle!;
+  String? learnerLearningStyle;
   Future<Map<String, List<LessonMaterialModel>>>? materialsWithLearningStyle;
 
   @override
   Widget build(BuildContext context) {
+    learnerLearningStyle ??=
+        Provider.of<AuthServices>(context).userInfo?.learningStyle;
+    if (learnerLearningStyle == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     materialsWithLearningStyle ??=
         Provider.of<StudentLessonViewModel>(context, listen: false)
             .getLOMaterials(widget.learningOutcome);

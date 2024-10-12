@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 
 class ConceptMapService {
-  static final ConceptMapService _instance =  ConceptMapService._internal();
+  static final ConceptMapService _instance = ConceptMapService._internal();
 
   ConceptMapService._internal();
 
@@ -16,8 +16,9 @@ class ConceptMapService {
       await FirebaseFirestore.instance
           .collection('ConceptMap')
           .withConverter(
-          fromFirestore: (snapshot, _) => ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (model, _) => model.toJson())
+              fromFirestore: (snapshot, _) =>
+                  ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .doc(map.courseID)
           .set(map);
       return true;
@@ -46,16 +47,18 @@ class ConceptMapService {
     return false;
   }
 */
-  Future<bool> uploadConceptMap(String courseID, ConceptMapModel conceptMap) async {
+  Future<bool> uploadConceptMap(
+      String courseID, ConceptMapModel conceptMap) async {
     try {
       var ref = FirebaseFirestore.instance
           .collection('Course')
           .doc(courseID)
           .collection("ConceptMap")
           .withConverter(
-            fromFirestore: (snapshot, _) => ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
-            toFirestore: (model, _) => model.toJson());
-          await ref.add(conceptMap);
+              fromFirestore: (snapshot, _) =>
+                  ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson());
+      await ref.add(conceptMap);
       return true;
     } catch (e) {
       debugPrint("Error adding concept map: $e ");
@@ -70,11 +73,14 @@ class ConceptMapService {
           .doc(courseID)
           .collection("ConceptMap")
           .withConverter(
-            fromFirestore: (snapshot, _) => ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
-            toFirestore: (model, _) => model.toJson())
+              fromFirestore: (snapshot, _) =>
+                  ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
           .get();
+      if (querySnapshot.docs.isEmpty) {
+        return null;
+      }
       return querySnapshot.docs[0].data() as ConceptMapModel;
-
     } catch (e) {
       debugPrint("Error getting concept map: $e");
     }

@@ -68,12 +68,7 @@ List<Widget> userInfo(BuildContext context) {
     ElevatedButton(
       onPressed: () async {
         await authServices.signOut();
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/login', // Replace with your target route name
-          (Route<dynamic> route) =>
-              false, // This removes all the previous routes
-        );
+        context.go('/login');
       },
       child: const Text('Sign out'),
     ),
