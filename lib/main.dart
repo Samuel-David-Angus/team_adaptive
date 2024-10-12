@@ -62,7 +62,7 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
     LessonListPage: (snapshot) =>
         LessonListPage(course: snapshot.data! as Course),
     ViewLessonView: (snapshot) {
-      ({LessonModel lesson, LessonMaterialModel material}) res = snapshot.data!;
+      LessonAndMaterial res = snapshot.data!;
       return ViewLessonView(
         lesson: res.lesson,
         mainLessonMaterial: res.material,
@@ -81,9 +81,9 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
         return TeacherAddQuestionView(
             lessonModel: snapshot.data! as LessonModel);
       }
-      (QuestionModel, LessonModel) res =
-          snapshot.data! as (QuestionModel, LessonModel);
-      return TeacherAddQuestionView(lessonModel: res.$2, question: res.$1);
+      QuestionAndLesson res = snapshot.data!;
+      return TeacherAddQuestionView(
+          lessonModel: res.lesson, question: res.question);
     },
     InitialAddMaterialsView: (snapshot) =>
         InitialAddMaterialsView(lesson: snapshot.data! as LessonModel)
@@ -186,10 +186,9 @@ final GoRouter _router = GoRouter(
             ),
           ),
           GoRoute(
-            path: '/courses/:courseID/lessons/:lessonID',
-            builder: (context, state) => routeBuilder<
-                ({LessonModel lesson, LessonMaterialModel material})?,
-                ViewLessonView>(
+            path: '/courses/:courseID/lessons/:lessonID/main/:materialID',
+            builder: (context, state) =>
+                routeBuilder<LessonAndMaterial?, ViewLessonView>(
               dataHandler.getLessonAndMainMaterial(state),
             ),
           ),
@@ -231,8 +230,8 @@ final GoRouter _router = GoRouter(
           GoRoute(
             path:
                 '/courses/:courseID/lessons/:lessonID/questions/edit/:questionID',
-            builder: (context, state) => routeBuilder<
-                (QuestionModel, LessonModel)?, TeacherAddQuestionView>(
+            builder: (context, state) =>
+                routeBuilder<QuestionAndLesson?, TeacherAddQuestionView>(
               dataHandler.getQuestionAndLesson(state),
             ),
           ),
@@ -247,7 +246,7 @@ final GoRouter _router = GoRouter(
                             dataHandler.getFeedback(state))),
               ]),
           GoRoute(
-              path: '/material/:courseID/:lessonID/:type/:materialID',
+              path: '/courses/:courseID/lessons/:lessonID/:type/:materialID',
               builder: (context, state) =>
                   routeBuilder<LessonMaterialModel?, LessonMaterialView>(
                       dataHandler.getLessonMaterial(state))),

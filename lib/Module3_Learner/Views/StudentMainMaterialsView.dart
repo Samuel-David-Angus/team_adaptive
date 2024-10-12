@@ -48,7 +48,7 @@ class StudentMainMaterialsView extends StatelessWidget {
                             child: InkWell(
                               onTap: () {
                                 context.go(
-                                    '/courses/${lesson.courseID}/lessons/${lesson.id}?material=${material.id}',
+                                    '/courses/${lesson.courseID}/lessons/${lesson.id}/main/${material.id!}',
                                     extra: (
                                       lesson: lesson,
                                       material: material
