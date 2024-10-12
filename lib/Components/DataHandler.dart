@@ -9,17 +9,14 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Services/TeacherQuestionService.dart';
 
-class DataHandler {
-  Future<Course?>? _course;
-  Future<LessonModel?>? _lesson;
-  Future<FeedbackModel?>? _feedback;
-  Future<LessonMaterialModel?>? _lessonMaterial;
-  Future<(QuestionModel, LessonModel)?>? _questionAndLesson;
+typedef QuestionAndLesson = ({QuestionModel question, LessonModel lesson});
+typedef LessonAndMaterial = ({
+  LessonModel lesson,
+  LessonMaterialModel material
+});
 
+class DataHandler {
   Future<Course?> getCourse(GoRouterState state) async {
-    if (_course != null) {
-      return _course;
-    }
     if (state.extra != null &&
         state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as Course;
@@ -28,16 +25,12 @@ class DataHandler {
     if (courseID == null) {
       return null;
     }
-    _course = StudentCourseServices().getCourseByID(courseID);
-    Course? retrievedCourse = await _course;
-    _course = null;
+    Course? retrievedCourse =
+        await StudentCourseServices().getCourseByID(courseID);
     return retrievedCourse;
   }
 
   Future<FeedbackModel?> getFeedback(GoRouterState state) async {
-    if (_feedback != null) {
-      return _feedback;
-    }
     if (state.extra != null &&
         state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as FeedbackModel;
@@ -46,16 +39,12 @@ class DataHandler {
     if (feedbackID == null) {
       return null;
     }
-    _feedback = FeedbackService().getFeedbackByID(feedbackID);
-    FeedbackModel? retrievedFeedback = await _feedback;
-    _feedback = null;
+    FeedbackModel? retrievedFeedback =
+        await FeedbackService().getFeedbackByID(feedbackID);
     return retrievedFeedback;
   }
 
   Future<LessonModel?> getLesson(GoRouterState state) async {
-    if (_lesson != null) {
-      return _lesson;
-    }
     if (state.extra != null &&
         state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as LessonModel;
@@ -65,17 +54,13 @@ class DataHandler {
     if (lessonID == null || courseID == null) {
       return null;
     }
-    _lesson = StudentLessonService().getLessonByID(courseID, lessonID);
-    LessonModel? retrievedLesson = await _lesson;
-    _lesson = null;
+    LessonModel? retrievedLesson =
+        await StudentLessonService().getLessonByID(courseID, lessonID);
     return retrievedLesson;
   }
 
   Future<LessonMaterialModel?> getLessonMaterial(GoRouterState state,
       {String? type}) async {
-    if (_lessonMaterial != null) {
-      return _lessonMaterial;
-    }
     if (state.extra != null &&
         state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as LessonMaterialModel;
@@ -91,24 +76,19 @@ class DataHandler {
         type == null) {
       return null;
     }
-    _lessonMaterial = StudentLessonService().getLessonMaterialByTypeAndID(
-        courseID: courseID,
-        lessonID: lessonID,
-        type: type,
-        materialID: materialID);
-    LessonMaterialModel? retrievedMaterial = await _lessonMaterial;
-    _lessonMaterial = null;
+    LessonMaterialModel? retrievedMaterial = await StudentLessonService()
+        .getLessonMaterialByTypeAndID(
+            courseID: courseID,
+            lessonID: lessonID,
+            type: type,
+            materialID: materialID);
     return retrievedMaterial;
   }
 
-  Future<(QuestionModel, LessonModel)?> getQuestionAndLesson(
-      GoRouterState state) async {
-    if (_questionAndLesson != null) {
-      return _questionAndLesson;
-    }
+  Future<QuestionAndLesson?> getQuestionAndLesson(GoRouterState state) async {
     if (state.extra != null &&
         state.extra.runtimeType.toString() != '_JsonMap') {
-      return state.extra as (QuestionModel, LessonModel);
+      return state.extra as QuestionAndLesson;
     }
     String? lessonID = state.pathParameters['lessonID'];
     String? questionID = state.pathParameters['questionID'];
@@ -116,7 +96,7 @@ class DataHandler {
       return null;
     }
 
-    Future<(QuestionModel, LessonModel)?> getDataPair() async {
+    Future<QuestionAndLesson?> getDataPair() async {
       List<Object?> res = await Future.wait([
         TeacherQuestionService().getQuestionByID(lessonID, questionID),
         getLesson(state),
@@ -124,17 +104,15 @@ class DataHandler {
       if (res[0] == null || res[1] == null) {
         return null;
       }
-      return (res[0] as QuestionModel, res[1] as LessonModel);
+      return (question: res[0] as QuestionModel, lesson: res[1] as LessonModel);
     }
 
-    _questionAndLesson = getDataPair();
-    var retrievedPair = await _questionAndLesson;
-    _questionAndLesson = null;
+    var retrievedPair = await getDataPair();
     return retrievedPair;
   }
 
-  Future<({LessonModel lesson, LessonMaterialModel material})>
-      getLessonAndMainMaterial(GoRouterState state) async {
+  Future<LessonAndMaterial> getLessonAndMainMaterial(
+      GoRouterState state) async {
     if (state.extra != null &&
         state.extra.runtimeType.toString() != '_JsonMap') {
       return state.extra as ({
