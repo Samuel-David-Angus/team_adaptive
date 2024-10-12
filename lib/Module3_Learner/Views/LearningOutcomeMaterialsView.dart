@@ -7,11 +7,9 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMater
 
 class LearningOutcomeMaterialsView extends StatefulWidget {
   final String learningOutcome;
-  final String courseID;
   const LearningOutcomeMaterialsView({
     super.key,
     required this.learningOutcome,
-    required this.courseID,
   });
 
   @override
@@ -59,7 +57,7 @@ class _LearningOutcomeMaterialsViewState
                             child: InkWell(
                               onTap: () {
                                 context.go(
-                                    '/courses/${widget.courseID}/lessons/${material.lessonID!}/sub/',
+                                    '/courses/${material.courseID!}/lessons/${material.lessonID!}/sub/${material.id!}',
                                     extra: material);
                                 Navigator.pop(context);
                               },
