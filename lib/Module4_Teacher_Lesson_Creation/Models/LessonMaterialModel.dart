@@ -3,6 +3,7 @@ class LessonMaterialModel {
   String? _title;
   String? _author;
   String? _type;
+  String? _courseID;
   String? _lessonID;
   String? _src;
   String? _learningStyle;
@@ -15,6 +16,7 @@ class LessonMaterialModel {
     required String author,
     required String? type,
     required String? lessonID,
+    required String? courseID,
     required String src,
     required String learningStyle,
     required List<String> concepts,
@@ -23,6 +25,7 @@ class LessonMaterialModel {
         _author = author,
         _type = type,
         _lessonID = lessonID,
+        _courseID = courseID,
         _src = src,
         _learningStyle = learningStyle,
         _concepts = concepts;
@@ -35,6 +38,7 @@ class LessonMaterialModel {
   String? get author => _author;
   String? get type => _type;
   String? get lessonID => _lessonID;
+  String? get courseID => _courseID;
   String? get src => _src;
   String? get learningStyle => _learningStyle;
   List<String>? get concepts => _concepts;
@@ -60,6 +64,10 @@ class LessonMaterialModel {
     _lessonID = value;
   }
 
+  set courseID(String? value) {
+    _courseID = value;
+  }
+
   set src(String? value) {
     _src = value;
   }
@@ -81,6 +89,7 @@ class LessonMaterialModel {
       author: json['author'],
       type: type,
       lessonID: json['lessonID'],
+      courseID: json['courseID'],
       src: json['src'],
       learningStyle: json['learningStyle'],
       concepts: List<String>.from(json['concepts']),
@@ -93,6 +102,7 @@ class LessonMaterialModel {
       'title': _title,
       'author': _author,
       'lessonID': _lessonID,
+      'courseID': _courseID,
       'src': _src,
       'learningStyle': _learningStyle,
       'concepts': _concepts,
