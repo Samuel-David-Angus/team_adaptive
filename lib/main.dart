@@ -17,6 +17,7 @@ import 'package:team_adaptive/Module2_Courses/Views/Student/EnrollCourseView.dar
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherJoinCourseView.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
+import 'package:team_adaptive/Module3_Learner/Views/LearningOutcomeMaterialsView.dart';
 import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Views/AssessmentView.dart';
@@ -33,7 +34,6 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLe
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
-import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
@@ -250,6 +250,11 @@ final GoRouter _router = GoRouter(
               builder: (context, state) =>
                   routeBuilder<LessonMaterialModel?, LessonMaterialView>(
                       dataHandler.getLessonMaterial(state))),
+          GoRoute(
+              path: '/materials/learning-outcome/:LO',
+              builder: (context, state) => LearningOutcomeMaterialsView(
+                  learningOutcome:
+                      (state.extra ?? state.pathParameters['LO']!) as String)),
           GoRoute(
               path: '/test',
               builder: (context, state) =>
