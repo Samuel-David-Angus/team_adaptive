@@ -135,8 +135,7 @@ class StudentLessonService {
     return null;
   }
 
-  Future<List<LessonMaterialModel>?> findSubMaterialsByLO(
-      String lO, String lessonID) async {
+  Future<List<LessonMaterialModel>?> findSubMaterialsByLO(String lO) async {
     try {
       List<LessonMaterialModel> materials = [];
       QuerySnapshot snapshot = await FirebaseFirestore.instance
