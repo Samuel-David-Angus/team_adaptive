@@ -32,6 +32,7 @@ class ConceptMapBrowserPage extends StatefulWidget {
 class _ConceptMapBrowserPageState extends State<ConceptMapBrowserPage> {
   final ConceptMapModel _conceptMap = ConceptMapModel.setAll(
     courseID: 'exampleCourseID',
+    // EXAMPLE WITH NETWORKING CONCEPTS
     conceptMap: {
       'Introduction to Networking': [],
       'Understanding TCP/IP': [],
