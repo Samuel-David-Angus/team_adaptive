@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:characters/characters.dart'; // For handling complex Unicode strings
 import 'ConceptMapModel.dart';
-import 'package:collection/collection.dart'; // For similarity sorting (optional)
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -29,16 +30,14 @@ class ConceptMapBrowserPage extends StatefulWidget {
 }
 
 class _ConceptMapBrowserPageState extends State<ConceptMapBrowserPage> {
-  // EXAMPLE WITH NETWORKING CONCEPTS
   final ConceptMapModel _conceptMap = ConceptMapModel.setAll(
     courseID: 'exampleCourseID',
     conceptMap: {
-      'Networking': [],
-      'TCP/IP': [],
-      'Routing': [],
-      'Subnetting': [],
-      'Switching': [],
-      // Add more example concepts here
+      'Introduction to Networking': [],
+      'Understanding TCP/IP': [],
+      'Routing Fundamentals': [],
+      'Subnetting Made Easy': [],
+      'Advanced Switching Concepts': [],
     },
   );
 
@@ -55,26 +54,80 @@ class _ConceptMapBrowserPageState extends State<ConceptMapBrowserPage> {
   List<String> _sortConceptsByRelevance(String query) {
     List<String> concepts = _conceptMap.conceptMap.keys.toList();
 
-    // Sort all concepts by similarity to the query
-    concepts.sort((a, b) {
-      double similarityA = _calculateStringSimilarity(query, a.toLowerCase());
-      double similarityB = _calculateStringSimilarity(query, b.toLowerCase());
-      return similarityB
-          .compareTo(similarityA); // Sort in descending order of similarity
-    });
+    // Compute similarity scores for all concepts
+    List<MapEntry<String, double>> scoredConcepts = concepts.map((concept) {
+      double similarity = _calculateTotalSimilarity(query, concept);
 
-    return concepts;
+      // Debug the matching process
+      debugPrint(
+          'Query: "$query", Concept: "$concept", Similarity: $similarity');
+      return MapEntry(concept, similarity);
+    }).toList();
+
+    // Sort concepts by their similarity scores in descending order
+    scoredConcepts.sort((a, b) => b.value.compareTo(a.value));
+
+    // Extract the sorted concept names
+    return scoredConcepts.map((entry) => entry.key).toList();
   }
 
-  double _calculateStringSimilarity(String query, String concept) {
-    // Use Jaccard similarity for example purposes (simple calculation)
-    Set<String> querySet = query.split('').toSet();
-    Set<String> conceptSet = concept.split('').toSet();
+  double _calculateTotalSimilarity(String query, String concept) {
+    List<String> queryWords = query.split(RegExp(r'\s+'));
+    List<String> conceptWords = concept.split(RegExp(r'\s+'));
 
-    int intersectionSize = querySet.intersection(conceptSet).length;
-    int unionSize = querySet.union(conceptSet).length;
+    double totalScore = 0.0;
 
-    return intersectionSize / unionSize; // Jaccard similarity index
+    for (String qWord in queryWords) {
+      double maxSimilarity = 0.0;
+      for (String cWord in conceptWords) {
+        double similarity = _stringSimilarity(qWord, cWord);
+        if (similarity > maxSimilarity) {
+          maxSimilarity = similarity;
+        }
+      }
+      totalScore += maxSimilarity;
+    }
+
+    return totalScore;
+  }
+
+  double _stringSimilarity(String s1, String s2) {
+    int distance = _levenshteinDistance(s1, s2);
+    int maxLength = s1.length > s2.length ? s1.length : s2.length;
+
+    // Handle edge case where both strings are empty
+    if (maxLength == 0) return 1.0;
+
+    return 1.0 - (distance / maxLength);
+  }
+
+  int _levenshteinDistance(String s1, String s2) {
+    List<List<int>> dp = List.generate(
+      s1.length + 1,
+      (i) => List<int>.filled(s2.length + 1, 0),
+    );
+
+    for (int i = 0; i <= s1.length; i++) {
+      for (int j = 0; j <= s2.length; j++) {
+        if (i == 0) {
+          dp[i][j] = j;
+        } else if (j == 0) {
+          dp[i][j] = i;
+        } else if (s1[i - 1] == s2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1];
+        } else {
+          dp[i][j] = 1 +
+              min(
+                dp[i - 1][j], // Deletion
+                min(
+                    dp[i][j - 1], // Insertion
+                    dp[i - 1][j - 1]), // Substitution
+              ) as int;
+        }
+      }
+    }
+
+    return dp[s1.length][s2.length];
   }
 
   @override
