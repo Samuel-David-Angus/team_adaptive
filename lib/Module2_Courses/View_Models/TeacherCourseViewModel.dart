@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 import '../../Module1_User_Management/Services/AuthServices.dart';
 import '../Models/CourseModel.dart';
 import '../Services/TeacherCourseServices.dart';
@@ -14,7 +16,18 @@ class TeacherCourseViewModel extends ChangeNotifier {
   }
 
   Future<Course?> addCourse(Course course) async {
-    return await courseService.addCourse(course);
+    Course? addedCourse = await courseService.addCourse(course);
+    if (addedCourse != null) {
+      await ConceptMapService().uploadConceptMap(
+          addedCourse.id!,
+          ConceptMapModel.setAll(
+              id: null,
+              courseID: addedCourse.id!,
+              conceptMap: {},
+              lessonPartitions: {},
+              maxFailureRates: {}));
+    }
+    return addedCourse;
   }
 
   Future<bool> joinCourse(String courseID) async {

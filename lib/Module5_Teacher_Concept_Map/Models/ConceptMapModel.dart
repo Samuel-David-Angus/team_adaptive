@@ -1,10 +1,12 @@
 class ConceptMapModel {
+  late String? _id;
   late String? _courseID;
   late Map<String, List<int>> _conceptMap;
   late Map<String, double> _maxFailureRates;
   late Map<String, List<String>> _lessonPartitions;
 
   // getters
+  String? get id => _id;
   String? get courseID => _courseID;
   Map<String, List<int>> get conceptMap => _conceptMap;
   int get conceptCount => _conceptMap.length;
@@ -21,10 +23,12 @@ class ConceptMapModel {
   }
 
   ConceptMapModel.setAll(
-      {required String? courseID,
+      {required String? id,
+      required String? courseID,
       required Map<String, List<int>> conceptMap,
       required Map<String, List<String>> lessonPartitions,
       required Map<String, double> maxFailureRates}) {
+    _id = id;
     _courseID = courseID;
     _conceptMap = conceptMap;
     _lessonPartitions = lessonPartitions;
@@ -54,15 +58,22 @@ class ConceptMapModel {
       return MapEntry(key, List<String>.from(value));
     });
 
+    Map<String, double> maxFailureRates =
+        (json['maxFailureRates'] as Map<String, dynamic>).map((key, value) {
+      return MapEntry(key, value as double);
+    });
+
     return ConceptMapModel.setAll(
-        courseID: id,
+        id: id,
+        courseID: json['courseID'],
         conceptMap: conceptMapOrdered,
         lessonPartitions: partitions,
-        maxFailureRates: json['maxFailureRates']);
+        maxFailureRates: maxFailureRates);
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'courseID': _courseID,
       'order': _conceptMap.keys,
       'lessonPartitions': _lessonPartitions,
       'maxFailureRates': _maxFailureRates,
@@ -92,8 +103,7 @@ class ConceptMapModel {
     return true;
   }
 
-  bool addExternalLearningOutcome(
-      String externalLO, String lessonID, String courseID) {
+  bool addExternalLearningOutcome(String externalLO, String lessonID) {
     if (!externalLO.startsWith('@')) {
       throw const FormatException(
           "If you want to add a local learning outcome. use addLocalLearningOutcome instead");

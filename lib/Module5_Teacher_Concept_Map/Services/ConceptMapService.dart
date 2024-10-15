@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 
 class ConceptMapService {
   static final ConceptMapService _instance = ConceptMapService._internal();
@@ -11,16 +12,31 @@ class ConceptMapService {
     return _instance;
   }
 
-  Future<bool> editConceptMap(ConceptMapModel map) async {
+  Future<bool> editConceptMapAndAddNewLOs(
+      ConceptMapModel map, String lessonID) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('ConceptMap')
-          .withConverter(
-              fromFirestore: (snapshot, _) =>
-                  ConceptMapModel.fromJson(snapshot.data()!, snapshot.id),
-              toFirestore: (model, _) => model.toJson())
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+      for (var lO in map.lessonPartitions[lessonID]!) {
+        DocumentReference doc =
+            FirebaseFirestore.instance.collection("LearningOutcomes").doc();
+        LearningOutcomeModel model = LearningOutcomeModel.setAll(
+            id: doc.id,
+            courseID: map.courseID!,
+            lessonID: lessonID,
+            learningOutcome: lO,
+            directPrereqs: map.findDirectPrerequisites(lO));
+        batch.set(doc, model.toJson());
+      }
+
+      DocumentReference cmap = FirebaseFirestore.instance
+          .collection('Course')
           .doc(map.courseID)
-          .set(map);
+          .collection('ConceptMap')
+          .doc(map.id);
+      batch.set(cmap, map.toJson());
+
+      await batch.commit();
+
       return true;
     } catch (e) {
       debugPrint("Error editing concept map: $e ");
@@ -50,6 +66,7 @@ class ConceptMapService {
   Future<bool> uploadConceptMap(
       String courseID, ConceptMapModel conceptMap) async {
     try {
+      conceptMap.courseID = courseID;
       var ref = FirebaseFirestore.instance
           .collection('Course')
           .doc(courseID)
@@ -85,5 +102,26 @@ class ConceptMapService {
       debugPrint("Error getting concept map: $e");
     }
     return null;
+  }
+
+  Future<List<LearningOutcomeModel>?> getExternalLearningOutcomes(
+      String lessonID) async {
+    try {
+      List<LearningOutcomeModel> lOs = [];
+      QuerySnapshot list = await FirebaseFirestore.instance
+          .collection("LearningOutcome")
+          .where("lessonID", isNotEqualTo: lessonID)
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  LearningOutcomeModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
+          .get();
+      for (DocumentSnapshot doc in list.docs) {
+        lOs.add(doc as LearningOutcomeModel);
+      }
+      return lOs;
+    } catch (e) {
+      print("Error getting learning outcomes");
+    }
   }
 }

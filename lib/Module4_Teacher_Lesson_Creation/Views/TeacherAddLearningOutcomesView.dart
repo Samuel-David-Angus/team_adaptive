@@ -1,167 +1,196 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLearningOutcomesViewModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 
-class TeacherAddLearningObjectivesView extends StatelessWidget {
-  final _scrollBarController = ScrollController();
-  TeacherAddLearningObjectivesView({super.key});
+class TeacherAddLearningObjectivesView extends StatefulWidget {
+  final String lessonID;
+  const TeacherAddLearningObjectivesView({super.key, required this.lessonID});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<TeacherAddLearningOutcomesViewModel>(
-        builder: (context, viewModel, child) {
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Text("Bloom's Taxonomy Level: "),
-                const SizedBox(
-                  width: 20,
-                ),
-                DropdownButton<String>(
-                  value: viewModel.selectedLevel,
-                  items: TeacherAddLearningOutcomesViewModel.levelsAndVerbs.keys
-                      .map((String level) => DropdownMenuItem<String>(
-                          value: level, child: Text(level)))
-                      .toList(),
-                  onChanged: (String? value) {
-                    viewModel.setSelectedLevel(value!);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownButton<String>(
-                    value: viewModel.selectedVerb,
-                    items: TeacherAddLearningOutcomesViewModel
-                        .levelsAndVerbs[viewModel.selectedLevel]!
-                        .map((String verb) => DropdownMenuItem<String>(
-                            value: verb, child: Text(verb)))
-                        .toList(),
-                    onChanged: (String? value) {
-                      viewModel.setSelectedVerb(value!);
-                    }),
-                Expanded(
-                  child: TextFormField(
-                    controller: viewModel.textEditingController,
-                    decoration: InputDecoration(
-                        hintText: "Complete the learning outcome here",
-                        errorText: viewModel.errorText),
-                    onChanged: (String value) {
-                      viewModel.checkIfValid(value);
-                    },
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  viewModel.addLearningOutcome();
-                },
-                child: const Text("Add Learning Outcome")),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text("Learning outcomes: "),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-                "Count: ${viewModel.learningOutcomesAndPassingFailureRate.length}"),
-            const SizedBox(
-              height: 20,
-            ),
-            if (viewModel.learningOutcomesAndPassingFailureRate.isNotEmpty)
-              Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(border: Border.all()),
-                height: 200,
-                width: 600,
-                child: Scrollbar(
-                  thumbVisibility: true,
-                  controller: _scrollBarController,
-                  child: ListView.builder(
-                      controller: _scrollBarController,
-                      itemCount: viewModel
-                          .learningOutcomesAndPassingFailureRate.length,
-                      itemBuilder: (context, index) {
-                        String lO = viewModel
-                            .learningOutcomesAndPassingFailureRate.keys
-                            .elementAt(index);
-                        return LearningOutcomeTile(
-                            viewModel: viewModel, learningOutcome: lO);
-                      }),
-                ),
-              )
-          ],
-        ),
-      );
+  State<TeacherAddLearningObjectivesView> createState() =>
+      _TeacherAddLearningObjectivesViewState();
+}
+
+class _TeacherAddLearningObjectivesViewState
+    extends State<TeacherAddLearningObjectivesView> {
+  final Map<String, List<String>> levelsAndVerbs = bloomsTaxonomy;
+  late String selectedLevel = levelsAndVerbs.keys.elementAt(0);
+  late String selectedVerb = levelsAndVerbs.values.elementAt(0).first;
+  TextEditingController textEditingController = TextEditingController();
+  String? errorText = "Please type a learning outcome";
+  double acceptableFailureRate = 0.4;
+
+  void setSelectedLevel(String value) {
+    setState(() {
+      selectedLevel = value;
+      selectedVerb = levelsAndVerbs[value]![0];
     });
   }
-}
 
-class LearningOutcomeTile extends StatefulWidget {
-  final TeacherAddLearningOutcomesViewModel viewModel;
-  final String learningOutcome;
-  const LearningOutcomeTile(
-      {super.key, required this.viewModel, required this.learningOutcome});
+  void setSelectedVerb(String value) {
+    setState(() {
+      selectedVerb = value;
+    });
+  }
 
-  @override
-  State<LearningOutcomeTile> createState() => _LearningOutcomeTileState();
-}
+  void checkIfValid(String value) {
+    setState(() {
+      errorText = null;
+      if (value.isEmpty) {
+        errorText = "Learning outcome must not be empty";
+      }
+    });
+  }
 
-class _LearningOutcomeTileState extends State<LearningOutcomeTile> {
-  late final TeacherAddLearningOutcomesViewModel viewModel;
-  late final String learningOutcome;
-  @override
-  void initState() {
-    super.initState();
-    viewModel = widget.viewModel;
-    learningOutcome = widget.learningOutcome;
+  void addLearningOutcome() {
+    if (textEditingController.text.isEmpty) {
+      return;
+    }
+    String lO = "$selectedVerb ${textEditingController.text}";
+    if (!Provider.of<ConceptMapViewModel>(context, listen: false)
+        .addLocalLearningOutcome(lO, acceptableFailureRate, widget.lessonID)) {
+      setState(() {
+        errorText = "This learning outcome already exists";
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: () {
-            viewModel.deleteLearningOutcome(learningOutcome);
-          },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Text("Bloom's Taxonomy Level: "),
+            const SizedBox(
+              width: 20,
+            ),
+            DropdownButton<String>(
+              value: selectedLevel,
+              items: levelsAndVerbs.keys
+                  .map((String level) => DropdownMenuItem<String>(
+                      value: level, child: Text(level)))
+                  .toList(),
+              onChanged: (String? value) {
+                setSelectedLevel(value!);
+              },
+            ),
+          ],
         ),
-        title: Text(learningOutcome),
-        subtitle: Row(
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButton<String>(
+                value: selectedVerb,
+                items: levelsAndVerbs[selectedLevel]!
+                    .map((String verb) => DropdownMenuItem<String>(
+                        value: verb, child: Text(verb)))
+                    .toList(),
+                onChanged: (String? value) {
+                  setSelectedVerb(value!);
+                }),
+            Expanded(
+              child: TextFormField(
+                controller: textEditingController,
+                decoration: InputDecoration(
+                    hintText: "Complete the learning outcome here",
+                    errorText: errorText),
+                onChanged: (String value) {
+                  checkIfValid(value);
+                },
+              ),
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
           children: [
             const Text("Acceptable Failure Rate"),
             Slider(
                 min: 0,
                 max: 100,
                 divisions: 20,
-                value: viewModel.learningOutcomesAndPassingFailureRate[
-                        learningOutcome]! *
-                    100,
+                value: acceptableFailureRate * 100,
                 onChanged: (double value) {
                   setState(() {
-                    viewModel.updateLOFailureRate(learningOutcome, value / 100);
+                    acceptableFailureRate = value / 100;
                   });
                 }),
-            Text(
-                "${(viewModel.learningOutcomesAndPassingFailureRate[learningOutcome]! * 100).toStringAsFixed(2)}%")
+            Text("${(acceptableFailureRate * 100).toStringAsFixed(2)}%")
           ],
         ),
-      ),
+        ElevatedButton(
+            onPressed: () {
+              addLearningOutcome();
+              Navigator.pop(
+                  context, "$selectedVerb ${textEditingController.text}");
+            },
+            child: const Text("Add Learning Outcome")),
+      ],
     );
   }
 }
+
+const Map<String, List<String>> bloomsTaxonomy = {
+  'Remember': [
+    'List',
+    'Define',
+    'Describe',
+    'Identify',
+    'Recall',
+    'Name',
+    'Recognize'
+  ],
+  'Understand': [
+    'Summarize',
+    'Explain',
+    'Paraphrase',
+    'Classify',
+    'Compare',
+    'Interpret',
+    'Discuss'
+  ],
+  'Apply': [
+    'Use',
+    'Implement',
+    'Carry out',
+    'Execute',
+    'Solve',
+    'Demonstrate',
+    'Apply'
+  ],
+  'Analyze': [
+    'Differentiate',
+    'Organize',
+    'Attribute',
+    'Compare',
+    'Contrast',
+    'Examine',
+    'Test'
+  ],
+  'Evaluate': [
+    'Judge',
+    'Critique',
+    'Assess',
+    'Defend',
+    'Support',
+    'Conclude',
+    'Justify'
+  ],
+  'Create': [
+    'Design',
+    'Construct',
+    'Develop',
+    'Formulate',
+    'Build',
+    'Invent',
+    'Compose'
+  ],
+};

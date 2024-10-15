@@ -12,6 +12,15 @@ class TeacherLessonService {
     return _instance;
   }
 
+  String getLessonID(String courseID) {
+    return FirebaseFirestore.instance
+        .collection("Course")
+        .doc(courseID)
+        .collection("Lesson")
+        .doc()
+        .id;
+  }
+
   Future<bool> confirmSetupComplete(LessonModel lesson) async {
     try {
       await FirebaseFirestore.instance
@@ -39,7 +48,12 @@ class TeacherLessonService {
               toFirestore: (model, _) => model.toJson());
       QuerySnapshot querySnapshot = await ref.get();
       lesson.order = querySnapshot.size + 1;
-      await ref.add(lesson);
+      if (lesson.id == null) {
+        await ref.add(lesson);
+      } else {
+        print(lesson.id);
+        await ref.doc(lesson.id!).set(lesson);
+      }
       return true;
     } catch (e) {
       debugPrint("Error adding lesson: $e");

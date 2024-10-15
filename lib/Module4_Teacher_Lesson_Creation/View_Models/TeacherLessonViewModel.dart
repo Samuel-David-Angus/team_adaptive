@@ -9,9 +9,17 @@ class TeacherLessonViewModel extends ChangeNotifier {
   bool canAddMoreLessons = true;
   late Future<List<LessonModel>> allLessons;
 
+  String getLessonID(String courseID) {
+    return service.getLessonID(courseID);
+  }
+
   Future<bool> addLesson(String title, String description, String courseId,
-      List<String> learningOutcomes) async {
+      List<String> learningOutcomes,
+      {String? lessonID}) async {
     LessonModel lesson = LessonModel();
+    if (lessonID != null) {
+      lesson.id = lessonID;
+    }
     lesson.lessonTitle = title;
     lesson.lessonDescription = description;
     lesson.courseID = courseId;

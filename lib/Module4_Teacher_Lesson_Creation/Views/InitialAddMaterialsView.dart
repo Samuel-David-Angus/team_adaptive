@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 class InitialAddMaterialsView extends StatelessWidget {
   final LessonModel lesson;
   InitialAddMaterialsView({super.key, required this.lesson}) {
-    viewModel.setPrereqs(lesson.courseID!, lesson.learningOutcomes!);
     mainLessonTab = SingleChildScrollView(
       child: Column(children: [
         ListView.separated(
@@ -29,46 +28,34 @@ class InitialAddMaterialsView extends StatelessWidget {
         )
       ]),
     );
-    subLessonTab = FutureBuilder<List<String>>(
-        future: viewModel.prereqs,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            return SingleChildScrollView(
-              child: Column(children: [
-                ListView.separated(
-                  shrinkWrap:
-                      true, // Add this to prevent ListView from taking up all available space
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Prevent scrolling inside the Column
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index1) {
-                    return Column(
-                      children: [
-                        ...List.generate(3, (index2) {
-                          return AtomicInputMaterialInfoView(
-                            connector: connect,
-                            lesson: lesson,
-                            lessonType: "sub",
-                            learningStyle: learningStyles[index2],
-                            concepts: [snapshot.data![index1]],
-                          );
-                        }),
-                      ],
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(),
-                )
-              ]),
+    subLessonTab = SingleChildScrollView(
+      child: Column(children: [
+        ListView.separated(
+          shrinkWrap:
+              true, // Add this to prevent ListView from taking up all available space
+          physics:
+              const NeverScrollableScrollPhysics(), // Prevent scrolling inside the Column
+          itemCount: lesson.learningOutcomes!.length,
+          itemBuilder: (context, index1) {
+            return Column(
+              children: [
+                ...List.generate(3, (index2) {
+                  return AtomicInputMaterialInfoView(
+                    connector: connect,
+                    lesson: lesson,
+                    lessonType: "sub",
+                    learningStyle: learningStyles[index2],
+                    concepts: [lesson.learningOutcomes![index1]],
+                  );
+                }),
+              ],
             );
-          } else {
-            return const Center(child: Text('No data available'));
-          }
-        });
+          },
+          separatorBuilder: (BuildContext context, int index) =>
+              const Divider(),
+        )
+      ]),
+    );
   }
 
   final viewModel = InitialAddMaterialsViewModel();

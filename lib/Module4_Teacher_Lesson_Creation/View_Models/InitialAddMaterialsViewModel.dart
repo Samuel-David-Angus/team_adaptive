@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Services/TeacherLessonService.dart';
-import '../../Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 import '../../Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 import '../Models/LessonMaterialModel.dart';
 import './AtomicInputMaterialInfoViewModel.dart';
@@ -22,7 +21,6 @@ class InitialAddMaterialsViewModel extends ChangeNotifier {
   }
 
   List<AtomicInputMaterialViewModel> initialMaterials = [];
-  late Future<List<String>> prereqs;
 
   Future<bool> addMultipleMaterials(LessonModel lesson) {
     List<LessonMaterialModel> materials = initialMaterials.map((item) {
@@ -56,28 +54,6 @@ class InitialAddMaterialsViewModel extends ChangeNotifier {
     lessonMaterial.concepts = viewModel.concepts;
     lessonMaterial.type = viewModel.type;
     return lessonMaterial;
-  }
-
-  Future<List<String>> getPrereqs(
-      String courseID, List<String> concepts) async {
-    ConceptMapModel? conceptMapModel =
-        await conceptMapService.getConceptMap(courseID);
-    List<String> prereqs = [];
-    for (var concept in concepts) {
-      for (int i = 0; i < conceptMapModel!.conceptMap[concept]!.length; i++) {
-        if (conceptMapModel.conceptMap[concept]![i] == 1) {
-          String val = conceptMapModel.conceptOfIndex(i);
-          if (!prereqs.contains(val)) {
-            prereqs.add(conceptMapModel.conceptOfIndex(i));
-          }
-        }
-      }
-    }
-    return prereqs;
-  }
-
-  void setPrereqs(String courseID, List<String> concepts) {
-    prereqs = getPrereqs(courseID, concepts);
   }
 
   Future<bool> confirmSetupComplete(LessonModel lesson) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
 import '../Models/ConceptMapModel.dart';
@@ -9,6 +10,7 @@ class ConceptMapViewModel extends ChangeNotifier {
 
   void createConceptMap() {
     map = ConceptMapModel.setAll(
+        id: null,
         courseID: null,
         conceptMap: {},
         lessonPartitions: {},
@@ -41,6 +43,7 @@ class ConceptMapViewModel extends ChangeNotifier {
   }
 
   void getConceptMap(String courseID) async {
+    print('test');
     map = await service.getConceptMap(courseID);
     notifyListeners();
   }
@@ -55,12 +58,22 @@ class ConceptMapViewModel extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> saveEdits() async {
+  Future<bool> saveEdits(String lessonID) async {
     try {
-      return await service.editConceptMap(map!);
+      return await service.editConceptMapAndAddNewLOs(map!, lessonID);
     } catch (e) {
       debugPrint("Error saving map: $e");
     }
     return false;
+  }
+
+  Future<List<LearningOutcomeModel>> getExternalLearningOutcomes(
+      String lessonID) async {
+    List<LearningOutcomeModel>? lOs =
+        await service.getExternalLearningOutcomes(lessonID);
+    if (lOs == null) {
+      throw Exception("Error getting external learning outcomes");
+    }
+    return lOs!;
   }
 }
