@@ -147,7 +147,7 @@ class StudentLessonService {
               toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot documentSnapshot in snapshot.docs) {
-        materials.add(documentSnapshot as LessonMaterialModel);
+        materials.add(documentSnapshot.data() as LessonMaterialModel);
       }
       return materials;
     } catch (e) {

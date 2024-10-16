@@ -35,6 +35,7 @@ class StudentLessonViewModel extends ChangeNotifier {
 
   Future<Map<String, List<LessonMaterialModel>>> getLOMaterials(
       String lO) async {
+    print(lO);
     List<LessonMaterialModel>? allMaterials =
         await lessonService.findSubMaterialsByLO(lO);
     Map<String, List<LessonMaterialModel>> learningStyleWithMaterials = {

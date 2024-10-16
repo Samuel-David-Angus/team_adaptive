@@ -254,8 +254,8 @@ final GoRouter _router = GoRouter(
               path: '/materials/learning-outcome/:LO',
               builder: (context, state) {
                 return LearningOutcomeMaterialsView(
-                    learningOutcome:
-                        (state.extra ?? state.pathParameters['LO']!) as String);
+                    learningOutcome: (state.extra as String? ??
+                        Uri.decodeFull(state.pathParameters['LO']!)));
               }),
           GoRoute(
               path: '/test',

@@ -51,20 +51,22 @@ class AssessmentView extends StatelessWidget {
                       if (confirmSubmit == true) {
                         bool success = await viewModel.submitAssessment();
                         if (success) {
-                          showDialog(
+                          String? feedbackID = await showDialog(
                               context: context,
                               barrierDismissible: false,
-                              builder: (context) => Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(0, 0, 0, 0.5)),
-                                  child: const Center(
-                                      child: CircularProgressIndicator())));
-                          String? feedbackID = await feedBackViewModel
-                              .createFeedback(viewModel.assessmentModel);
-                          Navigator.pop(context);
+                              builder: (context) {
+                                feedBackViewModel
+                                    .createFeedback(viewModel.assessmentModel)
+                                    .then((feedbackID) =>
+                                        Navigator.of(context).pop());
+                                return Container(
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(0, 0, 0, 0.5)),
+                                    child: const Center(
+                                        child: CircularProgressIndicator()));
+                              });
                           if (feedbackID != null) {
-                            GoRouter.of(context).go(
-                                '/feedbacks/$feedbackID',
+                            GoRouter.of(context).go('/feedbacks/$feedbackID',
                                 extra: feedBackViewModel.feedback);
                           } else {
                             showConfirmationDialog(

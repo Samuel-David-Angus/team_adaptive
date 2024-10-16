@@ -28,7 +28,6 @@ class TeacherQuestionViewModel extends ChangeNotifier {
           otherQuestionPool.add(question);
         }
       }
-      this.lessonID  = null;
       notifyListeners();
     }
   }
@@ -48,7 +47,6 @@ class TeacherQuestionViewModel extends ChangeNotifier {
       return true;
     }
     return false;
-
   }
 
   Future<bool> deleteQuestion(QuestionModel question) async {

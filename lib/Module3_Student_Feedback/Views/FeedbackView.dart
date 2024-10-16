@@ -98,7 +98,7 @@ class FeedbackView extends StatelessWidget {
                 child: ElevatedButton(
                   child: Text(concept),
                   onPressed: () {
-                    String lO = Uri.encodeQueryComponent(concept);
+                    String lO = Uri.encodeFull(concept);
                     context.go('/materials/learning-outcome/$lO', extra: lO);
                   },
                 ),

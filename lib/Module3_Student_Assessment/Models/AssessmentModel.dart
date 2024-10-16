@@ -160,6 +160,10 @@ class AssessmentModel {
           calculateTestItemRelationships(question);
       weightedSum += (1 - _scores[index]) * testItemRelationships[conceptIndex];
     }
+    if (weightedSum + totalConceptStrengths[conceptIndex] == 0) {
+      print("this concept wasnt even in the test bro");
+      return 0;
+    }
 
     return 100.0 * weightedSum / totalConceptStrengths[conceptIndex];
   }
