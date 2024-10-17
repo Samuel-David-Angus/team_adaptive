@@ -18,7 +18,7 @@ class ConceptMapService {
       WriteBatch batch = FirebaseFirestore.instance.batch();
       for (var lO in map.lessonPartitions[lessonID]!) {
         DocumentReference doc =
-            FirebaseFirestore.instance.collection("LearningOutcomes").doc();
+            FirebaseFirestore.instance.collection("LearningOutcome").doc();
         LearningOutcomeModel model = LearningOutcomeModel.setAll(
             id: doc.id,
             courseID: map.courseID!,
@@ -122,6 +122,22 @@ class ConceptMapService {
       return lOs;
     } catch (e) {
       print("Error getting learning outcomes");
+    }
+  }
+
+  Future<LearningOutcomeModel?> getLearningOutcome(String lO) async {
+    try {
+      QuerySnapshot qsnapshot = await FirebaseFirestore.instance
+          .collection("LearningOutcome")
+          .where("learningOutcome", isEqualTo: lO)
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  LearningOutcomeModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
+          .get();
+      return qsnapshot.docs[0].data() as LearningOutcomeModel;
+    } catch (e) {
+      print("Error getting learning outcome: $e");
     }
   }
 }

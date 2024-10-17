@@ -19,7 +19,7 @@ class LearningOutcomeModel {
       id: id,
       courseID: json['courseID'],
       lessonID: json['lessonID'],
-      learningOutcome: json['concept'],
+      learningOutcome: json['learningOutcome'],
       directPrereqs: List<String>.from(json['directPrereqs']),
     );
   }

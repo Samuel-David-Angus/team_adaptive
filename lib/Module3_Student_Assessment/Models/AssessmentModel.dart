@@ -162,7 +162,7 @@ class AssessmentModel {
     }
     if (weightedSum + totalConceptStrengths[conceptIndex] == 0) {
       print("this concept wasnt even in the test bro");
-      return 0;
+      return 1;
     }
 
     return 100.0 * weightedSum / totalConceptStrengths[conceptIndex];
