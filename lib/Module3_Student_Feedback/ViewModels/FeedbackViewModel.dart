@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Models/AssessmentModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Services/AIService.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Services/FeedbackService.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Services/TeacherLessonService.dart';
 
 class FeedbackViewModel extends ChangeNotifier {
   late FeedbackModel feedback;
+  late FeedbackSummaryModel feedbackSummary;
   TeacherLessonService lessonService = TeacherLessonService();
   FeedbackService feedbackService = FeedbackService();
   AuthServices authServices = AuthServices();
@@ -29,10 +31,12 @@ class FeedbackViewModel extends ChangeNotifier {
       if (!sucessfullyUpdateLearningStyle) {
         return null;
       }
-      String? feedbackID = await feedbackService.addFeedback(feedback);
-      return feedbackID;
+      FeedbackSummaryModel feedbackSummary =
+          await feedbackService.updateFeedbackSummary(feedback);
+      this.feedbackSummary = feedbackSummary;
+      return feedbackSummary.id;
     } on Exception catch (e) {
-      debugPrint("$e");
+      debugPrint("Error adding feedback: $e");
     }
     return null;
   }
@@ -48,10 +52,10 @@ class FeedbackViewModel extends ChangeNotifier {
     return feedback.lessonConceptFailureRates;
   }
 
-  Future<List<FeedbackModel>?> getUserFeedbacks() async {
+  Future<List<FeedbackSummaryModel>?> getUserFeedbacks() async {
     if (authServices.userInfo != null) {
       return await feedbackService
-          .getFeedbackByLearnerID(authServices.userInfo!.id!);
+          .getUserFeedbackSummaries(authServices.userInfo!.id!);
     }
     return null;
   }

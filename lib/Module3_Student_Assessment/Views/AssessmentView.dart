@@ -58,7 +58,7 @@ class AssessmentView extends StatelessWidget {
                                 feedBackViewModel
                                     .createFeedback(viewModel.assessmentModel)
                                     .then((feedbackID) =>
-                                        Navigator.of(context).pop());
+                                        Navigator.of(context).pop(feedbackID));
                                 return Container(
                                     decoration: const BoxDecoration(
                                         color: Color.fromRGBO(0, 0, 0, 0.5)),
@@ -67,7 +67,7 @@ class AssessmentView extends StatelessWidget {
                               });
                           if (feedbackID != null) {
                             GoRouter.of(context).go('/feedbacks/$feedbackID',
-                                extra: feedBackViewModel.feedback);
+                                extra: feedBackViewModel.feedbackSummary);
                           } else {
                             showConfirmationDialog(
                                 context, "Error generating feedback");

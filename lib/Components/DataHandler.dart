@@ -3,6 +3,7 @@ import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module2_Courses/Services/StudentCourseServices.dart';
 import 'package:team_adaptive/Module3_Learner/Services/StudentLessonService.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Services/FeedbackService.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
@@ -30,17 +31,17 @@ class DataHandler {
     return retrievedCourse;
   }
 
-  Future<FeedbackModel?> getFeedback(GoRouterState state) async {
+  Future<FeedbackSummaryModel?> getFeedback(GoRouterState state) async {
     if (state.extra != null &&
         state.extra.runtimeType.toString() != '_JsonMap') {
-      return state.extra as FeedbackModel;
+      return state.extra as FeedbackSummaryModel;
     }
     String? feedbackID = state.pathParameters['feedbackID'];
     if (feedbackID == null) {
       return null;
     }
-    FeedbackModel? retrievedFeedback =
-        await FeedbackService().getFeedbackByID(feedbackID);
+    FeedbackSummaryModel? retrievedFeedback =
+        await FeedbackService().getFeedbackSummaryByID(feedbackID);
     return retrievedFeedback;
   }
 

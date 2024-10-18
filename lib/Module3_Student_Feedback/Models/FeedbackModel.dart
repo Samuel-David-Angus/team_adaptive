@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Models/AssessmentModel.dart';
 
 class FeedbackModel {
@@ -45,42 +44,42 @@ class FeedbackModel {
     createdDate = DateTime.now();
   }
 
-  factory FeedbackModel.fromJson(Map<String, dynamic> json, String id) {
-    return FeedbackModel.setAll(
-      id: id,
-      courseID: json['courseID'],
-      lessonID: json['lessonID'],
-      userID: json['userID'],
-      feedbackTitle: json['feedbackTitle'],
-      createdDate: (json['createdDate'] as Timestamp)
-          .toDate(), //replaced just to remove error
-      diagnosedLearningStyle: json['diagnosedLearningStyle'],
-      lessonConceptFailureRates:
-          Map<String, double>.from(json['lessonConceptFailureRates']),
-      weakConcepts: List.from(json['weakConcepts']).cast<String>(),
-      skillLevel: json['skillLevel'],
-      categorizedSkillLevel: json['categorizedSkillLevel'],
-      learnerScore: json['learnerScore'],
-      assessmentTotal: json['assessmentTotal'],
-    );
-  }
+  // factory FeedbackModel.fromJson(Map<String, dynamic> json, String id) {
+  //   return FeedbackModel.setAll(
+  //     id: id,
+  //     courseID: json['courseID'],
+  //     lessonID: json['lessonID'],
+  //     userID: json['userID'],
+  //     feedbackTitle: json['feedbackTitle'],
+  //     createdDate: (json['createdDate'] as Timestamp)
+  //         .toDate(), //replaced just to remove error
+  //     diagnosedLearningStyle: json['diagnosedLearningStyle'],
+  //     lessonConceptFailureRates:
+  //         Map<String, double>.from(json['lessonConceptFailureRates']),
+  //     weakConcepts: List.from(json['weakConcepts']).cast<String>(),
+  //     skillLevel: json['skillLevel'],
+  //     categorizedSkillLevel: json['categorizedSkillLevel'],
+  //     learnerScore: json['learnerScore'],
+  //     assessmentTotal: json['assessmentTotal'],
+  //   );
+  // }
 
-  Map<String, dynamic> toJson() {
-    return {
-      "courseID": courseID,
-      "lessonID": lessonID,
-      "userID": userID,
-      "feedbackTitle": feedbackTitle,
-      "createdDate": Timestamp.fromDate(createdDate),
-      "diagnosedLearningStyle": diagnosedLearningStyle,
-      "lessonConceptFailureRates": lessonConceptFailureRates,
-      "weakConcepts": weakConcepts,
-      "skillLevel": skillLevel,
-      "categorizedSkillLevel": categorizedSkillLevel,
-      "learnerScore": learnerScore,
-      "assessmentTotal": assessmentTotal,
-    };
-  }
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     "courseID": courseID,
+  //     "lessonID": lessonID,
+  //     "userID": userID,
+  //     "feedbackTitle": feedbackTitle,
+  //     "createdDate": Timestamp.fromDate(createdDate),
+  //     "diagnosedLearningStyle": diagnosedLearningStyle,
+  //     "lessonConceptFailureRates": lessonConceptFailureRates,
+  //     "weakConcepts": weakConcepts,
+  //     "skillLevel": skillLevel,
+  //     "categorizedSkillLevel": categorizedSkillLevel,
+  //     "learnerScore": learnerScore,
+  //     "assessmentTotal": assessmentTotal,
+  //   };
+  // }
 
   Map<String, double> calculateLessonConceptFailureRates(
       AssessmentModel assessment) {

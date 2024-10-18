@@ -22,8 +22,10 @@ import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Views/AssessmentView.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackSummaryView.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/LessonMaterialView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
@@ -57,8 +59,8 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
         CourseOverviewPage(course: snapshot.data! as Course),
     ConceptMapView: (snapshot) =>
         ConceptMapView(course: snapshot.data! as Course),
-    FeedbackView: (snapshot) =>
-        FeedbackView(feedback: snapshot.data! as FeedbackModel),
+    FeedbackSummaryView: (snapshot) => FeedbackSummaryView(
+        feedbackSummary: snapshot.data! as FeedbackSummaryModel),
     LessonListPage: (snapshot) =>
         LessonListPage(course: snapshot.data! as Course),
     ViewLessonView: (snapshot) {
@@ -241,9 +243,9 @@ final GoRouter _router = GoRouter(
               routes: <RouteBase>[
                 GoRoute(
                     path: ':feedbackID',
-                    builder: (context, state) =>
-                        routeBuilder<FeedbackModel?, FeedbackView>(
-                            dataHandler.getFeedback(state))),
+                    builder: (context, state) => routeBuilder<
+                        FeedbackSummaryModel?,
+                        FeedbackSummaryView>(dataHandler.getFeedback(state))),
               ]),
           GoRoute(
               path: '/courses/:courseID/lessons/:lessonID/:type/:materialID',
