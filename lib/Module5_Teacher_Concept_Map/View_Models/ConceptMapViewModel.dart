@@ -77,6 +77,14 @@ class ConceptMapViewModel extends ChangeNotifier {
     return lOs!;
   }
 
+  Future<List<LearningOutcomeModel>> getAllLearningOutcomes() async {
+    List<LearningOutcomeModel>? lOs = await service.getAllLearningOutcomes();
+    if (lOs == null) {
+      throw Exception("Error getting external learning outcomes");
+    }
+    return lOs!;
+  }
+
   Future<LearningOutcomeModel> getLearningOutcome(String lO) async {
     LearningOutcomeModel? learningOutcomeModel =
         await service.getLearningOutcome(lO);

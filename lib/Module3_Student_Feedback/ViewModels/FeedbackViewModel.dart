@@ -42,7 +42,7 @@ class FeedbackViewModel extends ChangeNotifier {
   }
 
   Future<String> determineLearningStyle(argsForPrompt) async {
-    //PLS REPLACE WITH ACTUAL CALL TO AI SERVICE
+    //TODO: PLS REPLACE WITH ACTUAL CALL TO AI SERVICE
     List<String> styles = ["Visual", "Text", "Audio"];
     await Future.delayed(const Duration(seconds: 1));
     return styles[Random().nextInt(3)];
@@ -58,5 +58,11 @@ class FeedbackViewModel extends ChangeNotifier {
           .getUserFeedbackSummaries(authServices.userInfo!.id!);
     }
     return null;
+  }
+
+  Future<FeedbackSummaryModel?> getFeedbackFromLOAndUserID(String lO,
+      {String? userID}) async {
+    return await feedbackService.getFeedbackFromLearningOutcomeAndUserID(
+        lO, userID ?? authServices.userInfo!.id!);
   }
 }

@@ -117,11 +117,30 @@ class ConceptMapService {
               toFirestore: (model, _) => model.toJson())
           .get();
       for (DocumentSnapshot doc in list.docs) {
-        lOs.add(doc as LearningOutcomeModel);
+        lOs.add(doc.data() as LearningOutcomeModel);
       }
       return lOs;
     } catch (e) {
       print("Error getting learning outcomes");
+    }
+  }
+
+  Future<List<LearningOutcomeModel>?> getAllLearningOutcomes() async {
+    try {
+      List<LearningOutcomeModel> lOs = [];
+      QuerySnapshot list = await FirebaseFirestore.instance
+          .collection("LearningOutcome")
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  LearningOutcomeModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
+          .get();
+      for (DocumentSnapshot doc in list.docs) {
+        lOs.add(doc.data() as LearningOutcomeModel);
+      }
+      return lOs;
+    } catch (e) {
+      print("Error getting learning outcomes: $e");
     }
   }
 

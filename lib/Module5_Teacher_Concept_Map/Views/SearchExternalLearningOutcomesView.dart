@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/AtomicLOFeedbackView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 
 class SearchExternalLearningOutcomesView extends StatefulWidget {
-  final String lessonID;
+  final String? lessonID;
   const SearchExternalLearningOutcomesView({super.key, required this.lessonID});
 
   @override
@@ -23,8 +25,11 @@ class SearchExternalLearningOutcomesViewState
   @override
   void initState() {
     super.initState();
-    lOs = Provider.of<ConceptMapViewModel>(context, listen: false)
-        .getExternalLearningOutcomes(widget.lessonID);
+    ConceptMapViewModel cviewModel =
+        Provider.of<ConceptMapViewModel>(context, listen: false);
+    lOs = widget.lessonID != null
+        ? cviewModel.getExternalLearningOutcomes(widget.lessonID!)
+        : cviewModel.getAllLearningOutcomes();
   }
 
   void _searchConcepts(List<LearningOutcomeModel> list) {
@@ -159,7 +164,20 @@ class SearchExternalLearningOutcomesViewState
                       return ListTile(
                         title: Text(_searchResults[index]),
                         onTap: () {
-                          Navigator.of(context).pop(_searchResults[index]);
+                          if (widget.lessonID != null) {
+                            Navigator.of(context).pop(_searchResults[index]);
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: AtomicLOFeedbackView(
+                                      learningOutcome: _searchResults[index],
+                                      userID: AuthServices().userInfo!.id!,
+                                    ),
+                                  );
+                                });
+                          }
                         },
                       );
                     },

@@ -36,6 +36,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLe
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherLessonMaterialHomeView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/ConceptMapView.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/SearchExternalLearningOutcomesView.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/CreateEditQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
@@ -262,7 +263,14 @@ final GoRouter _router = GoRouter(
           GoRoute(
               path: '/test',
               builder: (context, state) =>
-                  TeacherAddLessonView(course: state.extra as Course))
+                  TeacherAddLessonView(course: state.extra as Course)),
+          GoRoute(
+            path: '/personal-credential-search',
+            builder: (context, state) =>
+                const SearchExternalLearningOutcomesView(
+              lessonID: null,
+            ),
+          )
         ]),
   ],
 );

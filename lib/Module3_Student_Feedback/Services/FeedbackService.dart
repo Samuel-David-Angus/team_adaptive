@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 
 class FeedbackService {
   static final _instance = FeedbackService._internal();
@@ -82,6 +83,41 @@ class FeedbackService {
       return feedbackSummary;
     } catch (e) {
       print("Error updating feedback summary: $e");
+      rethrow;
+    }
+  }
+
+  Future<FeedbackSummaryModel?> getFeedbackFromLearningOutcomeAndUserID(
+      String lO, String userID) async {
+    try {
+      QuerySnapshot<LearningOutcomeModel> qsnapshot = await FirebaseFirestore
+          .instance
+          .collection("LearningOutcome")
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  LearningOutcomeModel.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (model, _) => model.toJson())
+          .where("learningOutcome", isEqualTo: lO)
+          .get();
+      LearningOutcomeModel lOModel = qsnapshot.docs[0].data();
+      QuerySnapshot<FeedbackSummaryModel> feedbackSnapshot =
+          await FirebaseFirestore
+              .instance
+              .collection("Feedback")
+              .withConverter(
+                  fromFirestore: (snapshot, _) =>
+                      FeedbackSummaryModel.fromJson(snapshot.data()!),
+                  toFirestore: (model, _) => model.toJson())
+              .where("courseID", isEqualTo: lOModel.courseID)
+              .where("lessonID", isEqualTo: lOModel.lessonID)
+              .where("userID", isEqualTo: userID)
+              .get();
+      if (feedbackSnapshot.docs.isEmpty) {
+        return null;
+      }
+      return feedbackSnapshot.docs[0].data();
+    } catch (e) {
+      print("Error getting learning outcome: $e");
       rethrow;
     }
   }
