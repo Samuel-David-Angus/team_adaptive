@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
-import 'dart:ui' as ui;
-
 import 'ConceptMapModel.dart';
 
 void main() {
@@ -25,8 +23,11 @@ class _InteractiveDirectedGraphPageState
     ..orientation = SugiyamaConfiguration.ORIENTATION_TOP_BOTTOM;
 
   final ConceptMapModel conceptMapModel = ConceptMapModel.setAll(
+    id: "defaultID",
     courseID: "defaultCourse",
     conceptMap: {},
+    lessonPartitions: {},
+    maxFailureRates: {},
   );
 
   Node? selectedNode;
@@ -36,7 +37,7 @@ class _InteractiveDirectedGraphPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Interactive Learning Objective Map Visualizer'),
+        title: Text('Interactive Concept Map'),
       ),
       body: conceptMapModel.conceptCount > 0
           ? GestureDetector(
@@ -47,14 +48,7 @@ class _InteractiveDirectedGraphPageState
                   });
                 }
               },
-              onTap: () {
-                if (selectedNode != null) {
-                  setState(() {
-                    selectedNode = null;
-                    mousePosition = null;
-                  });
-                }
-              },
+              onTap: resetSelection,
               child: Stack(
                 children: [
                   InteractiveViewer(
@@ -62,29 +56,26 @@ class _InteractiveDirectedGraphPageState
                     boundaryMargin: EdgeInsets.all(50),
                     minScale: 0.01,
                     maxScale: 5.0,
-                    child: CustomPaint(
-                      painter: EdgePainter(graph),
-                      child: GraphView(
-                        graph: graph,
-                        algorithm: SugiyamaAlgorithm(builder),
-                        builder: (Node node) {
-                          var nodeText = node.key?.value ?? 'Node';
-                          return GestureDetector(
-                            onTap: () => onNodeTap(node),
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: Colors.blue,
-                              ),
-                              child: Text(
-                                nodeText,
-                                style: TextStyle(color: Colors.white),
-                              ),
+                    child: GraphView(
+                      graph: graph,
+                      algorithm: SugiyamaAlgorithm(builder),
+                      builder: (Node node) {
+                        var nodeText = node.key?.value ?? 'Node';
+                        return GestureDetector(
+                          onTap: () => onNodeTap(node),
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: Colors.blue,
                             ),
-                          );
-                        },
-                      ),
+                            child: Text(
+                              nodeText,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   if (selectedNode != null && mousePosition != null)
@@ -97,7 +88,7 @@ class _InteractiveDirectedGraphPageState
                 ],
               ),
             )
-          : const Text("Add Nodes"),
+          : const Center(child: Text("Add nodes to start.")),
       floatingActionButton: FloatingActionButton(
         onPressed: addNode,
         child: Icon(Icons.add),
@@ -105,10 +96,18 @@ class _InteractiveDirectedGraphPageState
     );
   }
 
+  void resetSelection() {
+    setState(() {
+      selectedNode = null;
+      mousePosition = null;
+    });
+  }
+
   void addNode() async {
     String? nodeName = await _getNodeNameFromUser();
     if (nodeName != null && nodeName.isNotEmpty) {
-      if (conceptMapModel.addConcept(nodeName)) {
+      String lessonID = "Lesson_${conceptMapModel.conceptCount + 1}";
+      if (conceptMapModel.addLocalLearningOutcome(nodeName, 0.1, lessonID)) {
         setState(() {
           Node newNode = Node.Id(nodeName);
           graph.addNode(newNode);
@@ -127,7 +126,6 @@ class _InteractiveDirectedGraphPageState
           String targetName = node.key?.value;
 
           if (sourceName != null && targetName != null) {
-            // Update ConceptMapModel and add edge if not cyclic
             if (conceptMapModel.setPrerequisite(targetName, sourceName)) {
               graph.addEdge(selectedNode!, node);
               //PRINT CONCEPT MAP
@@ -141,17 +139,13 @@ class _InteractiveDirectedGraphPageState
                 }
               }
               debugPrint("");
-              // PRINTED CONCEPT MAP
+              //PRINTED CONCEPT MAP
             }
           }
 
-          // Reset the selection
-          selectedNode = null;
-          mousePosition = null;
+          resetSelection();
         } else {
-          // Deselect if the same node is tapped again
-          selectedNode = null;
-          mousePosition = null;
+          resetSelection();
         }
       }
     });
@@ -159,10 +153,7 @@ class _InteractiveDirectedGraphPageState
 
   Offset? getNodePosition(Node node) {
     RenderBox? renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox != null) {
-      return renderBox.localToGlobal(Offset.zero);
-    }
-    return null;
+    return renderBox?.localToGlobal(Offset.zero);
   }
 
   Future<String?> _getNodeNameFromUser(
@@ -193,38 +184,6 @@ class _InteractiveDirectedGraphPageState
         );
       },
     );
-  }
-}
-
-class EdgePainter extends CustomPainter {
-  final Graph graph;
-
-  EdgePainter(this.graph);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
-
-    for (final edge in graph.edges) {
-      final sourceOffset = _getOffsetForNode(edge.source);
-      final destinationOffset = _getOffsetForNode(edge.destination);
-
-      if (sourceOffset != null && destinationOffset != null) {
-        canvas.drawLine(sourceOffset, destinationOffset, paint);
-      }
-    }
-  }
-
-  Offset? _getOffsetForNode(Node node) {
-    return null;
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }
 
