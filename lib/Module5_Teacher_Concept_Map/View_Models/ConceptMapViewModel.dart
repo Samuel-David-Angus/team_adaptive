@@ -42,8 +42,7 @@ class ConceptMapViewModel extends ChangeNotifier {
     return false;
   }
 
-  void getConceptMap(String courseID) async {
-    print('test');
+  Future<void> getConceptMap(String courseID) async {
     map = await service.getConceptMap(courseID);
     notifyListeners();
   }

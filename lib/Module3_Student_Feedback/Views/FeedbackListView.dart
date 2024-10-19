@@ -42,34 +42,50 @@ class FeedbackListView extends StatelessWidget {
                     child: Text('No feedback available.'),
                   );
                 }
-                return ListView.builder(
-                  itemCount: feedbackList.length,
-                  itemBuilder: (context, index) {
-                    var feedback = feedbackList[index];
-                    return Card(
-                      elevation:
-                          4.0, // Elevation gives a shadow effect to the card
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 16.0),
-                      child: ListTile(
-                        title: Text(feedback.title),
-                        trailing: SizedBox(
-                          width: 100,
-                          child: Row(
-                            children: [
-                              TextButton(
-                                  onPressed: () {
-                                    GoRouter.of(context).go(
-                                        '/feedbacks/${feedback.id}',
-                                        extra: feedback);
-                                  },
-                                  child: const Text('View'))
-                            ],
-                          ),
-                        ),
+                return Column(
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          GoRouter.of(context)
+                              .go('/personal-credential-search');
+                        },
+                        child: const Text("Check progress")),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text("Feedbacks"),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: feedbackList.length,
+                        itemBuilder: (context, index) {
+                          var feedback = feedbackList[index];
+                          return Card(
+                            elevation:
+                                4.0, // Elevation gives a shadow effect to the card
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
+                            child: ListTile(
+                              title: Text(feedback.title),
+                              trailing: SizedBox(
+                                width: 100,
+                                child: Row(
+                                  children: [
+                                    TextButton(
+                                        onPressed: () {
+                                          GoRouter.of(context).go(
+                                              '/feedbacks/${feedback.id}',
+                                              extra: feedback);
+                                        },
+                                        child: const Text('View'))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 );
               } else {
                 return const Center(
