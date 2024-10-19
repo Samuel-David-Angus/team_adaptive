@@ -82,6 +82,12 @@ class AssessmentModel {
         "the answer arrays must have the same length");
     int overallScore = 0;
     for (int i = 0; i < _answers.length; i++) {
+      if (studentAnswers[i] != -1) {
+        String choice = processedQuestions[i]['choices']![studentAnswers[i]]!;
+        _questions[i].tally[choice] = _questions[i].tally[choice]! + 1;
+      } else {
+        _questions[i].unansweredCount++;
+      }
       if (studentAnswers[i] == _answers[i]) {
         _scores[i] = 1;
         overallScore++;

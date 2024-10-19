@@ -1,4 +1,3 @@
-
 import 'dart:math';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 
@@ -14,6 +13,8 @@ class QuestionModel {
   late List<String> _prerequisiteConcepts;
   late int _baseDifficulty;
   late int _adjustedDifficulty;
+  late Map<String, int> _tally;
+  late int _unansweredCount;
 
   // Getters
   String get authorID => _authorID;
@@ -28,6 +29,8 @@ class QuestionModel {
   int get baseDifficulty => _baseDifficulty;
   int get adjustedDifficulty => _adjustedDifficulty;
   int get prerequisiteCount => _prerequisiteConcepts.length;
+  Map<String, int> get tally => _tally;
+  int get unansweredCount => _unansweredCount;
 
   // Setters
   set authorID(String authorID) => _authorID = authorID;
@@ -46,20 +49,23 @@ class QuestionModel {
   set baseDifficulty(int baseDifficulty) => _baseDifficulty = baseDifficulty;
   set adjustedDifficulty(int adjustedDifficulty) =>
       _adjustedDifficulty = adjustedDifficulty;
+  set tally(Map<String, int> map) => _tally = map;
+  set unansweredCount(int count) => _unansweredCount = count;
 
-  QuestionModel.setAll({
-    required String id,
-    required String authorID,
-    required String question,
-    required String correctAnswer,
-    required List<String> wrongChoices,
-    required String questionConcept,
-    required int numberOfCorrectAnswers,
-    required int numberOfWrongAnswers,
-    required List<String> prerequisiteConcepts,
-    required int baseDifficulty,
-    required int adjustedDifficulty,
-  })
+  QuestionModel.setAll(
+      {required String id,
+      required String authorID,
+      required String question,
+      required String correctAnswer,
+      required List<String> wrongChoices,
+      required String questionConcept,
+      required int numberOfCorrectAnswers,
+      required int numberOfWrongAnswers,
+      required List<String> prerequisiteConcepts,
+      required int baseDifficulty,
+      required int adjustedDifficulty,
+      required Map<String, int> tally,
+      required int unansweredCount})
       : _id = id,
         _authorID = authorID,
         _question = question,
@@ -70,32 +76,36 @@ class QuestionModel {
         _numberOfWrongAnswers = numberOfWrongAnswers,
         _prerequisiteConcepts = prerequisiteConcepts,
         _baseDifficulty = baseDifficulty,
-        _adjustedDifficulty = adjustedDifficulty;
+        _adjustedDifficulty = adjustedDifficulty,
+        _tally = tally,
+        _unansweredCount = unansweredCount;
 
-
-  QuestionModel.newlyCreated({
-    required String authorID,
-    required String question,
-    required String correctAnswer,
-    required List<String> wrongChoices,
-    required String questionConcept,
-    required ConceptMapModel conceptMapModel
-  })
+  QuestionModel.newlyCreated(
+      {required String authorID,
+      required String question,
+      required String correctAnswer,
+      required List<String> wrongChoices,
+      required String questionConcept,
+      required ConceptMapModel conceptMapModel})
       : _authorID = authorID,
         _question = question,
         _correctAnswer = correctAnswer,
         _wrongChoices = wrongChoices,
         _questionConcept = questionConcept,
         _numberOfCorrectAnswers = 0,
-        _numberOfWrongAnswers = 0
-  {
+        _numberOfWrongAnswers = 0,
+        _unansweredCount = 0 {
+    _tally = {
+      correctAnswer: 0,
+      for (String wrongAnswer in _wrongChoices) wrongAnswer: 0,
+    };
     findAllPrerequisites(conceptMapModel);
     calculateBaseDifficulty(conceptMapModel);
     calculateAdjustedDifficulty(conceptMapModel);
   }
 
-  QuestionModel.copyFrom(QuestionModel original) :
-        _id = original.id,
+  QuestionModel.copyFrom(QuestionModel original)
+      : _id = original.id,
         _authorID = original.authorID,
         _question = original.question,
         _correctAnswer = original.correctAnswer,
@@ -105,7 +115,9 @@ class QuestionModel {
         _numberOfWrongAnswers = original.numberOfWrongAnswers,
         _prerequisiteConcepts = original.prerequisiteConcepts,
         _baseDifficulty = original.baseDifficulty,
-        _adjustedDifficulty = original.adjustedDifficulty;
+        _adjustedDifficulty = original.adjustedDifficulty,
+        _tally = original.tally,
+        _unansweredCount = original.unansweredCount;
 
   factory QuestionModel.fromJson(Map<String, dynamic> json, String id) {
     return QuestionModel.setAll(
@@ -119,8 +131,10 @@ class QuestionModel {
         numberOfWrongAnswers: json["numberOfWrongAnswers"],
         prerequisiteConcepts: List<String>.from(json["prerequisiteConcepts"]),
         baseDifficulty: json["baseDifficulty"],
-        adjustedDifficulty: json["adjustedDifficulty"]
-    );
+        adjustedDifficulty: json["adjustedDifficulty"],
+        tally: Map<String, int>.from(json['tally'])
+            .map((key, value) => MapEntry(key, value.toInt())),
+        unansweredCount: json['unansweredCount']);
   }
 
   Map<String, dynamic> toJson() {
@@ -135,6 +149,8 @@ class QuestionModel {
       "prerequisiteConcepts": _prerequisiteConcepts,
       "baseDifficulty": _baseDifficulty,
       "adjustedDifficulty": _adjustedDifficulty,
+      "tally": _tally,
+      "unansweredCount": _unansweredCount
     };
   }
 
@@ -166,7 +182,6 @@ class QuestionModel {
     }
     return _adjustedDifficulty;
   }
-
 }
 
 /*

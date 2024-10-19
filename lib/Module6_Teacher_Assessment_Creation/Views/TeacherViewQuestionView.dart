@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +57,72 @@ class TeacherViewQuestionView extends StatelessWidget {
                                 viewModel.deleteQuestion(question);
                               },
                               child: const Text('Delete'),
-                            )
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  int totalCount = question.tally.values
+                                          .reduce((a, b) => a + b) +
+                                      question.unansweredCount;
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                2,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                    "Difficulty (1-10): ${question.adjustedDifficulty}"),
+                                                const SizedBox(height: 10),
+                                                LinearProgressIndicator(
+                                                  value: question
+                                                          .adjustedDifficulty /
+                                                      10, // Value of progress (0.0 to 1.0)
+                                                  minHeight: 10,
+                                                ),
+                                                const SizedBox(height: 20),
+                                                Expanded(
+                                                  child: PieChart(
+                                                      PieChartData(sections: [
+                                                    ...question.tally.entries
+                                                        .map((entry) {
+                                                      return PieChartSectionData(
+                                                          value: entry.value /
+                                                              totalCount,
+                                                          title: entry.key,
+                                                          radius: 60);
+                                                    }),
+                                                    PieChartSectionData(
+                                                        value: question
+                                                                .unansweredCount /
+                                                            totalCount,
+                                                        title: "Unanswered",
+                                                        radius: 60)
+                                                  ])),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text("close"))
+                                          ],
+                                        );
+                                      });
+                                },
+                                child: const Text('Stats'))
                           ],
                         ),
                       ),
@@ -116,7 +182,9 @@ class TeacherViewQuestionView extends StatelessWidget {
                         height: 40.0,
                         child: ElevatedButton(
                           onPressed: () {
-                            GoRouter.of(context).go('/courses/${lesson.courseID}/lessons/${lesson.id}/questions/add',extra: lesson);
+                            GoRouter.of(context).go(
+                                '/courses/${lesson.courseID}/lessons/${lesson.id}/questions/add',
+                                extra: lesson);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: ThemeColor.darkgreyTheme,
@@ -141,8 +209,7 @@ class TeacherViewQuestionView extends StatelessWidget {
                       Expanded(
                           child: TabBarView(children: [
                         questionListView(viewModel.myQuestionPool, true),
-                        questionListView(
-                            viewModel.otherQuestionPool, false),
+                        questionListView(viewModel.otherQuestionPool, false),
                       ]))
                     ],
                   ),
