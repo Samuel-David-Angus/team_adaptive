@@ -37,7 +37,7 @@ class _InteractiveDirectedGraphPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Interactive Concept Map'),
+        title: const Text('Interactive Concept Map Maker'),
       ),
       body: conceptMapModel.conceptCount > 0
           ? GestureDetector(
@@ -53,25 +53,31 @@ class _InteractiveDirectedGraphPageState
                 children: [
                   InteractiveViewer(
                     constrained: false,
-                    boundaryMargin: EdgeInsets.all(50),
+                    boundaryMargin: const EdgeInsets.all(50),
                     minScale: 0.01,
                     maxScale: 5.0,
                     child: GraphView(
                       graph: graph,
                       algorithm: SugiyamaAlgorithm(builder),
                       builder: (Node node) {
-                        var nodeText = node.key?.value ?? 'Node';
+                        String nodeText = _getNodeDisplayName(node.key?.value);
+
                         return GestureDetector(
                           onTap: () => onNodeTap(node),
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
+                              shape: _isExternalConcept(node.key?.value)
+                                  ? BoxShape.circle
+                                  : BoxShape.rectangle,
                               color: Colors.blue,
+                              borderRadius: _isExternalConcept(node.key?.value)
+                                  ? null
+                                  : BorderRadius.circular(4),
                             ),
                             child: Text(
                               nodeText,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         );
@@ -89,9 +95,23 @@ class _InteractiveDirectedGraphPageState
               ),
             )
           : const Center(child: Text("Add nodes to start.")),
-      floatingActionButton: FloatingActionButton(
-        onPressed: addNode,
-        child: Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "local",
+            onPressed: () => addLocalLearningOutcome(),
+            child: const Icon(Icons.add),
+            tooltip: 'Add Local Learning Outcome',
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            heroTag: "external",
+            onPressed: () => addExternalLearningOutcome(),
+            child: const Icon(Icons.link),
+            tooltip: 'Add Learning Outcome From Another Course',
+          ),
+        ],
       ),
     );
   }
@@ -103,11 +123,30 @@ class _InteractiveDirectedGraphPageState
     });
   }
 
-  void addNode() async {
-    String? nodeName = await _getNodeNameFromUser();
-    if (nodeName != null && nodeName.isNotEmpty) {
-      String lessonID = "Lesson_${conceptMapModel.conceptCount + 1}";
-      if (conceptMapModel.addLocalLearningOutcome(nodeName, 0.1, lessonID)) {
+  Future<void> addLocalLearningOutcome() async {
+    final result = await _getLocalLearningOutcomeFromUser();
+    if (result != null) {
+      final nodeName = result['conceptName']!;
+      final maxFailureRate = double.parse(result['maxFailureRate']!);
+      final lessonID = result['lessonID']!;
+
+      if (conceptMapModel.addLocalLearningOutcome(
+          nodeName, maxFailureRate, lessonID)) {
+        setState(() {
+          Node newNode = Node.Id(nodeName);
+          graph.addNode(newNode);
+        });
+      }
+    }
+  }
+
+  Future<void> addExternalLearningOutcome() async {
+    final result = await _getExternalLearningOutcomeFromUser();
+    if (result != null) {
+      final nodeName = '@${result['conceptName']!}';
+      final lessonID = result['lessonID']!;
+
+      if (conceptMapModel.addExternalLearningOutcome(nodeName, lessonID)) {
         setState(() {
           Node newNode = Node.Id(nodeName);
           graph.addNode(newNode);
@@ -128,21 +167,21 @@ class _InteractiveDirectedGraphPageState
           if (sourceName != null && targetName != null) {
             if (conceptMapModel.setPrerequisite(targetName, sourceName)) {
               graph.addEdge(selectedNode!, node);
-              //PRINT CONCEPT MAP
+
+              // PRINT CONCEPT MAP
               for (int i = 0; i < conceptMapModel.conceptCount; i++) {
                 String conceptName = conceptMapModel.conceptOfIndex(i);
-                debugPrint(conceptName + " prerequisites:");
+                debugPrint('$conceptName prerequisites:');
                 List<String> prereqs =
                     conceptMapModel.findDirectPrerequisites(conceptName);
                 for (String prereq in prereqs) {
-                  debugPrint("\t" + prereq);
+                  debugPrint('\t$prereq');
                 }
               }
-              debugPrint("");
-              //PRINTED CONCEPT MAP
+              debugPrint('');
+              // PRINTED CONCEPT MAP
             }
           }
-
           resetSelection();
         } else {
           resetSelection();
@@ -156,34 +195,103 @@ class _InteractiveDirectedGraphPageState
     return renderBox?.localToGlobal(Offset.zero);
   }
 
-  Future<String?> _getNodeNameFromUser(
-      {String prompt = 'Enter node name'}) async {
-    TextEditingController controller = TextEditingController();
+  Future<Map<String, String>?> _getLocalLearningOutcomeFromUser() async {
+    final conceptNameController = TextEditingController();
+    final maxFailureRateController = TextEditingController();
+    final lessonIDController = TextEditingController();
 
-    return showDialog<String>(
+    return showDialog<Map<String, String>>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(prompt),
-          content: TextField(
-            controller: controller,
-            decoration: InputDecoration(hintText: 'Node name'),
+          title: const Text('Add Local Learning Outcome'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: conceptNameController,
+                decoration: const InputDecoration(hintText: 'Concept Name'),
+              ),
+              TextField(
+                controller: maxFailureRateController,
+                decoration: const InputDecoration(hintText: 'Max Failure Rate'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: lessonIDController,
+                decoration: const InputDecoration(hintText: 'Lesson ID'),
+              ),
+            ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(controller.text);
+                Navigator.of(context).pop({
+                  'conceptName': conceptNameController.text,
+                  'maxFailureRate': maxFailureRateController.text,
+                  'lessonID': lessonIDController.text,
+                });
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
       },
     );
+  }
+
+  Future<Map<String, String>?> _getExternalLearningOutcomeFromUser() async {
+    final conceptNameController = TextEditingController();
+    final lessonIDController = TextEditingController();
+
+    return showDialog<Map<String, String>>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add External Learning Outcome'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: conceptNameController,
+                decoration: const InputDecoration(hintText: 'Concept Name'),
+              ),
+              TextField(
+                controller: lessonIDController,
+                decoration: const InputDecoration(hintText: 'Lesson ID'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop({
+                  'conceptName': conceptNameController.text,
+                  'lessonID': lessonIDController.text,
+                });
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _getNodeDisplayName(String? nodeName) {
+    return nodeName?.replaceAll('@', '') ?? 'Node';
+  }
+
+  bool _isExternalConcept(String? nodeName) {
+    return nodeName != null && nodeName.startsWith('@');
   }
 }
 
