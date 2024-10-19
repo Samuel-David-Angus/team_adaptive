@@ -51,7 +51,7 @@ class ConceptMapView extends StatelessWidget {
                 children: [
                   // Legend Box
                   Container(
-                    width: 150,
+                    width: 300,
                     padding: EdgeInsets.all(8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,7 @@ class ConceptMapView extends StatelessWidget {
                       maxScale: 5.0,
                       child: Transform(
                         transform: Matrix4.translationValues(
-                            100, 0, 0), // Move x pixels to the right
+                            50, 0, 0), // Move x pixels to the right
                         child: GraphView(
                           graph: graph,
                           algorithm: SugiyamaAlgorithm(builder),
