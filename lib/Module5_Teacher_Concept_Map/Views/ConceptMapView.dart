@@ -112,7 +112,7 @@ class ConceptMapView extends StatelessWidget {
                         algorithm: SugiyamaAlgorithm(builder),
                         builder: (Node node) {
                           String nodeText = node.key?.value ?? 'Node';
-                          Color nodeColor = getNodeColor(nodeText);
+                          Color nodeColor = getNodeColor(nodeText, conceptMapModel);
         
                           // Remove '@' from the displayed text if it's an external concept
                           String displayedText = nodeText.startsWith('@')
