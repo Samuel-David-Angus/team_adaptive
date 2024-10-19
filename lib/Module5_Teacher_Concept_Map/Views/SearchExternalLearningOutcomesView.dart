@@ -9,7 +9,9 @@ import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMap
 
 class SearchExternalLearningOutcomesView extends StatefulWidget {
   final String? lessonID;
-  const SearchExternalLearningOutcomesView({super.key, required this.lessonID});
+  final String? studentID;
+  const SearchExternalLearningOutcomesView(
+      {super.key, required this.lessonID, this.studentID});
 
   @override
   SearchExternalLearningOutcomesViewState createState() =>
@@ -167,13 +169,16 @@ class SearchExternalLearningOutcomesViewState
                           if (widget.lessonID != null) {
                             Navigator.of(context).pop(_searchResults[index]);
                           } else {
+                            print(widget.studentID);
                             showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
                                     content: AtomicLOFeedbackView(
                                       learningOutcome: _searchResults[index],
-                                      userID: AuthServices().userInfo!.id!,
+                                      userID: widget.studentID == null
+                                          ? AuthServices().userInfo!.id!
+                                          : widget.studentID!,
                                     ),
                                   );
                                 });

@@ -7,12 +7,13 @@ import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryMod
 import '../ViewModels/FeedbackViewModel.dart';
 
 class FeedbackListView extends StatelessWidget {
-  const FeedbackListView({super.key});
+  final String? userID;
+  const FeedbackListView({super.key, this.userID});
 
   @override
   Widget build(BuildContext context) {
     var authUserInfo = Provider.of<AuthServices>(context).userInfo;
-    if (authUserInfo == null) {
+    if (authUserInfo == null && userID == null) {
       return const Padding(
           padding: EdgeInsets.all(16.0),
           child: Center(child: Text("Please Login to see your feedbacks")));
@@ -21,7 +22,7 @@ class FeedbackListView extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<List<FeedbackSummaryModel>?>(
-            future: viewModel.getUserFeedbacks(),
+            future: viewModel.getUserFeedbacks(userID: userID),
             builder: (BuildContext context,
                 AsyncSnapshot<List<FeedbackSummaryModel>?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

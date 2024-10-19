@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
-
 class TeacherHomePage extends StatelessWidget {
   const TeacherHomePage({super.key});
 
@@ -22,8 +21,8 @@ class TeacherHomePage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 100.0, vertical: 200.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 100.0, vertical: 200.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -72,6 +71,23 @@ class TeacherHomePage extends StatelessWidget {
                   ),
                   child: const Text(
                     'Get Started',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: ThemeColor.darkgreyTheme,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    GoRouter.of(context).go('/student-performance');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    backgroundColor: ThemeColor.offwhiteTheme,
+                  ),
+                  child: const Text(
+                    'Student Performance',
                     style: TextStyle(
                       fontSize: 18,
                       color: ThemeColor.darkgreyTheme,

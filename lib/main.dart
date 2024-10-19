@@ -21,12 +21,10 @@ import 'package:team_adaptive/Module3_Learner/Views/LearningOutcomeMaterialsView
 import 'package:team_adaptive/Module3_Learner/Views/ViewLessonView.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/Views/AssessmentView.dart';
-import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackListView.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackSummaryView.dart';
-import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/LessonMaterialView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
@@ -41,6 +39,7 @@ import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/Cr
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherViewQuestionView.dart';
+import 'package:team_adaptive/Module7_Teacher_Dashboard/Views/SearchStudentPerformanceView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import 'LandingNavPages/AboutPage.dart';
@@ -249,6 +248,10 @@ final GoRouter _router = GoRouter(
                         FeedbackSummaryView>(dataHandler.getFeedback(state))),
               ]),
           GoRoute(
+              path: '/student-feedbacks/:name',
+              builder: (context, state) =>
+                  FeedbackListView(userID: state.extra as String?)),
+          GoRoute(
               path: '/courses/:courseID/lessons/:lessonID/:type/:materialID',
               builder: (context, state) =>
                   routeBuilder<LessonMaterialModel?, LessonMaterialView>(
@@ -270,7 +273,10 @@ final GoRouter _router = GoRouter(
                 const SearchExternalLearningOutcomesView(
               lessonID: null,
             ),
-          )
+          ),
+          GoRoute(
+              path: '/student-performance',
+              builder: (context, state) => SearchStudentPerformanceView())
         ]),
   ],
 );

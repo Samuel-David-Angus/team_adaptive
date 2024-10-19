@@ -45,23 +45,23 @@ class ConceptMapView extends StatelessWidget {
             _buildGraphFromModel(conceptMapModel);
             return Scaffold(
               appBar: AppBar(
-                title: Text('Concept Map'),
+                title: const Text('Concept Map'),
               ),
               body: Row(
                 children: [
                   // Legend Box
                   Container(
                     width: 300,
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Legend',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         ...lessonColors.entries.map((entry) => Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 4.0),
@@ -75,12 +75,12 @@ class ConceptMapView extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(entry.key),
                                 ],
                               ),
                             )),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         // External Concept Indicator
                         Row(
                           children: [
@@ -93,8 +93,8 @@ class ConceptMapView extends StatelessWidget {
                                     Border.all(color: Colors.black, width: 2),
                               ),
                             ),
-                            SizedBox(width: 8),
-                            Text("from another\ncourse"),
+                            const SizedBox(width: 8),
+                            const Text("from another\ncourse"),
                           ],
                         ),
                       ],
@@ -104,7 +104,7 @@ class ConceptMapView extends StatelessWidget {
                   Expanded(
                     child: InteractiveViewer(
                       constrained: false,
-                      boundaryMargin: EdgeInsets.all(50),
+                      boundaryMargin: const EdgeInsets.all(50),
                       minScale: 0.01,
                       maxScale: 5.0,
                       child: Transform(
@@ -134,7 +134,7 @@ class ConceptMapView extends StatelessWidget {
                               height: nodeText.startsWith('@') ? size : null,
                               padding: nodeText.startsWith('@')
                                   ? null
-                                  : EdgeInsets.all(8),
+                                  : const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: nodeColor,
                                 shape: nodeText.startsWith('@')
@@ -148,7 +148,7 @@ class ConceptMapView extends StatelessWidget {
                                 child: FittedBox(
                                   child: Text(
                                     displayedText,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),

@@ -23,7 +23,8 @@ class _AtomicLOFeedbackViewState extends State<AtomicLOFeedbackView> {
   void initState() {
     super.initState();
     future = Provider.of<FeedbackViewModel>(context, listen: false)
-        .getFeedbackFromLOAndUserID(widget.learningOutcome);
+        .getFeedbackFromLOAndUserID(widget.learningOutcome,
+            userID: widget.userID);
   }
 
   @override

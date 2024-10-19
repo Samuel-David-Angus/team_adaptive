@@ -52,10 +52,10 @@ class FeedbackViewModel extends ChangeNotifier {
     return feedback.lessonConceptFailureRates;
   }
 
-  Future<List<FeedbackSummaryModel>?> getUserFeedbacks() async {
-    if (authServices.userInfo != null) {
+  Future<List<FeedbackSummaryModel>?> getUserFeedbacks({String? userID}) async {
+    if (authServices.userInfo != null || userID != null) {
       return await feedbackService
-          .getUserFeedbackSummaries(authServices.userInfo!.id!);
+          .getUserFeedbackSummaries(userID ?? authServices.userInfo!.id!);
     }
     return null;
   }
