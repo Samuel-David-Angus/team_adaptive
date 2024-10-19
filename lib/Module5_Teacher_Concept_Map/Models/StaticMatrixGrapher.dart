@@ -16,28 +16,28 @@ class StaticConceptMapPage extends StatelessWidget {
     ..levelSeparation = 100
     ..orientation = SugiyamaConfiguration.ORIENTATION_TOP_BOTTOM;
 
-  //CONCEPT MAP EXAMPLE
+  // CONCEPT MAP EXAMPLE
   final ConceptMapModel conceptMapModel = ConceptMapModel.setAll(
     id: "map1",
     courseID: "course101",
     conceptMap: {
       "ConceptA": [0, 0, 0, 0, 0],
       "ConceptB": [1, 0, 0, 0, 0],
-      "ConceptC": [1, 0, 0, 0, 0],
-      "ConceptD": [0, 1, 1, 0, 0],
+      "@ConceptC": [1, 0, 0, 0, 0],
+      "@ConceptD": [0, 1, 1, 0, 0],
       "ConceptE": [0, 0, 0, 1, 0],
     },
     lessonPartitions: {
       "Lesson1": ["ConceptA", "ConceptB"],
-      "Lesson2": ["ConceptC"],
-      "Lesson3": ["ConceptD"],
+      "Lesson2": ["@ConceptC"],
+      "Lesson3": ["@ConceptD"],
       "Lesson4": ["ConceptE"],
     },
     maxFailureRates: {
       "ConceptA": 0.2,
       "ConceptB": 0.15,
-      "ConceptC": 0.1,
-      "ConceptD": 0.25,
+      "@ConceptC": 0.1,
+      "@ConceptD": 0.25,
       "ConceptE": 0.5,
     },
   );
@@ -128,6 +128,22 @@ class StaticConceptMapPage extends StatelessWidget {
                         ],
                       ),
                     )),
+                SizedBox(height: 10),
+                // External Concept Indicator
+                Row(
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black, width: 2),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Text("from another\ncourse"),
+                  ],
+                ),
               ],
             ),
           ),
@@ -145,15 +161,37 @@ class StaticConceptMapPage extends StatelessWidget {
                   String nodeText = node.key?.value ?? 'Node';
                   Color nodeColor = getNodeColor(nodeText);
 
+                  // Remove '@' from the displayed text if it's an external concept
+                  String displayedText = nodeText.startsWith('@')
+                      ? nodeText.substring(1)
+                      : nodeText;
+
+                  // Calculate the appropriate size based on the text length
+                  double minSize =
+                      50; // Minimum size to ensure it's not too small
+                  double size = max(minSize, 10.0 * displayedText.length);
+
                   return Container(
-                    padding: EdgeInsets.all(8),
+                    width: nodeText.startsWith('@') ? size : null,
+                    height: nodeText.startsWith('@') ? size : null,
+                    padding:
+                        nodeText.startsWith('@') ? null : EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
                       color: nodeColor,
+                      shape: nodeText.startsWith('@')
+                          ? BoxShape.circle
+                          : BoxShape.rectangle,
+                      borderRadius: nodeText.startsWith('@')
+                          ? null
+                          : BorderRadius.circular(4),
                     ),
-                    child: Text(
-                      nodeText,
-                      style: TextStyle(color: Colors.white),
+                    child: Center(
+                      child: FittedBox(
+                        child: Text(
+                          displayedText,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
                   );
                 },
