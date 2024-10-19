@@ -115,23 +115,26 @@ class ConceptMapView extends StatelessWidget {
                           algorithm: SugiyamaAlgorithm(builder),
                           builder: (Node node) {
                             String nodeText = node.key?.value ?? 'Node';
-                            Color nodeColor = getNodeColor(nodeText, conceptMapModel);
-        
+                            Color nodeColor =
+                                getNodeColor(nodeText, conceptMapModel);
+
                             // Remove '@' from the displayed text if it's an external concept
                             String displayedText = nodeText.startsWith('@')
                                 ? nodeText.substring(1)
                                 : nodeText;
-        
+
                             // Calculate the appropriate size based on the text length
                             double minSize =
                                 50; // Minimum size to ensure it's not too small
-                            double size = max(minSize, 10.0 * displayedText.length);
-        
+                            double size =
+                                max(minSize, 10.0 * displayedText.length);
+
                             return Container(
                               width: nodeText.startsWith('@') ? size : null,
                               height: nodeText.startsWith('@') ? size : null,
-                              padding:
-                                  nodeText.startsWith('@') ? null : EdgeInsets.all(8),
+                              padding: nodeText.startsWith('@')
+                                  ? null
+                                  : EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: nodeColor,
                                 shape: nodeText.startsWith('@')
