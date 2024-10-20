@@ -15,17 +15,17 @@ class SearchStudentPerformanceView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: viewModel,
-      child: Consumer<SearchStudentPerformanceViewModel>(
-          builder: (context, viewModel, child) {
-        return FutureBuilder<List<User>>(
-            future: viewModel.getStudents(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<User> students = snapshot.data!;
+      child: FutureBuilder<List<User>>(
+          future: viewModel.getStudents(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}'); // Display the error
+            } else if (snapshot.hasData) {
+              List<User> students = snapshot.data!;
+              return Consumer<SearchStudentPerformanceViewModel>(
+                  builder: (context, viewModel, child) {
                 return Column(
                   children: [
                     DropdownMenu(
@@ -55,15 +55,17 @@ class SearchStudentPerformanceView extends StatelessWidget {
                       Expanded(
                         child: SearchExternalLearningOutcomesView(
                           lessonID: null,
-                          studentID: viewModel.studentID,
+                          studentID: viewModel.studentID!,
                         ),
                       )
                     ]
                   ],
                 );
-              }
-            });
-      }),
+              });
+            } else {
+              return const Text('No data available');
+            }
+          }),
     );
   }
 }

@@ -8,7 +8,6 @@ class SearchStudentPerformanceViewModel extends ChangeNotifier {
 
   Future<List<User>> getStudents() async {
     _students ??= TeacherDashboardService().getAllStudents();
-    notifyListeners();
     return _students!;
   }
 

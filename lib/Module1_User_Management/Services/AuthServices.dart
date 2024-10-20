@@ -47,7 +47,7 @@ class AuthServices with ChangeNotifier {
       }
       return false;
     } catch (e) {
-      debugPrint("some error occured");
+      debugPrint("some error occured: $e");
       return false;
     }
   }

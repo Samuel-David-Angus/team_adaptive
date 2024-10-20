@@ -150,4 +150,16 @@ class FeedbackSummaryModel {
       return MapEntry(lO, rates[index]);
     });
   }
+
+  String learningStatusBasedOnLORate(double rate) {
+    if (rate <= 25) {
+      return "Very Poorly Learned";
+    } else if (rate <= 0.5) {
+      return "Less Poorly Learned";
+    } else if (rate <= 0.75) {
+      return "Learned";
+    } else {
+      return "Very Poorly Learned";
+    }
+  }
 }
