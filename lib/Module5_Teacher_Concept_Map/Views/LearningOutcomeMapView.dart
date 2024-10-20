@@ -64,39 +64,21 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
                                 hoveredNode = null;
                               });
                             },
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                    onPressed: () {
-                                      deleteNode(node);
-                                    },
-                                    tooltip: 'Delete Node',
-                                  ),
+                            child: GestureDetector(
+                              onTap: () => onNodeTap(node),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  borderRadius: (nodeText.startsWith("@"))
+                                      ? BorderRadius.circular(10)
+                                      : null,
+                                  color: setNodeColor(node),
                                 ),
-                                GestureDetector(
-                                  onTap: () => onNodeTap(node),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      shape: (nodeText.startsWith("@"))
-                                          ? BoxShape.circle
-                                          : BoxShape.rectangle,
-                                      color: setNodeColor(node),
-                                    ),
-                                    child: Text(
-                                      nodeText,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
+                                child: Text(
+                                  nodeText,
+                                  style: const TextStyle(color: Colors.white),
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -349,8 +331,11 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
     String? externalLO = await showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
-              content:
-                  SearchExternalLearningOutcomesView(lessonID: widget.lessonID),
+              content: SizedBox(
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: MediaQuery.of(context).size.height,
+                  child: SearchExternalLearningOutcomesView(
+                      lessonID: widget.lessonID)),
             ));
     if (externalLO != null) {
       externalLO = "@$externalLO";

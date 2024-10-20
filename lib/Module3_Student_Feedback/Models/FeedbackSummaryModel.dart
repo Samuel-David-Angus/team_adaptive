@@ -154,12 +154,12 @@ class FeedbackSummaryModel {
   String learningStatusBasedOnLORate(double rate) {
     if (rate <= 25) {
       return "Very Poorly Learned";
-    } else if (rate <= 0.5) {
+    } else if (rate <= 50) {
       return "Less Poorly Learned";
-    } else if (rate <= 0.75) {
+    } else if (rate <= 75) {
       return "Learned";
     } else {
-      return "Very Poorly Learned";
+      return "Very Well Learned";
     }
   }
 }

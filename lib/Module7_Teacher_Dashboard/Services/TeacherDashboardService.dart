@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module1_User_Management/Models/User.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
 
 class TeacherDashboardService {
   static final TeacherDashboardService _instance =
@@ -27,5 +29,30 @@ class TeacherDashboardService {
       rethrow;
     }
     return users;
+  }
+
+  Future<List<FeedbackSummaryModel>> getFeedbackSummariesByLessonAndCourse(
+      String courseID, String lessonID) async {
+    List<FeedbackSummaryModel> feedbackSummaries = [];
+    try {
+      QuerySnapshot<FeedbackSummaryModel> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection("Feedback")
+              .withConverter(
+                  fromFirestore: (snapshot, _) =>
+                      FeedbackSummaryModel.fromJson(snapshot.data()!),
+                  toFirestore: (model, _) => model.toJson())
+              .where("courseID", isEqualTo: courseID)
+              .where("lessonID", isEqualTo: lessonID)
+              .get();
+      for (DocumentSnapshot<FeedbackSummaryModel> documentSnapshot
+          in querySnapshot.docs) {
+        feedbackSummaries.add(documentSnapshot.data()!);
+      }
+      return feedbackSummaries;
+    } catch (e) {
+      print("Error getting feedbacks for this course and lesson: $e");
+      rethrow;
+    }
   }
 }

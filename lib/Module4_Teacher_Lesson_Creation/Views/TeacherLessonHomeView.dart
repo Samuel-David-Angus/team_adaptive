@@ -111,7 +111,14 @@ class TeacherLessonHomeView extends StatelessWidget {
                                       extra: lessons[index]);
                                   viewModel.refresh();
                                 },
-                                child: const Text('Setup'))
+                                child: const Text('Setup')),
+                          if (lessons[index].isSetupComplete!)
+                            TextButton(
+                                onPressed: () {
+                                  context.go(
+                                      '/courses/${course.id}/lessons/${lessons[index].id}/dashboard');
+                                },
+                                child: const Text('dashboard'))
                         ],
                       ),
                     ));

@@ -39,6 +39,7 @@ import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/Cr
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/View_Models/TeacherQuestionViewModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherAddQuestionView.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Views/TeacherViewQuestionView.dart';
+import 'package:team_adaptive/Module7_Teacher_Dashboard/Views/LessonDashboardView.dart';
 import 'package:team_adaptive/Module7_Teacher_Dashboard/Views/SearchStudentPerformanceView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
@@ -237,6 +238,11 @@ final GoRouter _router = GoRouter(
               dataHandler.getQuestionAndLesson(state),
             ),
           ),
+          GoRoute(
+              path: '/courses/:courseID/lessons/:lessonID/dashboard',
+              builder: (context, state) => LessonDashboardView(
+                  lessonID: state.pathParameters['lessonID']!,
+                  courseID: state.pathParameters['courseID']!)),
           GoRoute(
               path: '/feedbacks',
               builder: (context, state) => const FeedbackListView(),
