@@ -22,7 +22,7 @@ class SearchExternalLearningOutcomesViewState
     extends State<SearchExternalLearningOutcomesView> {
   late final Future<List<LearningOutcomeModel>> lOs;
   final TextEditingController _searchController = TextEditingController();
-  List<String> _searchResults = [];
+  List<LearningOutcomeModel> _searchResults = [];
 
   @override
   void initState() {
@@ -41,17 +41,18 @@ class SearchExternalLearningOutcomesViewState
     });
   }
 
-  List<String> _sortConceptsByRelevance(
+  List<LearningOutcomeModel> _sortConceptsByRelevance(
       String query, List<LearningOutcomeModel> lOs) {
     // Compute similarity scores for all concepts
-    List<MapEntry<String, double>> scoredConcepts = lOs.map((concept) {
+    List<MapEntry<LearningOutcomeModel, double>> scoredConcepts =
+        lOs.map((concept) {
       double similarity =
           _calculateTotalSimilarity(query, concept.learningOutcome);
 
       // Debug the matching process
       // debugPrint(
       //     'Query: "$query", Concept: "$concept", Similarity: $similarity');
-      return MapEntry(concept.learningOutcome, similarity);
+      return MapEntry(concept, similarity);
     }).toList();
 
     // Sort concepts by their similarity scores in descending order
@@ -164,7 +165,7 @@ class SearchExternalLearningOutcomesViewState
                     itemCount: _searchResults.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(_searchResults[index]),
+                        title: Text(_searchResults[index].learningOutcome),
                         onTap: () {
                           if (widget.lessonID != null) {
                             Navigator.of(context).pop(_searchResults[index]);
@@ -175,7 +176,8 @@ class SearchExternalLearningOutcomesViewState
                                 builder: (context) {
                                   return AlertDialog(
                                     content: AtomicLOFeedbackView(
-                                      learningOutcome: _searchResults[index],
+                                      learningOutcome:
+                                          _searchResults[index].learningOutcome,
                                       userID: widget.studentID == null
                                           ? AuthServices().userInfo!.id!
                                           : widget.studentID!,

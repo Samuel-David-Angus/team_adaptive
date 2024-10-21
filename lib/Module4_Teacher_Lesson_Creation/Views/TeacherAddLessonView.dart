@@ -85,6 +85,7 @@ class _TeacherAddLessonViewState extends State<TeacherAddLessonView> {
                     ),
                     LearningOutcomeMapView(
                       lessonID: lessonID,
+                      courseID: widget.course.id!,
                     )
                   ],
                 ),

@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLearningOutcomesView.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/SearchExternalLearningOutcomesView.dart';
 
 class LearningOutcomeMapView extends StatefulWidget {
   final String lessonID;
-  const LearningOutcomeMapView({super.key, required this.lessonID});
+  final String courseID;
+  const LearningOutcomeMapView(
+      {super.key, required this.lessonID, required this.courseID});
 
   @override
   State<LearningOutcomeMapView> createState() => _LearningOutcomeMapViewState();
@@ -112,12 +115,6 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
                         Row(
                           children: [
                             const Text("Prerequisites: "),
-                            ElevatedButton(
-                                onPressed: () {
-                                  addCourseLOasPrerequisite(
-                                      selectedNode!, context);
-                                },
-                                child: const Text("Add course prerequisite")),
                             ElevatedButton(
                                 onPressed: () {
                                   addExternalLOasPrerequisite(
@@ -263,72 +260,9 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
     }
   }
 
-  void addCourseLOasPrerequisite(
-      Node selectedNode, BuildContext context) async {
-    String? courseLO = await showDialog<String>(
-        context: context,
-        builder: (context) {
-          List<String> courseLOs = [];
-          String? selectedLO;
-          conceptMapViewModel.map!.lessonPartitions
-              .forEach((String lID, List<String> lOs) {
-            if (lID != widget.lessonID) {
-              courseLOs.addAll(lOs);
-            }
-          });
-          if (courseLOs.isNotEmpty) {
-            selectedLO = courseLOs[0];
-          }
-          return AlertDialog(
-            title: const Text("Choose a course learning outcome"),
-            content: Column(
-              children: [
-                selectedLO == null
-                    ? const Text("No course learning outcomes")
-                    : DropdownButton<String>(
-                        value: selectedLO,
-                        items: courseLOs
-                            .map((String lO) => DropdownMenuItem<String>(
-                                  value: lO,
-                                  child: Text(lO),
-                                ))
-                            .toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedLO = value;
-                          });
-                        })
-              ],
-            ),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(selectedLO);
-                  },
-                  child: const Text("ok")),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("cancel"))
-            ],
-          );
-        });
-    if (courseLO != null) {
-      if (conceptMapViewModel.setPrerequisite(
-          getNodeValue(selectedNode), courseLO)) {
-        setState(() {
-          Node prereqNode = Node.Id("#$courseLO");
-          graph.addNode(prereqNode);
-          graph.addEdge(prereqNode, selectedNode);
-        });
-      }
-    }
-  }
-
   void addExternalLOasPrerequisite(
       Node selectedNode, BuildContext context) async {
-    String? externalLO = await showDialog<String>(
+    LearningOutcomeModel? externalLO = await showDialog<LearningOutcomeModel>(
         context: context,
         builder: (context) => AlertDialog(
               content: SizedBox(
@@ -338,17 +272,18 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
                       lessonID: widget.lessonID)),
             ));
     if (externalLO != null) {
-      externalLO = "@$externalLO";
-      if (conceptMapViewModel.map!
-              .addExternalLearningOutcome(externalLO, widget.lessonID) &&
-          conceptMapViewModel.setPrerequisite(
-              getNodeValue(selectedNode), externalLO)) {
-        setState(() {
-          Node newNode = Node.Id(externalLO);
-          graph.addNode(newNode);
-          graph.addEdge(newNode, selectedNode);
-        });
+      String lO = externalLO.learningOutcome;
+      if (externalLO.courseID != widget.courseID) {
+        lO = "@$lO";
+        conceptMapViewModel.map!
+            .addExternalLearningOutcome(lO, widget.lessonID);
       }
+      conceptMapViewModel.setPrerequisite(getNodeValue(selectedNode), lO);
+      setState(() {
+        Node newNode = Node.Id(externalLO);
+        graph.addNode(newNode);
+        graph.addEdge(newNode, selectedNode);
+      });
     }
   }
 

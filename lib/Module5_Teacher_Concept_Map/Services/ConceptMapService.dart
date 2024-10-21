@@ -107,12 +107,12 @@ class ConceptMapService {
   }
 
   Future<List<LearningOutcomeModel>?> getExternalLearningOutcomes(
-      String courseID) async {
+      String lessonID) async {
     try {
       List<LearningOutcomeModel> lOs = [];
       QuerySnapshot list = await FirebaseFirestore.instance
           .collection("LearningOutcome")
-          .where("courseID", isNotEqualTo: courseID)
+          .where("lessonID", isNotEqualTo: lessonID)
           .withConverter(
               fromFirestore: (snapshot, _) =>
                   LearningOutcomeModel.fromJson(snapshot.data()!, snapshot.id),
