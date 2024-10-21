@@ -280,7 +280,7 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
       }
       conceptMapViewModel.setPrerequisite(getNodeValue(selectedNode), lO);
       setState(() {
-        Node newNode = Node.Id(externalLO);
+        Node newNode = Node.Id(lO);
         graph.addNode(newNode);
         graph.addEdge(newNode, selectedNode);
       });
