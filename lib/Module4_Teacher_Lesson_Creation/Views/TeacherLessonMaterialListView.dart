@@ -30,54 +30,56 @@ class TeacherLessonMaterialListView extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else {
             List<LessonMaterialModel> materials = snapshot.data!;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return TeacherAddLessonMaterialView(
-                                type: type, lesson: lesson);
-                          });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ThemeColor.darkgreyTheme,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        '+ Add $type lesson',
-                        style: const TextStyle(
-                          color: ThemeColor.offwhiteTheme,
-                        ),
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return TeacherAddLessonMaterialView(
+                                  type: type, lesson: lesson);
+                            });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ThemeColor.darkgreyTheme,
                       ),
-                    )),
-                const SizedBox(height: 20.0),
-                Wrap(
-                  spacing: 10,
-                  children: List.generate(materials.length, (index) {
-                    return Card(
-                        child: ListTile(
-                      title: Text(materials[index].title!),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              GoRouter.of(context).go(
-                                  '/materials/${lesson.courseID}/${lesson.id}/${materials[index].type}/${materials[index].id}',
-                                  extra: materials[index]);
-                            },
-                            child: const Text('View'),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          '+ Add $type lesson',
+                          style: const TextStyle(
+                            color: ThemeColor.offwhiteTheme,
                           ),
-                        ],
-                      ),
-                    ));
-                  }),
-                ),
-              ],
+                        ),
+                      )),
+                  const SizedBox(height: 20.0),
+                  Wrap(
+                    spacing: 10,
+                    children: List.generate(materials.length, (index) {
+                      return Card(
+                          child: ListTile(
+                        title: Text(materials[index].title!),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                GoRouter.of(context).go(
+                                    '/courses/${lesson.courseID!}/lessons/${lesson.id!}/$type/${materials[index].id!}',
+                                    extra: materials[index]);
+                              },
+                              child: const Text('View'),
+                            ),
+                          ],
+                        ),
+                      ));
+                    }),
+                  ),
+                ],
+              ),
             );
           }
         },
