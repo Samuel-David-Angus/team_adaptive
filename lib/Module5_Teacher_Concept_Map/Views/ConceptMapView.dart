@@ -72,7 +72,6 @@ class ConceptMapView extends StatelessWidget {
                                     height: 20,
                                     decoration: BoxDecoration(
                                       color: entry.value,
-                                      borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -88,13 +87,14 @@ class ConceptMapView extends StatelessWidget {
                               width: 20,
                               height: 20,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
+                                shape: BoxShape.rectangle,
                                 border:
                                     Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(6),
                               ),
                             ),
                             const SizedBox(width: 8),
-                            const Text("from another\ncourse"),
+                            const Text("from another\nlesson/course"),
                           ],
                         ),
                       ],
@@ -130,19 +130,17 @@ class ConceptMapView extends StatelessWidget {
                                 max(minSize, 10.0 * displayedText.length);
 
                             return Container(
-                              width: nodeText.startsWith('@') ? size : null,
-                              height: nodeText.startsWith('@') ? size : null,
-                              padding: nodeText.startsWith('@')
-                                  ? null
-                                  : const EdgeInsets.all(8),
+                              //width: nodeText.startsWith('@') ? size : null,
+                              //height: nodeText.startsWith('@') ? size : null,
+                              //padding: nodeText.startsWith('@') ? null : const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: nodeColor,
-                                shape: nodeText.startsWith('@')
-                                    ? BoxShape.circle
-                                    : BoxShape.rectangle,
+                                shape: BoxShape.rectangle,
+                                //shape: nodeText.startsWith('@') ? BoxShape.circle : BoxShape.rectangle,
                                 borderRadius: nodeText.startsWith('@')
-                                    ? null
-                                    : BorderRadius.circular(4),
+                                    ? BorderRadius.circular(10)
+                                    : null,
                               ),
                               child: Center(
                                 child: FittedBox(
