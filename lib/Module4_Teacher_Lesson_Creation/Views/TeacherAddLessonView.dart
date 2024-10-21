@@ -105,8 +105,10 @@ class _TeacherAddLessonViewState extends State<TeacherAddLessonView> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      List<String>? lOs =
-                          conceptMapViewModel.map?.lessonPartitions[lessonID];
+                      List<String>? lOs = conceptMapViewModel
+                          .map?.lessonPartitions[lessonID]!
+                          .where((lo) => !lo.startsWith("@"))
+                          .toList();
                       if (lOs != null &&
                           lOs.isNotEmpty &&
                           titleController.text.isNotEmpty &&
@@ -124,7 +126,7 @@ class _TeacherAddLessonViewState extends State<TeacherAddLessonView> {
                           viewModel.allLessons =
                               viewModel.getLessonByCourse(widget.course.id!);
                           viewModel.refresh();
-                          context.go('courses/${widget.course.id}/lessons',
+                          context.go('/courses/${widget.course.id}/lessons',
                               extra: widget.course);
                         } else {
                           print('uh oh something went wrong');

@@ -17,15 +17,17 @@ class ConceptMapService {
     try {
       WriteBatch batch = FirebaseFirestore.instance.batch();
       for (var lO in map.lessonPartitions[lessonID]!) {
-        DocumentReference doc =
-            FirebaseFirestore.instance.collection("LearningOutcome").doc();
-        LearningOutcomeModel model = LearningOutcomeModel.setAll(
-            id: doc.id,
-            courseID: map.courseID!,
-            lessonID: lessonID,
-            learningOutcome: lO,
-            directPrereqs: map.findDirectPrerequisites(lO));
-        batch.set(doc, model.toJson());
+        if (!lO.startsWith("@")) {
+          DocumentReference doc =
+              FirebaseFirestore.instance.collection("LearningOutcome").doc();
+          LearningOutcomeModel model = LearningOutcomeModel.setAll(
+              id: doc.id,
+              courseID: map.courseID!,
+              lessonID: lessonID,
+              learningOutcome: lO,
+              directPrereqs: map.findDirectPrerequisites(lO));
+          batch.set(doc, model.toJson());
+        }
       }
 
       DocumentReference cmap = FirebaseFirestore.instance
