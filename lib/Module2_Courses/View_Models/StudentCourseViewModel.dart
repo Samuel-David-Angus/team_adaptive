@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module2_Courses/Services/StudentCourseServices.dart';
 
-import '../../Module1_User_Management/Models/User.dart';
 import '../Models/CourseModel.dart';
 
 class StudentCourseViewModel extends ChangeNotifier {

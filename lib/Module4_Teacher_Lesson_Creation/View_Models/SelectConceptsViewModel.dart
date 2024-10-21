@@ -1,55 +1,57 @@
 import 'package:flutter/cupertino.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
-import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel_old.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
-class SelectConceptsViewModel extends ChangeNotifier{
+class SelectConceptsViewModel extends ChangeNotifier {
   List<String>? items;
   List<String>? selectedItems;
+  List<String>? prevSelectedItems;
 
-  Future<void> loadDataToAdd({String? courseID, Lesson? lesson}) async {
+  Future<void> loadDataToAdd({String? courseID, LessonModel? lesson}) async {
     try {
       assert(courseID != null || lesson != null);
-      ConceptMap? conceptMapModel = await ConceptMapService().getConceptMap(courseID ?? lesson!.courseID!);
-      List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
-      Map<String, List<int>> map = conceptMapModel.conceptMap!;
+      ConceptMapModel? conceptMapModel = await ConceptMapService()
+          .getConceptMap(courseID ?? lesson!.courseID!);
+      List<String> keys = conceptMapModel!.conceptMap.keys.toList();
+      Map<String, List<int>> map = conceptMapModel.conceptMap;
       selectedItems = [];
       if (lesson == null) {
         items = keys;
       } else {
         items = [];
-        for (var concept in lesson.concepts!) {
-              items!.add("$concept(main)");
-              print(concept);
-              List<int> val = map[concept]!;
-              print(val);
-              for (int i = 0; i < val.length; i++) {
-                if (val[i] == 1) {
-                  print(keys[i]);
-                  items!.add(keys[i]);
-                }
-              }
+        for (var concept in lesson.learningOutcomes!) {
+          items!.add("$concept(main)");
+          int indexOfConcept = conceptMapModel.indexOfConcept(concept);
+          List<int> val = map[concept]!;
+          for (int i = 0; i < val.length; i++) {
+            if (val[i] == 1 && i != indexOfConcept) {
+              items!.add(keys[i]);
             }
+          }
+        }
       }
       notifyListeners();
     } catch (e) {
-      print("Error loading concept data: $e");
+      debugPrint("Error loading concept data: $e");
     }
   }
 
-  Future<void> loadDataToEdit({required Lesson lesson, LessonMaterial? material}) async {
+  Future<void> loadDataToEdit(
+      {required LessonModel lesson, LessonMaterialModel? material}) async {
     try {
-      ConceptMap? conceptMapModel = await ConceptMapService().getConceptMap(lesson.courseID!);
-      List<String> keys = conceptMapModel!.conceptMap!.keys.toList();
-      Map<String, List<int>> map = conceptMapModel.conceptMap!;
+      ConceptMapModel? conceptMapModel =
+          await ConceptMapService().getConceptMap(lesson.courseID!);
+      List<String> keys = conceptMapModel!.conceptMap.keys.toList();
+      Map<String, List<int>> map = conceptMapModel.conceptMap;
       selectedItems = [];
       if (material == null) {
         items = keys;
-        selectedItems = lesson.concepts;
+        selectedItems = lesson.learningOutcomes;
       } else {
         items = [];
-        for (var concept in lesson.concepts!) {
+        for (var concept in lesson.learningOutcomes!) {
           items!.add("$concept(main)");
           List<int> val = map[concept]!;
           for (int i = 0; i < val.length; i++) {
@@ -62,12 +64,13 @@ class SelectConceptsViewModel extends ChangeNotifier{
       }
       notifyListeners();
     } catch (e) {
-      print("Error loading concept data: $e");
+      debugPrint("Error loading concept data: $e");
     }
   }
 
   void addToSelected(String concept) {
     selectedItems!.add(concept);
+    debugPrint("$selectedItems");
     notifyListeners();
   }
 
@@ -76,9 +79,15 @@ class SelectConceptsViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  void resetToNull() {
-    items = null;
-    selectedItems = null;
+  void confirmSelected() {
+    prevSelectedItems = List.from(selectedItems!);
   }
 
+  void cancelSelected() {
+    if (prevSelectedItems == null) {
+      selectedItems = [];
+      return;
+    }
+    selectedItems = List.from(prevSelectedItems!);
+  }
 }

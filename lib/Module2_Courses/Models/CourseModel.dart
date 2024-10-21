@@ -1,4 +1,3 @@
-import '../../Module1_User_Management/Models/User.dart';
 
 class Course {
   String? _id;

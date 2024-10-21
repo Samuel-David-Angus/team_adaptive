@@ -1,133 +1,198 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 
 class ConceptMapView extends StatelessWidget {
-  Course course;
+  final Course? course;
   final TextEditingController conceptController = TextEditingController();
 
+  final Graph graph = Graph();
+  final SugiyamaConfiguration builder = SugiyamaConfiguration()
+    ..nodeSeparation = 30
+    ..levelSeparation = 100
+    ..orientation = SugiyamaConfiguration.ORIENTATION_TOP_BOTTOM;
+
   ConceptMapView({super.key, required this.course});
+
+  final Map<String, Color> lessonColors = {};
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ConceptMapViewModel>(context, listen: false);
-    if (viewModel.map == null || viewModel.map!.courseID != course.id) {
-      viewModel.getConceptMap(course.id!);
-    }
-    return TemplateView(
-        highlighted: SELECTED.NONE,
-        topRight: userInfo(context),
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Concept Map"),
-              const SizedBox(height: 10,),
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: 'Concept',
-                  border: OutlineInputBorder()
-                ),
-                controller: conceptController,
+    return FutureBuilder<void>(
+        future: viewModel.getConceptMap(course!.id!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // While the future is loading, show a loading indicator
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            // If there was an error, show an error message
+            return Center(
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
               ),
-              Row(
+            );
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            final ConceptMapModel conceptMapModel = viewModel.map!;
+
+            _assignColorsToLessons(conceptMapModel);
+            _buildGraphFromModel(conceptMapModel);
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Concept Map'),
+              ),
+              body: Row(
                 children: [
-                  ElevatedButton(
-                      onPressed: (){
-                        viewModel.addConcept(conceptController.text);
-                      },
-                      child: Text("Add Concept")),
-                  const SizedBox(width: 10,),
-                  Consumer<ConceptMapViewModel>(
-                      builder: (context, viewModel, child) {
-                        return viewModel.map != null && viewModel.map!.conceptMap!.length > 0 ?
-                        PopupMenuButton<String>(
-                          child: const Text("Delete Concept"),
-                            itemBuilder: (BuildContext context) {
-                              Map<String, List<int>> cmap = viewModel.map!.conceptMap!;
-                              return List.generate(
-                                  cmap.length,
-                                  (index) {
-                                    String val = cmap!.keys!.toList()[index];
-                                    return PopupMenuItem(
-                                        value: val,
-                                        child: Text(val));
-                                  }
-                              );
-                            },
-                          onSelected: (String val) {
-                              viewModel.deleteConcept(val);
-                          },
-                        )
-                            : Text('No concepts to delete');
-                      }
-                  )
-                ]
-              ),
-
-              Consumer<ConceptMapViewModel>(
-                builder: (context, viewModel, child) {
-                  final conceptMap = viewModel.map?.conceptMap;
-
-                  if (conceptMap == null || conceptMap.isEmpty) {
-                    return Center(child: Text('No data available'));
-                  }
-
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: SingleChildScrollView(
-                      child: buildTable(conceptMap, viewModel),
+                  // Legend Box
+                  Container(
+                    width: 300,
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Legend',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        ...lessonColors.entries.map((entry) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: entry.value,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(entry.key),
+                                ],
+                              ),
+                            )),
+                        const SizedBox(height: 10),
+                        // External Concept Indicator
+                        Row(
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                border:
+                                    Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text("from another\nlesson/course"),
+                          ],
+                        ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                  // Graph Viewer
+                  Expanded(
+                    child: InteractiveViewer(
+                      constrained: false,
+                      boundaryMargin: const EdgeInsets.all(50),
+                      minScale: 0.01,
+                      maxScale: 5.0,
+                      child: Transform(
+                        transform: Matrix4.translationValues(
+                            50, 0, 0), // Move x pixels to the right
+                        child: GraphView(
+                          graph: graph,
+                          algorithm: SugiyamaAlgorithm(builder),
+                          builder: (Node node) {
+                            String nodeText = node.key?.value ?? 'Node';
+                            Color nodeColor =
+                                getNodeColor(nodeText, conceptMapModel);
+
+                            // Remove '@' from the displayed text if it's an external concept
+                            String displayedText = nodeText.startsWith('@')
+                                ? nodeText.substring(1)
+                                : nodeText;
+
+                            return Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: nodeColor,
+                                shape: BoxShape.rectangle,
+                                borderRadius: nodeText.startsWith('@')
+                                    ? BorderRadius.circular(10)
+                                    : null,
+                              ),
+                              child: Center(
+                                child: FittedBox(
+                                  child: Text(
+                                    displayedText,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if(await viewModel.saveEdits()) {
-                      print("Saved successfully");
-                    } else {
-                      print("Not saved");
-                    }
-                  },
-                  child: Text("Save")),
-            ],
-          ),
-        ));
+            );
+          }
+          return Container();
+        });
   }
 
-  Widget buildTable(Map<String, List<int>>? data, ConceptMapViewModel viewModel) {
+  void _assignColorsToLessons(ConceptMapModel conceptMapModel) {
+    final int n =
+        conceptMapModel.lessonPartitions.keys.length; // Number of lessons
+    int index = 0;
 
-    if (data == null) {
-      return const CircularProgressIndicator();
+    for (var lesson in conceptMapModel.lessonPartitions.keys) {
+      double hue =
+          (index * 360 / n) % 360; // Spread hues evenly around the color wheel
+      int color = HSVColor.fromAHSV(1.0, hue, 0.8, 0.9).toColor().value;
+
+      lessonColors[lesson] = Color(color);
+      index++;
     }
-    var keys = data.keys.toList();
-    var rows = List.generate(
-      data.length,
-          (rowIndex) => DataRow(
-        cells: [DataCell(Text(keys[rowIndex]))] + List.generate(
-          data[keys[rowIndex]]!.length,
-              (colIndex) => DataCell(GestureDetector(
-                onTap: (){viewModel.setPrerequisite(keys[rowIndex], keys[colIndex]);},
-                child: Text(data[keys[rowIndex]]![colIndex].toString()))),
-        ),
-      ),
-    );
-    var columns = [DataColumn(
-        label: Text(''))] + List.generate(
-      data.length,
-          (index) => DataColumn(
-        label: Text(keys[index]),
-      ),
-    );
+  }
 
-    return DataTable(
+  void _buildGraphFromModel(ConceptMapModel conceptMapModel) {
+    // Add nodes for each concept
+    conceptMapModel.conceptMap.forEach((concept, _) {
+      graph.addNode(Node.Id(concept));
+    });
 
-      columns: columns,
-      rows: rows,
-    );
+    // Add edges based on connections between concepts
+    for (String concept in conceptMapModel.conceptMap.keys) {
+      List<int> connections = conceptMapModel.conceptMap[concept]!;
+      for (int i = 0; i < connections.length; i++) {
+        if (connections[i] == 1) {
+          String prereq = conceptMapModel.conceptOfIndex(i);
+          graph.addEdge(Node.Id(prereq), Node.Id(concept));
+        }
+      }
+    }
+  }
+
+  Color getNodeColor(String concept, ConceptMapModel conceptMapModel) {
+    for (var entry in conceptMapModel.lessonPartitions.entries) {
+      if (entry.value.contains(concept)) {
+        return lessonColors[entry.key] ?? Colors.grey; // Default to grey
+      }
+    }
+    return Colors.grey;
   }
 }

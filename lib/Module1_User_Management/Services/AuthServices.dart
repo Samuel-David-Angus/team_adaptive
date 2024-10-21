@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fauth;
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+
 import '../Models/User.dart';
 
-
-class AuthServices with ChangeNotifier{
+class AuthServices with ChangeNotifier {
   static final AuthServices _instance = AuthServices._internal();
 
   fauth.User? _currentUser;
@@ -37,8 +36,8 @@ class AuthServices with ChangeNotifier{
 
   Future<bool> signIn(String email, String password, String type) async {
     try {
-      fauth.UserCredential credential = await fauth.FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email, password: password);
+      fauth.UserCredential credential = await fauth.FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
       fauth.User? credUser = credential.user;
       if (credUser != null) {
         await _fetchUserInfo();
@@ -48,25 +47,26 @@ class AuthServices with ChangeNotifier{
       }
       return false;
     } catch (e) {
-      print("some error occured");
+      debugPrint("some error occured: $e");
       return false;
     }
   }
 
   Future<bool> register(User user) async {
     try {
-      fauth.UserCredential credential = await fauth.FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: user.email ?? '', password: user.password ?? '');
+      fauth.UserCredential credential = await fauth.FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: user.email ?? '', password: user.password ?? '');
       fauth.User? credUser = credential.user;
+      user.learningStyle = "Text";
       if (credUser != null) {
         user.id = credUser.uid;
         await addUserInfo(user);
         return true;
       }
       return false;
-
     } catch (e) {
-      print("some error occured $e ");
+      debugPrint("some error occured $e ");
       return false;
     }
   }
@@ -82,19 +82,20 @@ class AuthServices with ChangeNotifier{
             .collection('User')
             .doc(_currentUser!.uid)
             .withConverter<User>(
-              fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!, snapshot.id),
-              toFirestore: (user, _) => user.toJson())
+                fromFirestore: (snapshot, _) =>
+                    User.fromJson(snapshot.data()!, snapshot.id),
+                toFirestore: (user, _) => user.toJson())
             .get();
 
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data();
           _userInfo = data as User;
         } else {
-          print('User document does not exist in Firestore');
+          debugPrint('User document does not exist in Firestore');
           _userInfo = null;
         }
       } catch (e) {
-        print('Error fetching user info: $e');
+        debugPrint('Error fetching user info: $e');
         _userInfo = null;
       }
       notifyListeners();
@@ -107,16 +108,14 @@ class AuthServices with ChangeNotifier{
           .collection('User')
           .doc(user.id)
           .withConverter<User>(
-            fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!, snapshot.id),
-            toFirestore: (user, _) => user.toJson())
+              fromFirestore: (snapshot, _) =>
+                  User.fromJson(snapshot.data()!, snapshot.id),
+              toFirestore: (user, _) => user.toJson())
           .set(user);
-      print('User information added to Firestore');
+      debugPrint('User information added to Firestore');
     } catch (e) {
-      print('Error adding user information to Firestore: $e');
+      debugPrint('Error adding user information to Firestore: $e');
       // Handle error as needed
     }
   }
-
-
-
 }

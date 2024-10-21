@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
 import '../Models/ConceptMapModel.dart';
@@ -7,73 +8,88 @@ class ConceptMapViewModel extends ChangeNotifier {
   ConceptMapService service = ConceptMapService();
   ConceptMapModel? map;
 
-  bool addConcept(String concept){
-    try {
-      int? length = map?.conceptMap!.keys.length!;
-      List<int> generatedList = List.generate(length! + 1, (index) => 0);
-      map?.conceptMap?.putIfAbsent(concept, ()=>generatedList);
-      map?.conceptMap = map?.conceptMap?.map((key, value) {
-        List<int> extendedList = List<int>.from(value);
-        while (extendedList.length < length + 1) {
-          extendedList.add(0);  // Add zeroes to extend the list
-        }
-        return MapEntry(key, extendedList);
-      });
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print('Concept map is not available.');
-    }
-    return false;
+  void createConceptMap() {
+    map = ConceptMapModel.setAll(
+        id: null,
+        courseID: null,
+        conceptMap: {},
+        lessonPartitions: {},
+        maxFailureRates: {});
   }
-  bool deleteConcept(String concept){
-    try {
-      int? length = map?.conceptMap!.keys.length!;
-      int conceptIndex = map!.conceptMap!.keys!.toList().indexOf(concept);
-      map?.conceptMap!.remove(concept);
-      map?.conceptMap = map?.conceptMap?.map((key, value) {
-        List<int> shrunkList = List<int>.from(value);
-        shrunkList.removeAt(conceptIndex);
-        return MapEntry(key, shrunkList);
-      });
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("Error deleting concept: $e");
-    }
-    return false;
-  }
-  getConceptMap(String courseID) async {
-    map = await service.getConceptMap(courseID);
 
+  Future<bool> uploadConceptMap(String courseID) async {
+    return await service.uploadConceptMap(courseID, map!);
+  }
+
+  bool addLocalLearningOutcome(
+      String concept, double maxFailureRate, String lessonID) {
+    try {
+      notifyListeners();
+      return map!.addLocalLearningOutcome(concept, maxFailureRate, lessonID);
+    } catch (e) {
+      debugPrint('Concept map is not available.');
+    }
+    return false;
+  }
+
+  bool deleteConcept(String concept, String lessonID) {
+    try {
+      notifyListeners();
+      return map!.removeConcept(concept, lessonID);
+    } catch (e) {
+      debugPrint("Error deleting concept: $e");
+    }
+    return false;
+  }
+
+  Future<void> getConceptMap(String courseID) async {
+    map = await service.getConceptMap(courseID);
     notifyListeners();
   }
+
   bool setPrerequisite(String concept, String prereq) {
     try {
-      int index = map!.conceptMap!.keys.toList().indexOf(prereq);
-      if (index == -1) {
-        return false;
-      }
-      int value = map!.conceptMap![concept]![index];
-      if (value == 0) {
-        map!.conceptMap![concept]![index] = 1;
-      } else {
-        map!.conceptMap![concept]![index] = 0;
-      }
       notifyListeners();
-      return true;
+      return map!.setPrerequisite(concept, prereq);
     } catch (e) {
-      print("Error setting prerequisite: $e");
+      debugPrint("Error setting prerequisite: $e");
     }
     return false;
   }
 
-   Future<bool> saveEdits() async {
+  Future<bool> saveEdits(String lessonID) async {
     try {
-      return await service.editConceptMap(map!);
+      return await service.editConceptMapAndAddNewLOs(map!, lessonID);
     } catch (e) {
-      print("Error saving map: $e");
+      debugPrint("Error saving map: $e");
     }
     return false;
+  }
+
+  Future<List<LearningOutcomeModel>> getExternalLearningOutcomes(
+      String lessonID) async {
+    List<LearningOutcomeModel>? lOs =
+        await service.getExternalLearningOutcomes(lessonID);
+    if (lOs == null) {
+      throw Exception("Error getting external learning outcomes");
+    }
+    return lOs!;
+  }
+
+  Future<List<LearningOutcomeModel>> getAllLearningOutcomes() async {
+    List<LearningOutcomeModel>? lOs = await service.getAllLearningOutcomes();
+    if (lOs == null) {
+      throw Exception("Error getting external learning outcomes");
+    }
+    return lOs!;
+  }
+
+  Future<LearningOutcomeModel> getLearningOutcome(String lO) async {
+    LearningOutcomeModel? learningOutcomeModel =
+        await service.getLearningOutcome(lO);
+    if (learningOutcomeModel == null) {
+      throw Exception("Cant get lO");
+    }
+    return learningOutcomeModel;
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Components/TemplateView.dart';
-import 'package:team_adaptive/Components/TopRightOptions.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
+import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module2_Courses/View_Models/TeacherCourseViewModel.dart';
-
-import '../../Models/CourseModel.dart';
+import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class TeacherAddCourseView extends StatelessWidget {
   final TextEditingController titleController = TextEditingController();
@@ -15,62 +15,171 @@ class TeacherAddCourseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TeacherCourseViewModel viewModel = Provider.of<TeacherCourseViewModel>(context);
-    return TemplateView(
-        highlighted: SELECTED.NONE,
-        topRight: userInfo(context),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
+    final TeacherCourseViewModel? teacherCourseViewModel =
+        Provider.of<TeacherCourseViewModel?>(context);
+    final ConceptMapViewModel? conceptMapViewModel =
+        Provider.of<ConceptMapViewModel?>(context, listen: false);
+
+    if (teacherCourseViewModel == null || conceptMapViewModel == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 50.0),
+      child: Wrap(
+        children: [
+          Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                  color: ThemeColor.darkgreyTheme,
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(50.0),
+                  child: Column(
+                    children: [
+                      const Text('Add Course',
+                          style: TextStyle(
+                            fontSize: 64,
+                            fontWeight: FontWeight.bold,
+                            color: ThemeColor.offwhiteTheme,
+                          )),
+                      const SizedBox(height: 50.0),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .offwhiteTheme), // Change the outline color
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 0, 0, 0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .lightgreyTheme), // Change the outline color when focused
+                            ),
+                            fillColor: ThemeColor
+                                .offwhiteTheme, // Change the background color
+                            filled: true, // Enable the background color
+                            hintText: 'Title',
+                          ),
+                          controller: titleController,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .offwhiteTheme), // Change the outline color
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 0, 0, 0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .lightgreyTheme), // Change the outline color when focused
+                            ),
+                            fillColor: ThemeColor
+                                .offwhiteTheme, // Change the background color
+                            filled: true, // Enable the background color
+                            hintText: 'Code',
+                          ),
+                          controller: codeController,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: SizedBox(
+                          height: 200, // Set the desired height
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: ThemeColor
+                                        .offwhiteTheme), // Change the outline color
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 0, 0, 0)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: ThemeColor
+                                        .lightgreyTheme), // Change the outline color when focused
+                              ),
+                              fillColor: ThemeColor
+                                  .offwhiteTheme, // Change the background color
+                              filled: true, // Enable the background color
+                              hintText: 'Description',
+                            ),
+                            controller: descriptionController,
+                            maxLines:
+                                null, // Allow the text to wrap and support newlines
+                            minLines: 5, // Set a minimum number of lines
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ]),
+          ),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Add Course'),
-              TextField(
-                decoration: const InputDecoration (
-                    border: OutlineInputBorder(),
-                    hintText: 'Title'
-                ),
-                controller: titleController,
-              ),
-              TextField(
-                decoration: const InputDecoration (
-                    border: OutlineInputBorder(),
-                    hintText: 'Code'
-                ),
-                controller: codeController,
-              ),
-              TextField(
-                decoration: const InputDecoration (
-                    border: OutlineInputBorder(),
-                    hintText: 'Description'
-                ),
-                controller: descriptionController,
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (viewModel.validate(titleController.text, codeController.text, descriptionController.text)) {
-                      Course course =  Course.setAll(
+              Padding(
+                padding: const EdgeInsets.only(),
+                child: ElevatedButton(
+                    onPressed: () async {
+                      if (teacherCourseViewModel.validate(titleController.text,
+                          codeController.text, descriptionController.text)) {
+                        Course course = Course.setAll(
                           id: null,
                           title: titleController.text,
                           code: codeController.text,
                           description: descriptionController.text,
                           students: [],
-                          teachers: [AuthServices().userInfo?.id ?? '']);
-                      Course? added = await viewModel.addCourse(course);
-                      if (added != null) {
-                        Navigator.pushNamed(context, '/courseOverview', arguments: added);
+                          teachers: [AuthServices().userInfo?.id ?? ''],
+                        );
+                        Course? added =
+                            await teacherCourseViewModel.addCourse(course);
+                        if (added != null) {
+                          GoRouter.of(context)
+                              .go('/courses/${added.id}', extra: added);
+                        } else {
+                          msgDialogShow(context, "Course failed to be added");
+                        }
                       } else {
-                        msgDialogShow(context, "Course failed to eb added");
+                        msgDialogShow(
+                            context, "Please check the inputted info");
                       }
-                    } else {
-                      msgDialogShow(context, "Pls check the inputted info");
-                    }
-                  },
-                  child: const Text('Add Course'))
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 98, vertical: 24),
+                      backgroundColor: ThemeColor.darkgreyTheme,
+                    ),
+                    child: const Text('Add Course',
+                        style: TextStyle(
+                            color: ThemeColor.offwhiteTheme, fontSize: 16.0))),
+              )
             ],
-          ),
-        ));
+          )
+        ],
+      ),
+    );
   }
+
   void msgDialogShow(BuildContext context, String message) {
     showDialog(
       context: context,

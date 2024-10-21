@@ -5,12 +5,12 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/Select
 
 import '../Models/LessonMaterialModel.dart';
 
-
 class TeacherSelectConceptsView extends StatelessWidget {
-  String? courseID;
-  LessonModel? lesson;
-  LessonMaterialModel? material;
-  TeacherSelectConceptsView({super.key, this.courseID, this.lesson, this.material});
+  final String? courseID;
+  final LessonModel? lesson;
+  final LessonMaterialModel? material;
+  const TeacherSelectConceptsView(
+      {super.key, this.courseID, this.lesson, this.material});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class TeacherSelectConceptsView extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         return AlertDialog(
-          title: Text('Select Options'),
+          title: const Text('Select Options'),
           content: SingleChildScrollView(
             child: ListBody(
               children: viewModel.items!.map((item) {
@@ -53,17 +53,17 @@ class TeacherSelectConceptsView extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
-                viewModel.resetToNull();
+                viewModel.cancelSelected();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 var results = [...?viewModel.selectedItems];
-                viewModel.resetToNull();
+                viewModel.confirmSelected();
                 Navigator.of(context).pop(results);
               },
             ),

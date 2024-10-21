@@ -3,23 +3,26 @@ class LessonModel {
   String? _lessonTitle;
   String? _lessonDescription;
   String? _courseID;
-  List<String>? _concepts;
+  List<String>? _learningOutcomes;
   int? _order;
+  bool? _isSetupComplete;
 
   // Constructor
-  LessonModel.setAll({
-    required String id,
-    required String lessonTitle,
-    required String lessonDescription,
-    required String courseID,
-    required List<String> concepts,
-    required int order
-  })  : _id = id,
+  LessonModel.setAll(
+      {required String id,
+      required String lessonTitle,
+      required String lessonDescription,
+      required String courseID,
+      required List<String> concepts,
+      required int order,
+      required bool isSetupComplete})
+      : _id = id,
         _lessonTitle = lessonTitle,
         _lessonDescription = lessonDescription,
         _courseID = courseID,
-        _concepts = concepts,
-        _order = order;
+        _learningOutcomes = concepts,
+        _order = order,
+        _isSetupComplete = isSetupComplete;
 
   LessonModel();
 
@@ -28,8 +31,9 @@ class LessonModel {
   String? get lessonTitle => _lessonTitle;
   String? get lessonDescription => _lessonDescription;
   String? get courseID => _courseID;
-  List<String>? get concepts => _concepts;
+  List<String>? get learningOutcomes => _learningOutcomes;
   int? get order => _order;
+  bool? get isSetupComplete => _isSetupComplete;
 
   // Setters
   set id(String? id) {
@@ -48,24 +52,27 @@ class LessonModel {
     _courseID = courseID;
   }
 
-  set concepts(List<String>? concepts) {
-    _concepts = concepts;
+  set learningOutcomes(List<String>? concepts) {
+    _learningOutcomes = concepts;
   }
 
   set order(int? order) {
     _order = order;
   }
 
+  set isSetupComplete(bool? isSetUpComplete) {
+    _isSetupComplete = isSetUpComplete;
+  }
 
   factory LessonModel.fromJson(Map<String, dynamic> json, String id) {
     return LessonModel.setAll(
-      id: id,
-      lessonTitle: json['lessonTitle'] as String,
-      lessonDescription: json['lessonDescription'] as String,
-      courseID: json['courseID'] as String,
-      concepts: List<String>.from(json['concepts']),
-      order: json['order'],
-    );
+        id: id,
+        lessonTitle: json['lessonTitle'] as String,
+        lessonDescription: json['lessonDescription'] as String,
+        courseID: json['courseID'] as String,
+        concepts: List<String>.from(json['concepts']),
+        order: json['order'],
+        isSetupComplete: json['isSetupComplete']);
   }
 
   // Method to convert an instance of LessonModel to a map
@@ -74,8 +81,9 @@ class LessonModel {
       'lessonTitle': _lessonTitle,
       'lessonDescription': _lessonDescription,
       'courseID': _courseID,
-      'concepts': _concepts,
+      'concepts': _learningOutcomes,
       'order': _order,
+      'isSetupComplete': _isSetupComplete,
     };
   }
 }
