@@ -123,21 +123,11 @@ class ConceptMapView extends StatelessWidget {
                                 ? nodeText.substring(1)
                                 : nodeText;
 
-                            // Calculate the appropriate size based on the text length
-                            double minSize =
-                                50; // Minimum size to ensure it's not too small
-                            double size =
-                                max(minSize, 10.0 * displayedText.length);
-
                             return Container(
-                              //width: nodeText.startsWith('@') ? size : null,
-                              //height: nodeText.startsWith('@') ? size : null,
-                              //padding: nodeText.startsWith('@') ? null : const EdgeInsets.all(8),
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: nodeColor,
                                 shape: BoxShape.rectangle,
-                                //shape: nodeText.startsWith('@') ? BoxShape.circle : BoxShape.rectangle,
                                 borderRadius: nodeText.startsWith('@')
                                     ? BorderRadius.circular(10)
                                     : null,
