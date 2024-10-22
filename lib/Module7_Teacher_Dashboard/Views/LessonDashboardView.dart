@@ -25,56 +25,101 @@ class LessonDashboardView extends StatelessWidget {
                   child:
                       CircularProgressIndicator()); // Show a loading indicator
             } else if (snapshot.connectionState == ConnectionState.done) {
-              return Consumer<LessonDashboardViewModel>(
-                  builder: (context, viewModel, child) {
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      DropdownMenu<int>(
-                        initialSelection: 1,
-                        dropdownMenuEntries:
-                            List.generate(viewModel.maxAttempt, (index) {
-                          return DropdownMenuEntry(
-                            value: index + 1,
-                            label: (index + 1).toString(),
-                          );
-                        }),
-                        onSelected: (value) {
-                          viewModel.setAttemptNumber(value!);
-                        },
-                      ),
-                      Text(
-                          "Number of students included in the analysis: ${viewModel.numberOfStudents}"),
-                      const Text("Learning Styles"),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: PieChart(PieChartData(
-                            sections:
-                                viewModel.getLearningStylesPieSections())),
-                      ),
-                      const Text("Skill levels"),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: BarChart(BarChartData(
-                            maxY: viewModel.numberOfStudents.toDouble(),
-                            barGroups: viewModel.getSkillLvlBarChartData())),
-                      ),
-                      const Text("Weak Concepts"),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2,
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: PieChart(PieChartData(
-                            sections: viewModel.getWeakConceptsPieSections())),
-                      ),
-                      const LODashboard()
-                    ],
-                  ),
-                );
-              });
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              if (snapshot.hasError) {
+                return Center(
+                    child:
+                        Text('Error: ${snapshot.error}')); // Handle any errors
+              } else if (lessonDashboardViewModel.feedbackSummaries.isEmpty) {
+                return const Center(
+                  child: Text('No data available'),
+                ); // Handle null or empty data
+              } else {
+                return Consumer<LessonDashboardViewModel>(
+                    builder: (context, viewModel, child) {
+                  // Check if viewModel data is empty
+                  if (viewModel.numberOfStudents == 0) {
+                    return const Center(
+                        child: Text('No students available for analysis.'));
+                  }
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        DropdownMenu<int>(
+                          initialSelection: 1,
+                          dropdownMenuEntries: viewModel.maxAttempt > 0
+                              ? List.generate(viewModel.maxAttempt, (index) {
+                                  return DropdownMenuEntry(
+                                    value: index + 1,
+                                    label: (index + 1).toString(),
+                                  );
+                                })
+                              : [],
+                          onSelected: (value) {
+                            if (value != null) {
+                              viewModel.setAttemptNumber(value);
+                            }
+                          },
+                        ),
+                        Text(
+                            "Number of students included in the analysis: ${viewModel.numberOfStudents}"),
+
+                        // Learning Styles Pie Chart
+                        const Text("Learning Styles"),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: viewModel
+                                  .getLearningStylesPieSections()
+                                  .isNotEmpty
+                              ? PieChart(PieChartData(
+                                  sections:
+                                      viewModel.getLearningStylesPieSections(),
+                                ))
+                              : const Center(
+                                  child:
+                                      Text('No learning style data available')),
+                        ),
+
+                        // Skill Levels Bar Chart
+                        const Text("Skill levels"),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: viewModel.getSkillLvlBarChartData().isNotEmpty
+                              ? BarChart(BarChartData(
+                                  maxY: viewModel.numberOfStudents.toDouble(),
+                                  barGroups:
+                                      viewModel.getSkillLvlBarChartData(),
+                                ))
+                              : const Center(
+                                  child: Text('No skill level data available')),
+                        ),
+
+                        // Weak Concepts Pie Chart
+                        const Text("Weak Concepts"),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: viewModel
+                                  .getWeakConceptsPieSections()
+                                  .isNotEmpty
+                              ? PieChart(PieChartData(
+                                  sections:
+                                      viewModel.getWeakConceptsPieSections(),
+                                ))
+                              : const Center(
+                                  child:
+                                      Text('No weak concepts data available')),
+                        ),
+
+                        // Other content such as LODashboard
+                        const LODashboard(),
+                      ],
+                    ),
+                  );
+                });
+              }
             } else {
               return const Text('Something unexpected happened');
             }

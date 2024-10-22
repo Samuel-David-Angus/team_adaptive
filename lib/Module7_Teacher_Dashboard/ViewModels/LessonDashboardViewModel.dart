@@ -15,10 +15,13 @@ class LessonDashboardViewModel extends ChangeNotifier {
     feedbackSummaries = await TeacherDashboardService()
         .getFeedbackSummariesByLessonAndCourse(courseID, lessonID);
     filteredListByAttemptNumber = feedbackSummaries;
-    maxAttempt = feedbackSummaries
-        .reduce((a, b) => a.dateHistory.length > b.dateHistory.length ? a : b)
-        .dateHistory
-        .length;
+
+    if (feedbackSummaries.isNotEmpty) {
+      maxAttempt = feedbackSummaries
+          .reduce((a, b) => a.dateHistory.length > b.dateHistory.length ? a : b)
+          .dateHistory
+          .length;
+    }
   }
 
   void setAttemptNumber(int value) {
