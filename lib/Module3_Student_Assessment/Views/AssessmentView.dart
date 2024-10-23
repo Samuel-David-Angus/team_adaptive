@@ -51,10 +51,12 @@ class AssessmentView extends StatelessWidget {
                       if (confirmSubmit == true) {
                         bool success = await viewModel.submitAssessment();
                         if (success) {
+                          late BuildContext dialogContext;
                           showDialog(
                               context: context,
                               barrierDismissible: false,
                               builder: (context) {
+                                dialogContext = context;
                                 return Container(
                                     decoration: const BoxDecoration(
                                         color: Color.fromRGBO(0, 0, 0, 0.5)),
@@ -63,8 +65,8 @@ class AssessmentView extends StatelessWidget {
                               });
                           String? feedbackID = await feedBackViewModel
                               .createFeedback(viewModel.assessmentModel);
+                          Navigator.pop(dialogContext);
                           if (feedbackID != null) {
-                            Navigator.pop(context);
                             GoRouter.of(context).go('/feedbacks/$feedbackID',
                                 extra: feedBackViewModel.feedbackSummary);
                           } else {
