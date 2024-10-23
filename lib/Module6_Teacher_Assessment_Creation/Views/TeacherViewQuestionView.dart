@@ -60,12 +60,13 @@ class TeacherViewQuestionView extends StatelessWidget {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  int totalCount = question.tally.values
-                                          .reduce((a, b) => a + b) +
-                                      question.unansweredCount;
                                   showDialog(
                                       context: context,
                                       builder: (context) {
+                                        List<PieChartSectionData>? chartData =
+                                            viewModel
+                                                .generateSectionsFromQuestion(
+                                                    question);
                                         return AlertDialog(
                                           content: SizedBox(
                                             width: MediaQuery.of(context)
@@ -90,25 +91,15 @@ class TeacherViewQuestionView extends StatelessWidget {
                                                   minHeight: 10,
                                                 ),
                                                 const SizedBox(height: 20),
-                                                Expanded(
-                                                  child: PieChart(
-                                                      PieChartData(sections: [
-                                                    ...question.tally.entries
-                                                        .map((entry) {
-                                                      return PieChartSectionData(
-                                                          value: entry.value /
-                                                              totalCount,
-                                                          title: entry.key,
-                                                          radius: 60);
-                                                    }),
-                                                    PieChartSectionData(
-                                                        value: question
-                                                                .unansweredCount /
-                                                            totalCount,
-                                                        title: "Unanswered",
-                                                        radius: 60)
-                                                  ])),
-                                                ),
+                                                (chartData != null)
+                                                    ? Expanded(
+                                                        child: PieChart(
+                                                            PieChartData(
+                                                                sections:
+                                                                    chartData)),
+                                                      )
+                                                    : const Text(
+                                                        "No one has answered this question yet"),
                                               ],
                                             ),
                                           ),

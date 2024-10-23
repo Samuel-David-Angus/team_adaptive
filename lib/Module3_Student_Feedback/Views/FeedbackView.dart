@@ -34,6 +34,10 @@ class FeedbackView extends StatelessWidget {
               style: const TextStyle(fontSize: 24.0)),
           const SizedBox(height: 15),
           Table(
+            columnWidths: const {
+              0: FixedColumnWidth(150), // Fixed width for concept column
+              1: FixedColumnWidth(350), // Fixed width for failure rate column
+            },
             children: [
               TableRow(
                 children: [

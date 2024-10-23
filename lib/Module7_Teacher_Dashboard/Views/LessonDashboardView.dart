@@ -29,10 +29,6 @@ class LessonDashboardView extends StatelessWidget {
                 return Center(
                     child:
                         Text('Error: ${snapshot.error}')); // Handle any errors
-              } else if (lessonDashboardViewModel.feedbackSummaries.isEmpty) {
-                return const Center(
-                  child: Text('No data available'),
-                ); // Handle null or empty data
               } else {
                 return Consumer<LessonDashboardViewModel>(
                     builder: (context, viewModel, child) {
@@ -73,6 +69,7 @@ class LessonDashboardView extends StatelessWidget {
                                   .getLearningStylesPieSections()
                                   .isNotEmpty
                               ? PieChart(PieChartData(
+                                  sectionsSpace: 0,
                                   sections:
                                       viewModel.getLearningStylesPieSections(),
                                 ))
@@ -88,6 +85,48 @@ class LessonDashboardView extends StatelessWidget {
                           height: MediaQuery.of(context).size.height / 3,
                           child: viewModel.getSkillLvlBarChartData().isNotEmpty
                               ? BarChart(BarChartData(
+                                  titlesData: FlTitlesData(
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles:
+                                            true, // Show labels on the left axis
+                                        getTitlesWidget: (value, meta) {
+                                          if (value == value.toInt()) {
+                                            return Text(
+                                              (value)
+                                                  .toInt()
+                                                  .toString(), // This ensures integer display
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                              ),
+                                            );
+                                          }
+                                          return const SizedBox();
+                                        },
+                                      ),
+                                    ),
+                                    rightTitles: const AxisTitles(
+                                      sideTitles: SideTitles(
+                                          showTitles:
+                                              false), // Hide right axis labels
+                                    ),
+                                    topTitles: const AxisTitles(
+                                      sideTitles: SideTitles(
+                                          showTitles:
+                                              false), // Hide top axis labels
+                                    ),
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles:
+                                            true, // Show labels on the bottom axis
+                                        getTitlesWidget: (value, meta) {
+                                          return Text(value
+                                              .toString()); // Customize label if needed
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                   maxY: viewModel.numberOfStudents.toDouble(),
                                   barGroups:
                                       viewModel.getSkillLvlBarChartData(),
@@ -105,6 +144,7 @@ class LessonDashboardView extends StatelessWidget {
                                   .getWeakConceptsPieSections()
                                   .isNotEmpty
                               ? PieChart(PieChartData(
+                                  sectionsSpace: 0,
                                   sections:
                                       viewModel.getWeakConceptsPieSections(),
                                 ))
@@ -205,9 +245,20 @@ class _LODashboardState extends State<LODashboard> {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      interval: 20, // Interval of Y-axis labels
+                      interval: 1, // Interval of Y-axis labels
                       getTitlesWidget: (value, meta) {
-                        return Text(value.toInt().toString());
+                        if (value == value.toInt()) {
+                          return Text(
+                            (value)
+                                .toInt()
+                                .toString(), // This ensures integer display
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          );
+                        }
+                        return const SizedBox();
                       },
                     ),
                   ),
@@ -225,7 +276,7 @@ class _LODashboardState extends State<LODashboard> {
         in viewModel.filteredListByAttemptNumber) {
       double rate = feedbackSummaryModel
           .lOsAndRateHistory[lO]![viewModel.attemptNumber - 1];
-      int index = (rate / 25).ceil() - 1;
+      int index = rate == 0 ? 0 : (rate / 25).ceil() - 1;
       tally[index]++;
     }
     return [

@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../Models/FeedbackModel.dart';
@@ -119,7 +120,8 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
                     child: Text(concept),
                     onPressed: () {
                       String lO = Uri.encodeFull(concept);
-                      context.go('/materials/learning-outcome/$lO',
+                      context.go(
+                          '/materials/learning-outcome/$lO/${widget.feedbackSummary.mostRecentLearningStyle}',
                           extra: concept);
                     },
                   ),
@@ -128,66 +130,279 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
             ),
             const Text("History"),
             const Text("Assessment scores"),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              height: MediaQuery.of(context).size.height / 3,
-              child: LineChart(LineChartData(
-                  maxY: widget.feedbackSummary.assessmentTotal.toDouble(),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: widget.feedbackSummary.scoreHistory
-                          .asMap()
-                          .entries
-                          .map((entry) => FlSpot(
-                              entry.key.toDouble(), entry.value.toDouble()))
-                          .toList(),
-                      isCurved: false,
-                    )
-                  ])),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 3,
+                child: LineChart(LineChartData(
+                    minY: 0,
+                    maxY: widget.feedbackSummary.assessmentTotal.toDouble(),
+                    minX: 0,
+                    lineTouchData: LineTouchData(touchCallback: (event, touch) {
+                      if (event is FlTapUpEvent) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: FeedbackView(
+                                  feedback: widget.feedbackSummary
+                                      .getFeedbackFromIndex(
+                                          touch!.lineBarSpots!.first.spotIndex),
+                                ),
+                              );
+                            });
+                      }
+                    }),
+                    titlesData: FlTitlesData(
+                      topTitles: const AxisTitles(
+                        sideTitles:
+                            SideTitles(showTitles: false), // Disable top titles
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(
+                            showTitles: false), // Disable right titles
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          interval: 1,
+                          showTitles: true,
+                          getTitlesWidget: (value, meta) {
+                            if (value == value.toInt()) {
+                              return Text(
+                                (value + 1)
+                                    .toInt()
+                                    .toString(), // This ensures integer display
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              );
+                            }
+                            return const SizedBox();
+                          },
+                        ), // Keep bottom titles
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                            getTitlesWidget: (value, meta) {
+                              if (value == value.toInt()) {
+                                return Text(
+                                  value
+                                      .toInt()
+                                      .toString(), // This ensures integer display
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                );
+                              }
+                              return const SizedBox();
+                            },
+                            showTitles: true,
+                            reservedSize: 20), // Keep left titles
+                      ),
+                    ),
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: widget.feedbackSummary.scoreHistory
+                            .asMap()
+                            .entries
+                            .map((entry) => FlSpot(
+                                entry.key.toDouble(), entry.value.toDouble()))
+                            .toList(),
+                        isCurved: false,
+                      )
+                    ])),
+              ),
             ),
             const Text("Learning Outcomes"),
-            DropdownButton<String>(
-                value: selectedLO,
-                items: widget.feedbackSummary.mostRecentLOsAndRates.keys
+            DropdownMenu<String>(
+                initialSelection: selectedLO,
+                dropdownMenuEntries: widget
+                    .feedbackSummary.mostRecentLOsAndRates.keys
                     .map((String lO) {
-                  return DropdownMenuItem(
-                    value: lO,
-                    child: Text(lO),
-                  );
+                  return DropdownMenuEntry(value: lO, label: lO);
                 }).toList(),
-                onChanged: (value) {
+                onSelected: (value) {
                   setState(() {
                     selectedLO = value!;
                   });
                 }),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              height: MediaQuery.of(context).size.height / 3,
-              child: LineChart(LineChartData(minY: 0, maxY: 100, lineBarsData: [
-                LineChartBarData(
-                    spots: widget.feedbackSummary.lOsAndRateHistory[selectedLO]!
-                        .asMap()
-                        .entries
-                        .map((entry) => FlSpot(
-                            entry.key.toDouble(), entry.value.toDouble()))
-                        .toList(),
-                    isCurved: false)
-              ])),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 3,
+                child: LineChart(LineChartData(
+                    lineTouchData: LineTouchData(touchCallback: (event, touch) {
+                      if (event is FlTapUpEvent) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: FeedbackView(
+                                  feedback: widget.feedbackSummary
+                                      .getFeedbackFromIndex(
+                                          touch!.lineBarSpots!.first.spotIndex),
+                                ),
+                              );
+                            });
+                      }
+                    }),
+                    titlesData: FlTitlesData(
+                      topTitles: const AxisTitles(
+                        sideTitles:
+                            SideTitles(showTitles: false), // Disable top titles
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(
+                            showTitles: false), // Disable right titles
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          interval: 1,
+                          getTitlesWidget: (value, meta) {
+                            if (value == value.toInt()) {
+                              return Text(
+                                (value + 1)
+                                    .toInt()
+                                    .toString(), // This ensures integer display
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              );
+                            }
+                            return const SizedBox();
+                          },
+                          showTitles: true,
+                        ), // Keep bottom titles
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                            getTitlesWidget: (value, meta) {
+                              if (value == value.toInt()) {
+                                return Text(
+                                  value
+                                      .toInt()
+                                      .toString(), // This ensures integer display
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                );
+                              }
+                              return const SizedBox();
+                            },
+                            showTitles: true,
+                            reservedSize: 40), // Keep left titles
+                      ),
+                    ),
+                    minY: 0,
+                    maxY: 100,
+                    minX: 0,
+                    lineBarsData: [
+                      LineChartBarData(
+                          spots: widget
+                              .feedbackSummary.lOsAndRateHistory[selectedLO]!
+                              .asMap()
+                              .entries
+                              .map((entry) => FlSpot(
+                                  entry.key.toDouble(),
+                                  double.parse((entry.value.toDouble() * 100)
+                                          .round()
+                                          .toString()) /
+                                      100))
+                              .toList(),
+                          isCurved: false)
+                    ])),
+              ),
             ),
             const Text("Skill levels"),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              height: MediaQuery.of(context).size.height / 3,
-              child: LineChart(LineChartData(minY: 0, maxY: 10, lineBarsData: [
-                LineChartBarData(
-                    spots: widget.feedbackSummary.skillLvlHistory
-                        .asMap()
-                        .entries
-                        .map((entry) => FlSpot(
-                            entry.key.toDouble(), entry.value.toDouble()))
-                        .toList(),
-                    isCurved: false)
-              ])),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 3,
+                child: LineChart(LineChartData(
+                    lineTouchData: LineTouchData(touchCallback: (event, touch) {
+                      if (event is FlTapUpEvent) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: FeedbackView(
+                                  feedback: widget.feedbackSummary
+                                      .getFeedbackFromIndex(
+                                          touch!.lineBarSpots!.first.spotIndex),
+                                ),
+                              );
+                            });
+                      }
+                    }),
+                    titlesData: FlTitlesData(
+                      topTitles: const AxisTitles(
+                        sideTitles:
+                            SideTitles(showTitles: false), // Disable top titles
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(
+                            showTitles: false), // Disable right titles
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                            interval: 1,
+                            showTitles: true,
+                            getTitlesWidget: (value, meta) {
+                              if (value == value.toInt()) {
+                                return Text(
+                                  (value + 1)
+                                      .toInt()
+                                      .toString(), // This ensures integer display
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                );
+                              }
+                              return const SizedBox();
+                            }), // Keep bottom titles
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                            getTitlesWidget: (value, meta) {
+                              if (value == value.toInt()) {
+                                return Text(
+                                  value
+                                      .toInt()
+                                      .toString(), // This ensures integer display
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                );
+                              }
+                              return const SizedBox();
+                            },
+                            showTitles: true,
+                            reservedSize: 20), // Keep left titles
+                      ),
+                    ),
+                    minY: 0,
+                    maxY: 10,
+                    minX: 0,
+                    lineBarsData: [
+                      LineChartBarData(
+                          spots: widget.feedbackSummary.skillLvlHistory
+                              .asMap()
+                              .entries
+                              .map((entry) => FlSpot(
+                                  entry.key.toDouble(), entry.value.toDouble()))
+                              .toList(),
+                          isCurved: false)
+                    ])),
+              ),
             )
           ],
         ),

@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
@@ -50,12 +52,14 @@ class LessonDashboardViewModel extends ChangeNotifier {
         conceptAndCount[weakConcept] = conceptAndCount[weakConcept]! + 1;
       }
     }
+    List<Color> colors = generateColorSequence(conceptAndCount.length);
+    int index = 0;
     int totalCount = conceptAndCount.values.reduce((a, b) => a + b);
     List<PieChartSectionData> sections = [];
     conceptAndCount.forEach((concept, count) {
       sections.add(
         PieChartSectionData(
-          color: Colors.blue,
+          color: colors[index++],
           value: count.toDouble(),
           title:
               '$concept (${(count / totalCount * 100).toStringAsFixed(1)}%)', // Display percentage
@@ -82,12 +86,14 @@ class LessonDashboardViewModel extends ChangeNotifier {
       }
       styleAndCount[learningStyle] = styleAndCount[learningStyle]! + 1;
     }
+    List<Color> colors = generateColorSequence(styleAndCount.length);
+    int index = 0;
     int totalCount = styleAndCount.values.reduce((a, b) => a + b);
     List<PieChartSectionData> sections = [];
     styleAndCount.forEach((learningStyle, count) {
       sections.add(
         PieChartSectionData(
-          color: Colors.blue,
+          color: colors[index++],
           value: count.toDouble(),
           title:
               '$learningStyle (${(count / totalCount * 100).toStringAsFixed(1)}%)', // Display percentage
@@ -111,17 +117,29 @@ class LessonDashboardViewModel extends ChangeNotifier {
       skillLvlAndCount[skillLvl] = skillLvlAndCount[skillLvl]! + 1;
     }
     int index = 0;
+    List<Color> colors = generateColorSequence(skillLvlAndCount.length);
     return skillLvlAndCount.entries.map((entry) {
       return BarChartGroupData(
-        x: index++,
+        x: index,
         barRods: [
           BarChartRodData(
             toY: entry.value.toDouble(),
-            color: Colors.blue, // Customize colors as needed
+            color: colors[index++],
             width: 30,
           ),
         ],
       );
     }).toList();
   }
+}
+
+List<Color> generateColorSequence(int numberOfColors) {
+  List<Color> colors = [];
+  for (int index = 0; index < numberOfColors; index++) {
+    double hue = (index * 360 / numberOfColors) %
+        360; // Spread hues evenly around the color wheel
+    Color color = HSVColor.fromAHSV(1.0, hue, 0.8, 0.9).toColor();
+    colors.add(color);
+  }
+  return colors;
 }

@@ -1,7 +1,9 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Models/QuestionModel.dart';
 import 'package:team_adaptive/Module6_Teacher_Assessment_Creation/Services/TeacherQuestionService.dart';
+import 'package:team_adaptive/Module7_Teacher_Dashboard/ViewModels/LessonDashboardViewModel.dart';
 
 class TeacherQuestionViewModel extends ChangeNotifier {
   TeacherQuestionService teacherService = TeacherQuestionService();
@@ -56,5 +58,29 @@ class TeacherQuestionViewModel extends ChangeNotifier {
       return true;
     }
     return false;
+  }
+
+  List<PieChartSectionData>? generateSectionsFromQuestion(
+      QuestionModel question) {
+    int totalCount = question.tally.values.reduce((a, b) => a + b) +
+        question.unansweredCount;
+    if (totalCount == 0) {
+      return null;
+    }
+
+    List<Color> colors = generateColorSequence(question.tally.length);
+    int index = 0;
+
+    return [
+      ...question.tally.entries.map((entry) {
+        return PieChartSectionData(
+            value: entry.value / totalCount, title: entry.key, radius: 60);
+      }),
+      PieChartSectionData(
+          value: question.unansweredCount / totalCount,
+          title: "Unanswered",
+          radius: 60,
+          color: colors[index++])
+    ];
   }
 }

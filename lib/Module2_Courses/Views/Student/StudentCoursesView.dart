@@ -22,6 +22,10 @@ class _StudentCoursesViewState extends State<StudentCoursesView> {
     });
   }
 
+  void refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     StudentCourseViewModel viewModel =
@@ -57,8 +61,7 @@ class _StudentCoursesViewState extends State<StudentCoursesView> {
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                         ).copyWith(
-                          overlayColor:
-                              WidgetStateProperty.resolveWith<Color?>(
+                          overlayColor: WidgetStateProperty.resolveWith<Color?>(
                             (Set<WidgetState> states) {
                               if (states.contains(WidgetState.hovered)) {
                                 return Colors
@@ -132,11 +135,10 @@ class _StudentCoursesViewState extends State<StudentCoursesView> {
                                     extra: courses[index]);
                               },
                               child: Container(
-                                width: MediaQuery.of(context).size.width / 5 -
-                                    20,
+                                width:
+                                    MediaQuery.of(context).size.width / 5 - 20,
                                 height:
-                                    MediaQuery.of(context).size.height / 4 -
-                                        20,
+                                    MediaQuery.of(context).size.height / 4 - 20,
                                 decoration: BoxDecoration(
                                   color: ThemeColor.lightgreyTheme,
                                   borderRadius: BorderRadius.circular(
@@ -214,7 +216,8 @@ class _StudentCoursesViewState extends State<StudentCoursesView> {
                         bool enrolled =
                             await viewModel.enroll(textController.text);
                         if (enrolled) {
-                          GoRouter.of(context).go('/courses');
+                          Navigator.pop(context);
+                          refresh();
                         } else {
                           setState(() {
                             isCodeIncorrect = true;

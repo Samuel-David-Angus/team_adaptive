@@ -60,6 +60,7 @@ class TeacherLessonViewModel extends ChangeNotifier {
       List<String> concepts,
       String type) async {
     LessonMaterialModel lessonMaterial = LessonMaterialModel();
+    lessonMaterial.courseID = courseID;
     lessonMaterial.title = title;
     lessonMaterial.lessonID = lessonID;
     lessonMaterial.author = author;

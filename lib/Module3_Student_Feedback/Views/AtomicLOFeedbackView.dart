@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
+import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 
 var color = const Color.fromARGB(255, 249, 235, 235);
 
@@ -99,21 +100,91 @@ class _AtomicLOFeedbackViewState extends State<AtomicLOFeedbackView> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 3,
-                  child: LineChart(LineChartData(maxY: 100, lineBarsData: [
-                    LineChartBarData(
-                      spots: feedbackSummary
-                          .lOsAndRateHistory[widget.learningOutcome]!
-                          .asMap()
-                          .entries
-                          .map((entry) => FlSpot(
-                              entry.key.toDouble(), entry.value.toDouble()))
-                          .toList(),
-                      isCurved: false,
-                    )
-                  ])),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: LineChart(LineChartData(
+                        lineTouchData:
+                            LineTouchData(touchCallback: (event, touch) {
+                          if (event is FlTapUpEvent) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: FeedbackView(
+                                      feedback: feedbackSummary
+                                          .getFeedbackFromIndex(touch!
+                                              .lineBarSpots!.first.spotIndex),
+                                    ),
+                                  );
+                                });
+                          }
+                        }),
+                        titlesData: FlTitlesData(
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(
+                                showTitles: false), // Disable top titles
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(
+                                showTitles: false), // Disable right titles
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              interval: 1,
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                if (value == value.toInt()) {
+                                  return Text(
+                                    (value + 1)
+                                        .toInt()
+                                        .toString(), // This ensures integer display
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                            ), // Keep bottom titles
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                                getTitlesWidget: (value, meta) {
+                                  if (value == value.toInt()) {
+                                    return Text(
+                                      value
+                                          .toInt()
+                                          .toString(), // This ensures integer display
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox();
+                                },
+                                showTitles: true,
+                                reservedSize: 40), // Keep left titles
+                          ),
+                        ),
+                        maxY: 100,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: feedbackSummary
+                                .lOsAndRateHistory[widget.learningOutcome]!
+                                .asMap()
+                                .entries
+                                .map((entry) => FlSpot(entry.key.toDouble(),
+                                    entry.value.toDouble()))
+                                .toList(),
+                            isCurved: false,
+                          )
+                        ])),
+                  ),
                 )
               ],
             );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
@@ -9,9 +8,11 @@ import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMap
 
 class LearningOutcomeMaterialsView extends StatefulWidget {
   final String learningOutcome;
+  final String recommendedStyle;
   const LearningOutcomeMaterialsView({
     super.key,
     required this.learningOutcome,
+    required this.recommendedStyle,
   });
 
   @override
@@ -21,18 +22,10 @@ class LearningOutcomeMaterialsView extends StatefulWidget {
 
 class _LearningOutcomeMaterialsViewState
     extends State<LearningOutcomeMaterialsView> {
-  String? learnerLearningStyle;
   Future<Map<String, List<LessonMaterialModel>>>? materialsWithLearningStyle;
 
   @override
   Widget build(BuildContext context) {
-    learnerLearningStyle ??=
-        Provider.of<AuthServices>(context).userInfo?.learningStyle;
-    if (learnerLearningStyle == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
     materialsWithLearningStyle ??=
         Provider.of<StudentLessonViewModel>(context, listen: false)
             .getLOMaterials(widget.learningOutcome);
@@ -135,13 +128,15 @@ class _LearningOutcomeMaterialsViewState
                       return Column(
                         children: [
                           Text(entry.key +
-                              (entry.key == learnerLearningStyle
+                              (entry.key == widget.recommendedStyle
                                   ? " (Recommended)"
                                   : "")),
                           ...entry.value.map((LessonMaterialModel material) {
                             return Card(
                               child: InkWell(
                                 onTap: () {
+                                  print(
+                                      "${material.courseID} ${material.lessonID} ${material.id}");
                                   context.go(
                                       '/courses/${material.courseID!}/lessons/${material.lessonID!}/sub/${material.id!}',
                                       extra: material);

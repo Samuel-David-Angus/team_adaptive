@@ -51,30 +51,26 @@ class AssessmentView extends StatelessWidget {
                       if (confirmSubmit == true) {
                         bool success = await viewModel.submitAssessment();
                         if (success) {
-                          String? feedbackID = await showDialog(
+                          showDialog(
                               context: context,
                               barrierDismissible: false,
                               builder: (context) {
-                                feedBackViewModel
-                                    .createFeedback(viewModel.assessmentModel)
-                                    .then((feedbackID) {
-                                  Navigator.pop(context);
-                                  if (feedbackID != null) {
-                                    GoRouter.of(context).go(
-                                        '/feedbacks/$feedbackID',
-                                        extra:
-                                            feedBackViewModel.feedbackSummary);
-                                  } else {
-                                    showConfirmationDialog(
-                                        context, "Error generating feedback");
-                                  }
-                                });
                                 return Container(
                                     decoration: const BoxDecoration(
                                         color: Color.fromRGBO(0, 0, 0, 0.5)),
                                     child: const Center(
                                         child: CircularProgressIndicator()));
                               });
+                          String? feedbackID = await feedBackViewModel
+                              .createFeedback(viewModel.assessmentModel);
+                          if (feedbackID != null) {
+                            Navigator.pop(context);
+                            GoRouter.of(context).go('/feedbacks/$feedbackID',
+                                extra: feedBackViewModel.feedbackSummary);
+                          } else {
+                            showConfirmationDialog(
+                                context, "Error generating feedback");
+                          }
                         } else {
                           showConfirmationDialog(
                               context, "Error submitting assessment");
