@@ -36,6 +36,10 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            AssessmentLink(
+                weak: widget.feedbackSummary.mostRecentWeakConcepts,
+                courseID: widget.feedbackSummary.courseID,
+                lessonID: widget.feedbackSummary.lessonID),
             const Text("Latest Feedback"),
             const SizedBox(height: 15),
             Text('Score: ${widget.feedbackSummary.mostRecentScore}',
@@ -407,6 +411,53 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AssessmentLink extends StatefulWidget {
+  final List<String> weak;
+  final String courseID;
+  final String lessonID;
+  const AssessmentLink(
+      {super.key,
+      required this.weak,
+      required this.courseID,
+      required this.lessonID});
+
+  @override
+  State<AssessmentLink> createState() => _AssessmentLinkState();
+}
+
+class _AssessmentLinkState extends State<AssessmentLink> {
+  bool isChecked = false;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              if (isChecked) {
+                String serializedItems =
+                    Uri.encodeFull(widget.weak.join('|~|'));
+                GoRouter.of(context).go(
+                    '/courses/${widget.courseID}/lessons/${widget.lessonID}/assessment?weak=$serializedItems');
+              } else {
+                GoRouter.of(context).go(
+                    '/courses/${widget.courseID}/lessons/${widget.lessonID}/assessment');
+              }
+            },
+            child: const Text('Take assessment again')),
+        Checkbox(
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value ?? false; // Update the checkbox state
+            });
+          },
+        ),
+        const Text('exclude mastered learning outcomes?')
+      ],
     );
   }
 }

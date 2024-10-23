@@ -96,7 +96,8 @@ class FeedbackModel {
     lessonConceptFailureRates.forEach((String concept, double failurerate) {
       if (failurerate >
           assessment.conceptMapModel
-              .getMaxFailureRateOfLearningOutcome(concept)) {
+                  .getMaxFailureRateOfLearningOutcome(concept) *
+              100) {
         weakConcepts.add(concept);
       }
     });

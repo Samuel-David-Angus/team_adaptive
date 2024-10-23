@@ -10,7 +10,10 @@ class AssessmentView extends StatelessWidget {
   bool justInitialized = false;
   int assessmentLength = 10;
   late Future<bool> successfulGeneratedAssessment;
-  AssessmentView({super.key, required this.lessonModel});
+  AssessmentView({
+    super.key,
+    required this.lessonModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +23,14 @@ class AssessmentView extends StatelessWidget {
         Provider.of<FeedbackViewModel>(context, listen: false);
     if (!justInitialized) {
       justInitialized = true;
+      String? weak = GoRouterState.of(context).uri.queryParameters['weak'];
+      List<String>? weakLOs;
+      if (weak != null) {
+        weakLOs = weak.split('|~|').map((e) => Uri.decodeFull(e)).toList();
+      }
+
       successfulGeneratedAssessment =
-          viewModel.createNewAssessment(lessonModel, assessmentLength);
+          viewModel.createNewAssessment(lessonModel, assessmentLength, weakLOs);
     }
     return FutureBuilder<bool>(
       future: successfulGeneratedAssessment,

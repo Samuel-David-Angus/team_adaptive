@@ -16,20 +16,29 @@ class AssessmentViewModel extends ChangeNotifier {
   late List<int> learnerAnswers;
   late LessonModel lesson;
 
-
-  Future<bool> createNewAssessment(LessonModel lesson, int length) async {
-    List<QuestionModel>? questions = await questionService.getLessonQuestions(lesson.id!);
-    ConceptMapModel? conceptMapModel = await ConceptMapService().getConceptMap(lesson.courseID!);
+  Future<bool> createNewAssessment(
+      LessonModel lesson, int length, List<String>? weakLOs) async {
+    List<QuestionModel>? questions =
+        await questionService.getLessonQuestions(lesson.id!);
+    if (weakLOs != null && questions != null) {
+      questions = questions
+          .where((question) => weakLOs.contains(question.questionConcept))
+          .toList();
+    }
+    ConceptMapModel? conceptMapModel =
+        await ConceptMapService().getConceptMap(lesson.courseID!);
     if (questions != null && conceptMapModel != null) {
       questions.shuffle();
       questions = questions.sublist(0, min(length, questions.length));
       this.lesson = lesson;
-      assessmentModel = AssessmentModel.createNew(lessonID: lesson, questions: questions, conceptMapModel: conceptMapModel);
+      assessmentModel = AssessmentModel.createNew(
+          lessonID: lesson,
+          questions: questions,
+          conceptMapModel: conceptMapModel);
       questionAndChoices = assessmentModel.processedQuestions;
       learnerAnswers = List.filled(questionAndChoices.length, -1);
       return true;
     }
-
 
     return false;
   }
@@ -45,9 +54,10 @@ class AssessmentViewModel extends ChangeNotifier {
 
   Future<bool> submitAssessment() async {
     assessmentModel.processAssessment(learnerAnswers);
-    List<QuestionModel> adjustedCopies = assessmentModel.getCopyOfQuestionsWithAdjustedDifficulties();
-    bool res = await questionService.updateQuestionsFromAssessment(adjustedCopies, lesson.id!);
+    List<QuestionModel> adjustedCopies =
+        assessmentModel.getCopyOfQuestionsWithAdjustedDifficulties();
+    bool res = await questionService.updateQuestionsFromAssessment(
+        adjustedCopies, lesson.id!);
     return res;
   }
-
 }
