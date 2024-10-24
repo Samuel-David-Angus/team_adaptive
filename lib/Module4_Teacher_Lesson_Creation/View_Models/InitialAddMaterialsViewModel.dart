@@ -56,6 +56,7 @@ class InitialAddMaterialsViewModel extends ChangeNotifier {
     lessonMaterial.lessonID = lessonID;
     lessonMaterial.author = authservice.userInfo!.id!;
     lessonMaterial.fileBytes = viewModel.fileBytes;
+    lessonMaterial.fileName = viewModel.fileName;
     lessonMaterial.learningStyle = viewModel.learningStyle;
     lessonMaterial.concepts = viewModel.concepts;
     lessonMaterial.type = viewModel.type;

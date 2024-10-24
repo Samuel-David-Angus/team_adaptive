@@ -258,7 +258,8 @@ final GoRouter _router = GoRouter(
               builder: (context, state) =>
                   FeedbackListView(userID: state.extra as String?)),
           GoRoute(
-              path: '/courses/:courseID/lessons/:lessonID/:type/:materialID',
+              path:
+                  '/courses/:courseID/lessons/:lessonID/:type/:materialID/teacher',
               builder: (context, state) =>
                   routeBuilder<LessonMaterialModel?, LessonMaterialView>(
                       dataHandler.getLessonMaterial(state))),

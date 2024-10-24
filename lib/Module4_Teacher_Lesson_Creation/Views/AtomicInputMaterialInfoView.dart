@@ -61,7 +61,10 @@ class _AtomicInputMaterialInfoViewState
                 ),
                 onPressed: () {
                   setState(() {
-                    isUploadingFile = !isUploadingFile; // Toggle the state
+                    isUploadingFile = !isUploadingFile;
+                    viewModel.linkController.clear();
+                    viewModel.fileBytes = null;
+                    viewModel.fileName = null; // Toggle the state
                   });
                 },
               ),
