@@ -68,7 +68,7 @@ class ConceptMapView extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Container(
-                                    width: 20,
+                                    width: 30,
                                     height: 20,
                                     decoration: BoxDecoration(
                                       color: entry.value,
@@ -84,17 +84,17 @@ class ConceptMapView extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              width: 20,
+                              width: 30,
                               height: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.rectangle,
                                 border:
                                     Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                             const SizedBox(width: 8),
-                            const Text("from another\nlesson/course"),
+                            const Text("from another course"),
                           ],
                         ),
                       ],
