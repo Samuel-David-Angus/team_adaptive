@@ -293,6 +293,7 @@ Future main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
+            storageBucket: "gs://adaptiveedu-ccde2.appspot.com",
             apiKey: "AIzaSyDBv6AtnL2k6ma3laZVNfkIMRUtb72TlHQ",
             appId: "1:219837929614:web:3857f058d59dd54bf411df",
             messagingSenderId: "219837929614",

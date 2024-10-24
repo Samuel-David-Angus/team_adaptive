@@ -24,7 +24,7 @@ class InitialAddMaterialsViewModel extends ChangeNotifier {
 
   Future<bool> addMultipleMaterials(LessonModel lesson) {
     List<LessonMaterialModel> materials = initialMaterials.map((item) {
-      return createLessonMaterial(item, lesson.id!);
+      return createLessonMaterial(item, lesson.id!, lesson.courseID!);
     }).toList();
     return service.addMultipleLessonMaterials(
         lesson.courseID!, lesson.id!, materials);
@@ -43,13 +43,19 @@ class InitialAddMaterialsViewModel extends ChangeNotifier {
   }
 
   LessonMaterialModel createLessonMaterial(
-      AtomicInputMaterialViewModel viewModel, String lessonID) {
+      AtomicInputMaterialViewModel viewModel,
+      String lessonID,
+      String courseID) {
     var lessonMaterial = LessonMaterialModel();
 
+    lessonMaterial.courseID = courseID;
+    lessonMaterial.src = viewModel.linkController.text.isNotEmpty
+        ? viewModel.linkController.text
+        : null;
     lessonMaterial.title = viewModel.titleController.text;
     lessonMaterial.lessonID = lessonID;
     lessonMaterial.author = authservice.userInfo!.id!;
-    lessonMaterial.src = viewModel.linkController.text;
+    lessonMaterial.fileBytes = viewModel.fileBytes;
     lessonMaterial.learningStyle = viewModel.learningStyle;
     lessonMaterial.concepts = viewModel.concepts;
     lessonMaterial.type = viewModel.type;
