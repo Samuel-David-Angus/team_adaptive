@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 class LessonMaterialModel {
   String? _id;
   String? _title;
@@ -8,6 +11,9 @@ class LessonMaterialModel {
   String? _src;
   String? _learningStyle;
   List<String>? _concepts;
+
+  Uint8List? _fileBytes;
+  String? _fileName;
 
   // Constructor
   LessonMaterialModel.setAll({
@@ -42,6 +48,8 @@ class LessonMaterialModel {
   String? get src => _src;
   String? get learningStyle => _learningStyle;
   List<String>? get concepts => _concepts;
+  Uint8List? get fileBytes => _fileBytes;
+  String? get fileName => _fileName;
 
   // Setters
   set id(String? id) {
@@ -78,6 +86,14 @@ class LessonMaterialModel {
 
   set concepts(List<String>? value) {
     _concepts = value;
+  }
+
+  set fileBytes(Uint8List? file) {
+    _fileBytes = file;
+  }
+
+  set fileName(String? name) {
+    _fileName = name;
   }
 
   // fromJson factory method

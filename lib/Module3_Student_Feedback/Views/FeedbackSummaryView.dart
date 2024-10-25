@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Models/FeedbackSummaryModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/Views/FeedbackView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
@@ -36,10 +37,11 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AssessmentLink(
-                weak: widget.feedbackSummary.mostRecentWeakConcepts,
-                courseID: widget.feedbackSummary.courseID,
-                lessonID: widget.feedbackSummary.lessonID),
+            if (AuthServices().userInfo!.type == "student")
+              AssessmentLink(
+                  weak: widget.feedbackSummary.mostRecentWeakConcepts,
+                  courseID: widget.feedbackSummary.courseID,
+                  lessonID: widget.feedbackSummary.lessonID),
             const Text("Latest Feedback"),
             const SizedBox(height: 15),
             Text('Score: ${widget.feedbackSummary.mostRecentScore}',

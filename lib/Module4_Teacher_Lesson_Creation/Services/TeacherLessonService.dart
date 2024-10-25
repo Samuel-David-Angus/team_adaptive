@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonMaterialModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
@@ -131,13 +132,39 @@ class TeacherLessonService {
   Future<bool> addMultipleLessonMaterials(String courseID, String lessonID,
       List<LessonMaterialModel> materials) async {
     try {
+      List<DocumentReference> docRefs = [];
+      List<Future<String>> materialURLs = [];
       DocumentReference parentRef = FirebaseFirestore.instance
           .collection("Course")
           .doc(courseID)
           .collection("Lesson")
           .doc(lessonID);
+      for (LessonMaterialModel material in materials) {
+        docRefs.add(parentRef.collection(material.type!).doc());
+      }
+      for (int i = 0; i < materials.length; i++) {
+        if (materials[i].src == null) {
+          String filename =
+              "${materials[i].courseID!}/${materials[i].lessonID!}/${docRefs[i].id}";
+          Reference storageRef =
+              FirebaseStorage.instance.ref().child('materials/$filename');
+          Future<String> uploadTask = storageRef
+              .putData(
+                  materials[i].fileBytes!,
+                  SettableMetadata(
+                      contentType: getMimeType(
+                          materials[i].fileName!))) // Upload the file
+              .then((TaskSnapshot snapshot) => snapshot.ref.getDownloadURL());
+          materialURLs.add(uploadTask);
+        } else {
+          materialURLs.add(Future.value(materials[i].src!));
+        }
+      }
+      List<String> finalURLS = await Future.wait<String>(materialURLs);
       WriteBatch batch = FirebaseFirestore.instance.batch();
-      for (var material in materials) {
+      for (int j = 0; j < materials.length; j++) {
+        var material = materials[j];
+        material.src = finalURLS[j];
         DocumentReference ref = parentRef.collection(material.type!).doc();
         batch.set(ref, material.toJson());
       }
@@ -187,5 +214,29 @@ class TeacherLessonService {
       debugPrint("Error adding lesson material: $e");
     }
     return false;
+  }
+
+  String getMimeType(String path) {
+    // Map of file extensions to MIME types
+    final Map<String, String> mimeTypes = {
+      'pdf': 'application/pdf',
+      'mp4': 'video/mp4',
+      'm4v': 'video/x-m4v',
+      'avi': 'video/x-msvideo',
+      'mov': 'video/quicktime',
+      'wmv': 'video/x-ms-wmv',
+      'mp3': 'audio/mpeg',
+      'wav': 'audio/wav',
+      'aac': 'audio/aac',
+      'ogg': 'audio/ogg',
+      'flac': 'audio/flac',
+      // Add more audio and video types as needed
+    };
+
+    // Extract the file extension
+    final String extension = path.split('.').last.toLowerCase();
+
+    // Return the corresponding MIME type, or a default type
+    return mimeTypes[extension]!; // Default MIME type
   }
 }
