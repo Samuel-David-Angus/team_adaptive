@@ -60,8 +60,72 @@ class LessonDashboardView extends StatelessWidget {
                         Text(
                             "Number of students included in the analysis: ${viewModel.numberOfStudents}"),
 
+                        //RETAKES BEFORE PASSING
+                        const Text(
+                            "\nNumber of Retakes Before Passing (Per Student)"),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: viewModel
+                                  .getRetakeCountBarChartData()
+                                  .isNotEmpty
+                              ? BarChart(BarChartData(
+                                  titlesData: FlTitlesData(
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles:
+                                            true, // Show labels on the left axis
+                                        getTitlesWidget: (value, meta) {
+                                          if (value == value.toInt()) {
+                                            return Text(
+                                              (value)
+                                                  .toInt()
+                                                  .toString(), // This ensures integer display
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                              ),
+                                            );
+                                          }
+                                          return const SizedBox();
+                                        },
+                                      ),
+                                    ),
+                                    rightTitles: const AxisTitles(
+                                      sideTitles: SideTitles(
+                                          showTitles:
+                                              false), // Hide right axis labels
+                                    ),
+                                    topTitles: const AxisTitles(
+                                      sideTitles: SideTitles(
+                                          showTitles:
+                                              false), // Hide top axis labels
+                                    ),
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles:
+                                            true, // Show labels on the bottom axis
+                                        getTitlesWidget: (value, meta) {
+                                          return Text(value
+                                              .toString()); // Customize label if needed
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  maxY: viewModel.numberOfStudents.toDouble(),
+                                  barGroups:
+                                      viewModel.getRetakeCountBarChartData(),
+                                ))
+                              : const Center(
+                                  child:
+                                      Text('No retake count data available')),
+                        ),
+                        //AVERAGE RETAKES BEFORE PASSING
+                        Text(
+                            "\nAverage number of retakes before passing: ${lessonDashboardViewModel.getAverageRetakeCount()}"),
+
                         // Learning Styles Pie Chart
-                        const Text("Learning Styles"),
+                        const Text("\nLearning Styles"),
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 2,
                           height: MediaQuery.of(context).size.height / 3,
@@ -79,7 +143,7 @@ class LessonDashboardView extends StatelessWidget {
                         ),
 
                         // Skill Levels Bar Chart
-                        const Text("Skill levels"),
+                        const Text("\nSkill Level Per Student"),
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 2,
                           height: MediaQuery.of(context).size.height / 3,
@@ -136,13 +200,11 @@ class LessonDashboardView extends StatelessWidget {
                         ),
 
                         // Weak Concepts Pie Chart
-                        const Text("Weak Concepts"),
+                        const Text("\nWeak Concepts"),
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 2,
                           height: MediaQuery.of(context).size.height / 3,
-                          child: viewModel
-                                  .getWeakConceptsPieSections()
-                                  .isNotEmpty
+                          child: viewModel.getWeakConceptsPieSections() != null
                               ? PieChart(PieChartData(
                                   sectionsSpace: 0,
                                   sections:
