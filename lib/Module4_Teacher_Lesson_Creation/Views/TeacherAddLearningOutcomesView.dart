@@ -154,18 +154,9 @@ const Map<String, List<String>> bloomsTaxonomy = {
     'Paraphrase',
     'Classify',
     'Compare',
-    'Interpret',
-    'Discuss'
+    'Interpret'
   ],
-  'Apply': [
-    'Use',
-    'Implement',
-    'Carry out',
-    'Execute',
-    'Solve',
-    'Demonstrate',
-    'Apply'
-  ],
+  'Apply': ['Use', 'Implement', 'Carry out', 'Execute', 'Solve', 'Apply'],
   'Analyze': [
     'Differentiate',
     'Organize',
@@ -183,14 +174,5 @@ const Map<String, List<String>> bloomsTaxonomy = {
     'Support',
     'Conclude',
     'Justify'
-  ],
-  'Create': [
-    'Design',
-    'Construct',
-    'Develop',
-    'Formulate',
-    'Build',
-    'Invent',
-    'Compose'
   ],
 };

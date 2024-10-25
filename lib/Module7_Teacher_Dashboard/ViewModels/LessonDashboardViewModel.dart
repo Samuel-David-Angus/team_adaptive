@@ -39,7 +39,7 @@ class LessonDashboardViewModel extends ChangeNotifier {
         .toList();
   }
 
-  List<PieChartSectionData> getWeakConceptsPieSections() {
+  List<PieChartSectionData>? getWeakConceptsPieSections() {
     Map<String, int> conceptAndCount = {};
     for (FeedbackSummaryModel feedbackSummaryModel
         in filteredListByAttemptNumber) {
@@ -51,6 +51,9 @@ class LessonDashboardViewModel extends ChangeNotifier {
         }
         conceptAndCount[weakConcept] = conceptAndCount[weakConcept]! + 1;
       }
+    }
+    if (conceptAndCount.isEmpty) {
+      return null;
     }
     List<Color> colors = generateColorSequence(conceptAndCount.length);
     int index = 0;
@@ -119,6 +122,52 @@ class LessonDashboardViewModel extends ChangeNotifier {
     int index = 0;
     List<Color> colors = generateColorSequence(skillLvlAndCount.length);
     return skillLvlAndCount.entries.map((entry) {
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: entry.value.toDouble(),
+            color: colors[index++],
+            width: 30,
+          ),
+        ],
+      );
+    }).toList();
+  }
+
+  int getIndividualRetakeCount(FeedbackSummaryModel feedbackSummaryModel) {
+    int individualRetakeCount = 0;
+    List<int> scores = feedbackSummaryModel.scoreHistory;
+    for (int score in scores) {
+      individualRetakeCount++;
+      if (score >= feedbackSummaryModel.assessmentTotal * 0.6) {
+        break;
+      }
+    }
+    return individualRetakeCount;
+  }
+
+  double getAverageRetakeCount() {
+    double totalCount = 0;
+    for (FeedbackSummaryModel feedbackSummaryModel
+        in filteredListByAttemptNumber) {
+      totalCount += getIndividualRetakeCount(feedbackSummaryModel);
+    }
+    return totalCount / numberOfStudents;
+  }
+
+  List<BarChartGroupData> getRetakeCountBarChartData() {
+    Map<int, int> retakeCounts = {for (int i = 0; i < 10; i++) i: 0};
+    for (FeedbackSummaryModel feedbackSummaryModel
+        in filteredListByAttemptNumber) {
+      int individualRetakeCount =
+          getIndividualRetakeCount(feedbackSummaryModel);
+      retakeCounts[individualRetakeCount] =
+          retakeCounts[individualRetakeCount]! + 1;
+    }
+    int index = 0;
+    List<Color> colors = generateColorSequence(retakeCounts.length);
+    return retakeCounts.entries.map((entry) {
       return BarChartGroupData(
         x: index,
         barRods: [
