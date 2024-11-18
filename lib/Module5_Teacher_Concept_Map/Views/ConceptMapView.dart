@@ -47,107 +47,113 @@ class ConceptMapView extends StatelessWidget {
               appBar: AppBar(
                 title: const Text('Concept Map'),
               ),
-              body: Row(
-                children: [
-                  // Legend Box
-                  Container(
-                    width: 300,
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              body: graph.hasNodes()
+                  ? Row(
                       children: [
-                        const Text(
-                          'Legend',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        ...lessonColors.entries.map((entry) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
-                              child: Row(
+                        // Legend Box
+                        Container(
+                          width: 300,
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Legend',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              ...lessonColors.entries.map((entry) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4.0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: entry.value,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(entry.key),
+                                      ],
+                                    ),
+                                  )),
+                              const SizedBox(height: 10),
+                              // External Concept Indicator
+                              Row(
                                 children: [
                                   Container(
                                     width: 30,
                                     height: 20,
                                     decoration: BoxDecoration(
-                                      color: entry.value,
+                                      shape: BoxShape.rectangle,
+                                      border: Border.all(
+                                          color: Colors.black, width: 2),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(entry.key),
+                                  const Text("from another course"),
                                 ],
                               ),
-                            )),
-                        const SizedBox(height: 10),
-                        // External Concept Indicator
-                        Row(
-                          children: [
-                            Container(
-                              width: 30,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(8),
+                            ],
+                          ),
+                        ),
+                        // Graph Viewer
+                        Expanded(
+                          child: InteractiveViewer(
+                            constrained: false,
+                            boundaryMargin: const EdgeInsets.all(50),
+                            minScale: 0.01,
+                            maxScale: 5.0,
+                            child: Transform(
+                              transform: Matrix4.translationValues(
+                                  50, 0, 0), // Move x pixels to the right
+                              child: GraphView(
+                                graph: graph,
+                                algorithm: SugiyamaAlgorithm(builder),
+                                builder: (Node node) {
+                                  String nodeText = node.key?.value ?? 'Node';
+                                  Color nodeColor =
+                                      getNodeColor(nodeText, conceptMapModel);
+
+                                  // Remove '@' from the displayed text if it's an external concept
+                                  String displayedText =
+                                      nodeText.startsWith('@')
+                                          ? nodeText.substring(1)
+                                          : nodeText;
+
+                                  return Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: nodeColor,
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: nodeText.startsWith('@')
+                                          ? BorderRadius.circular(10)
+                                          : null,
+                                    ),
+                                    child: Center(
+                                      child: FittedBox(
+                                        child: Text(
+                                          displayedText,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                            const SizedBox(width: 8),
-                            const Text("from another course"),
-                          ],
+                          ),
                         ),
                       ],
+                    )
+                  : const Center(
+                      child: Text("Empty"),
                     ),
-                  ),
-                  // Graph Viewer
-                  Expanded(
-                    child: InteractiveViewer(
-                      constrained: false,
-                      boundaryMargin: const EdgeInsets.all(50),
-                      minScale: 0.01,
-                      maxScale: 5.0,
-                      child: Transform(
-                        transform: Matrix4.translationValues(
-                            50, 0, 0), // Move x pixels to the right
-                        child: GraphView(
-                          graph: graph,
-                          algorithm: SugiyamaAlgorithm(builder),
-                          builder: (Node node) {
-                            String nodeText = node.key?.value ?? 'Node';
-                            Color nodeColor =
-                                getNodeColor(nodeText, conceptMapModel);
-
-                            // Remove '@' from the displayed text if it's an external concept
-                            String displayedText = nodeText.startsWith('@')
-                                ? nodeText.substring(1)
-                                : nodeText;
-
-                            return Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: nodeColor,
-                                shape: BoxShape.rectangle,
-                                borderRadius: nodeText.startsWith('@')
-                                    ? BorderRadius.circular(10)
-                                    : null,
-                              ),
-                              child: Center(
-                                child: FittedBox(
-                                  child: Text(
-                                    displayedText,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             );
           }
           return Container();
