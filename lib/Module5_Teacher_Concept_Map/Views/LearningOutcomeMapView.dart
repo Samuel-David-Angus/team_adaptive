@@ -111,7 +111,7 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
                                 selectedNode = null;
                               });
                             },
-                            child: const Text("Delete Learning Outcoe")),
+                            child: const Text("Delete Learning Outcome")),
                         Row(
                           children: [
                             const Text("Prerequisites: "),
