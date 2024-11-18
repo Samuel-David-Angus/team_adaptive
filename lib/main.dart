@@ -89,7 +89,9 @@ Widget pageHandler<pageType>(AsyncSnapshot snapshot) {
           lessonModel: res.lesson, question: res.question);
     },
     InitialAddMaterialsView: (snapshot) =>
-        InitialAddMaterialsView(lesson: snapshot.data! as LessonModel)
+        InitialAddMaterialsView(lesson: snapshot.data! as LessonModel),
+    TeacherAddLessonView: (snapshot) =>
+        TeacherAddLessonView(course: snapshot.data! as Course)
   };
 
   // Look up the page type in the map
@@ -272,9 +274,10 @@ final GoRouter _router = GoRouter(
                         Uri.decodeFull(state.pathParameters['LO']!)));
               }),
           GoRoute(
-              path: '/test',
+              path: '/courses/:courseID/add-lesson',
               builder: (context, state) =>
-                  TeacherAddLessonView(course: state.extra as Course)),
+                  routeBuilder<Course?, TeacherAddLessonView>(
+                      dataHandler.getCourse(state))),
           GoRoute(
             path: '/personal-credential-search',
             builder: (context, state) =>

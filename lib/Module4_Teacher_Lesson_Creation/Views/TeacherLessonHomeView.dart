@@ -43,7 +43,9 @@ class TeacherLessonHomeView extends StatelessWidget {
                     onPressed: () {
                       if (!lessons
                           .any((lesson) => lesson.isSetupComplete == false)) {
-                        GoRouter.of(context).go("/test", extra: course);
+                        GoRouter.of(context).go(
+                            "/courses/${course.id}/add-lesson",
+                            extra: course);
                       } else {
                         showDialog(
                           context: context,
