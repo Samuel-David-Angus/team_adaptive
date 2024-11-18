@@ -123,40 +123,43 @@ class _LearningOutcomeMaterialsViewState
                             });
                       },
                       child: const Text('Prerequisites')),
-                  ...map.entries.map<Widget>(
-                    (MapEntry<String, List<LessonMaterialModel>> entry) {
-                      return Column(
-                        children: [
-                          Text(entry.key +
-                              (entry.key == widget.recommendedStyle
-                                  ? " (Recommended)"
-                                  : "")),
-                          ...entry.value.map((LessonMaterialModel material) {
-                            return Card(
-                              child: InkWell(
-                                onTap: () {
-                                  print(
-                                      "${material.courseID} ${material.lessonID} ${material.id}");
-                                  context.go(
-                                      '/courses/${material.courseID!}/lessons/${material.lessonID!}/sub/${material.id!}',
-                                      extra: material);
-                                  Navigator.pop(context);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text(
-                                    material.title!,
-                                    style: const TextStyle(fontSize: 16),
+                  if (map.entries.isNotEmpty)
+                    ...map.entries.map<Widget>(
+                      (MapEntry<String, List<LessonMaterialModel>> entry) {
+                        return Column(
+                          children: [
+                            Text(entry.key +
+                                (entry.key == widget.recommendedStyle
+                                    ? " (Recommended)"
+                                    : "")),
+                            ...entry.value.map((LessonMaterialModel material) {
+                              return Card(
+                                child: InkWell(
+                                  onTap: () {
+                                    print(
+                                        "${material.courseID} ${material.lessonID} ${material.id}");
+                                    context.go(
+                                        '/courses/${material.courseID!}/lessons/${material.lessonID!}/sub/${material.id!}',
+                                        extra: material);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      material.title!,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
-                          const Divider(),
-                        ],
-                      );
-                    },
-                  ).toList()
+                              );
+                            }),
+                            const Divider(),
+                          ],
+                        );
+                      },
+                    )
+                  else
+                    const Text("No prerequisites")
                 ],
               ),
             );

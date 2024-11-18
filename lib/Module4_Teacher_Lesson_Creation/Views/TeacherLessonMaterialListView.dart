@@ -68,7 +68,7 @@ class TeacherLessonMaterialListView extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 GoRouter.of(context).go(
-                                    '/courses/${lesson.courseID!}/lessons/${lesson.id!}/${materials[index].type!}/${materials[index].id!}/teacher',
+                                    '/courses/${lesson.courseID!}/lessons/${lesson.id!}/${materials[index].type!}/${materials[index].id!}',
                                     extra: materials[index]);
                               },
                               child: const Text('View'),
