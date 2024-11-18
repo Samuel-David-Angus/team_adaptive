@@ -104,7 +104,8 @@ class FeedbackView extends StatelessWidget {
                   child: Text(concept),
                   onPressed: () {
                     String lO = Uri.encodeFull(concept);
-                    context.go('/materials/learning-outcome/$lO',
+                    context.go(
+                        '/materials/learning-outcome/$lO/${feedback.diagnosedLearningStyle}',
                         extra: concept);
                   },
                 ),

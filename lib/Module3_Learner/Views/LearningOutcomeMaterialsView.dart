@@ -104,7 +104,7 @@ class _LearningOutcomeMaterialsViewState
                                                         Navigator.of(context)
                                                             .pop();
                                                         GoRouter.of(context).go(
-                                                            '/materials/learning-outcome/$prereqPath',
+                                                            '/materials/learning-outcome/$prereqPath/${widget.recommendedStyle}',
                                                             extra: prereq);
                                                       },
                                                       child: Text(prereq),
