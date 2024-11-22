@@ -41,6 +41,8 @@ class LessonDashboardView extends StatelessWidget {
                   return SingleChildScrollView(
                     child: Column(
                       children: [
+                        const Text(
+                            "Retake ceiling (filter feedbacks up to a certain number of retakes)"),
                         DropdownMenu<int>(
                           initialSelection: 1,
                           dropdownMenuEntries: viewModel.maxAttempt > 0
