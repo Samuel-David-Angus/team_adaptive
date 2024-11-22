@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +7,6 @@ import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMap
 
 class ConceptMapView extends StatelessWidget {
   final Course? course;
-  final TextEditingController conceptController = TextEditingController();
 
   final Graph graph = Graph();
   final SugiyamaConfiguration builder = SugiyamaConfiguration()
@@ -76,7 +73,8 @@ class ConceptMapView extends StatelessWidget {
                                           ),
                                         ),
                                         const SizedBox(width: 8),
-                                        Text(entry.key),
+                                        Text(viewModel
+                                            .lessonNameMap![entry.key]!),
                                       ],
                                     ),
                                   )),

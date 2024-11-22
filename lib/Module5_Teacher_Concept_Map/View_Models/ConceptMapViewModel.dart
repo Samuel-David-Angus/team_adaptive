@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Services/TeacherLessonService.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Services/ConceptMapService.dart';
 
@@ -7,6 +9,7 @@ import '../Models/ConceptMapModel.dart';
 class ConceptMapViewModel extends ChangeNotifier {
   ConceptMapService service = ConceptMapService();
   ConceptMapModel? map;
+  Map<String, String>? lessonNameMap;
 
   void createConceptMap() {
     map = ConceptMapModel.setAll(
@@ -43,7 +46,15 @@ class ConceptMapViewModel extends ChangeNotifier {
   }
 
   Future<void> getConceptMap(String courseID) async {
-    map = await service.getConceptMap(courseID);
+    final results = await Future.wait([
+      service.getConceptMap(courseID),
+      getCourseLessonNameMap(courseID),
+    ]);
+
+    map = results[0] as ConceptMapModel?; // Adjust the type if needed
+    lessonNameMap =
+        results[1] as Map<String, String>; // Adjust the type if needed
+
     notifyListeners();
   }
 
@@ -91,5 +102,15 @@ class ConceptMapViewModel extends ChangeNotifier {
       throw Exception("Cant get lO");
     }
     return learningOutcomeModel;
+  }
+
+  Future<Map<String, String>> getCourseLessonNameMap(String courseID) async {
+    List<LessonModel> courseLessons =
+        await TeacherLessonService().getLessonsByCourse(courseID);
+    Map<String, String> nameMap = {};
+    for (var lesson in courseLessons) {
+      nameMap[lesson.id!] = lesson.lessonTitle!;
+    }
+    return nameMap;
   }
 }
