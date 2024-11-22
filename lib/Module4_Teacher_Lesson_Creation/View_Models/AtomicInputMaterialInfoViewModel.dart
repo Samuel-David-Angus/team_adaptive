@@ -36,7 +36,7 @@ class AtomicInputMaterialViewModel {
     return false;
   }
 
-  Future<bool> setFile(String learningStyle) async {
+  Future<bool?> setFile(String learningStyle) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       PlatformFile file = result.files.first;
@@ -47,7 +47,7 @@ class AtomicInputMaterialViewModel {
       fileName = file.name;
       return true;
     }
-    return false;
+    return null;
   }
 
   String getText() {

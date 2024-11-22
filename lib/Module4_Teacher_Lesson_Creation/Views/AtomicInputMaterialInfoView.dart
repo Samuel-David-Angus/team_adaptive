@@ -76,18 +76,20 @@ class _AtomicInputMaterialInfoViewState
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          bool check =
+                          bool? check =
                               await viewModel.setFile(widget.learningStyle);
-                          if (check) {
-                            setState(() {});
-                          } else {
-                            showDialog(
-                                context: context,
-                                builder: (context) => const AlertDialog(
-                                      title: Text('Warning'),
-                                      content: Text(
-                                          'Invalid file extension for learning style'),
-                                    ));
+                          if (check != null) {
+                            if (check) {
+                              setState(() {});
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => const AlertDialog(
+                                        title: Text('Warning'),
+                                        content: Text(
+                                            'Invalid file extension for learning style'),
+                                      ));
+                            }
                           }
                         },
                         child: const Text('Choose file')),

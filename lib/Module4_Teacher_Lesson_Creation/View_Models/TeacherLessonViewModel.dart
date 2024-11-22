@@ -49,36 +49,4 @@ class TeacherLessonViewModel extends ChangeNotifier {
       String courseID, String lessonID, String type) async {
     return await service.getLessonMaterialsByType(courseID, lessonID, type);
   }
-
-  Future<bool> addLessonMaterial(
-      String courseID,
-      String lessonID,
-      String title,
-      String author,
-      String src,
-      String learningStyle,
-      List<String> concepts,
-      String type) async {
-    LessonMaterialModel lessonMaterial = LessonMaterialModel();
-    lessonMaterial.courseID = courseID;
-    lessonMaterial.title = title;
-    lessonMaterial.lessonID = lessonID;
-    lessonMaterial.author = author;
-    lessonMaterial.src = src;
-    lessonMaterial.learningStyle = learningStyle;
-    lessonMaterial.concepts = concepts;
-    lessonMaterial.type = type;
-    notifyListeners();
-    return await service.addLessonMaterial(courseID, lessonMaterial);
-  }
-
-  Future<bool> editLessonMaterial(
-      String courseID, LessonMaterialModel lessonMaterial) async {
-    return await service.editLessonMaterial(courseID, lessonMaterial);
-  }
-
-  Future<bool> deleteLessonMaterial(
-      String courseID, LessonMaterialModel lessonMaterial) async {
-    return await service.deleteLessonMaterial(courseID, lessonMaterial);
-  }
 }

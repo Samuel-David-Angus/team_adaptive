@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/AtomicInputMaterialInfoViewModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/InitialAddMaterialsViewModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/AtomicInputMaterialInfoView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherSelectLearningStyleView.dart';
 
 import '../View_Models/SelectConceptsViewModel.dart';
 import '../View_Models/SelectLearningStyleViewModel.dart';
-import '../View_Models/TeacherLessonViewModel.dart';
 import 'TeacherSelectConceptsView.dart';
 
 class TeacherAddLessonMaterialView extends StatelessWidget {
@@ -19,101 +20,117 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
       SelectConceptsViewModel();
   final SelectLearningStyleViewModel selectLearningStyleViewModel =
       SelectLearningStyleViewModel();
+  final InitialAddMaterialsViewModel initialAddMaterialsViewModel =
+      InitialAddMaterialsViewModel();
   TeacherAddLessonMaterialView(
       {super.key, required this.type, required this.lesson});
 
   @override
   Widget build(BuildContext context) {
-    final viewModel =
-        Provider.of<TeacherLessonViewModel>(context, listen: false);
-    List<String>? selectedConcepts;
-    String? learningStyle;
-    return AlertDialog(
-      title: const Text('Add material'),
-      content: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: 'Title'),
-              controller: titleController,
-            ),
-            TextField(
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: 'Upload'),
-              controller: linkController,
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  selectedConcepts = await showDialog<List<String>>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ChangeNotifierProvider.value(
-                          value: selectConceptsViewModel,
-                          child: TeacherSelectConceptsView(lesson: lesson));
-                    },
-                  );
-                },
-                child: const Text('Concepts')),
-            ElevatedButton(
-                onPressed: () async {
-                  learningStyle = await showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ChangeNotifierProvider.value(
-                          value: selectLearningStyleViewModel,
-                          child: const TeacherSelectLearningStyleView());
-                    },
-                  );
-                },
-                child: const Text('Learning Styles')),
-            const SizedBox(
-              height: 20,
-            ),
-            TextButton(
-                onPressed: () async {
-                  if (selectedConcepts != null) {
-                    if (selectedConcepts!.isNotEmpty &&
-                        titleController.text.isNotEmpty &&
-                        linkController.text.isNotEmpty) {
-                      await viewModel.addLessonMaterial(
-                          lesson.courseID!,
-                          lesson.id!,
-                          titleController.text,
-                          AuthServices().userInfo!.id!,
-                          linkController.text,
-                          learningStyle!,
-                          selectedConcepts!,
-                          type);
-                    } else {
-                      showDialog(
+    return ChangeNotifierProvider.value(
+      value: initialAddMaterialsViewModel,
+      child: Consumer<InitialAddMaterialsViewModel>(
+          builder: (context, viewModel, child) {
+        return AlertDialog(
+          title: const Text('Add material'),
+          content: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () async {
+                      List<String>? selectedConcepts =
+                          await showDialog<List<String>>(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Message'),
-                            content:
-                                const Text('Pls fill all fields and select concepts'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              ),
-                            ],
-                          );
+                          return ChangeNotifierProvider.value(
+                              value: selectConceptsViewModel,
+                              child: TeacherSelectConceptsView(lesson: lesson));
                         },
                       );
-                    }
-                  }
-                },
-                child: const Text('Save'))
+                      if (selectedConcepts == null ||
+                          selectedConcepts.isEmpty) {
+                        viewModel.initialMaterials.clear();
+                      }
+                      viewModel.refresh();
+                    },
+                    child: const Text('Concepts')),
+                ElevatedButton(
+                    onPressed: () async {
+                      String? learningStyle = await showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ChangeNotifierProvider.value(
+                              value: selectLearningStyleViewModel,
+                              child: const TeacherSelectLearningStyleView());
+                        },
+                      );
+                      if (learningStyle != null) {
+                        viewModel.initialMaterials.clear();
+                      }
+                      viewModel.refresh();
+                    },
+                    child: const Text('Learning Styles')),
+                const SizedBox(
+                  height: 20,
+                ),
+                if (selectLearningStyleViewModel.selectedStyle.isNotEmpty &&
+                    (selectConceptsViewModel.selectedItems != null &&
+                        selectConceptsViewModel.selectedItems!.isNotEmpty)) ...[
+                  AtomicInputMaterialInfoView(
+                      lesson: lesson,
+                      connector: (AtomicInputMaterialViewModel infoModel) {
+                        viewModel.initialMaterials.add(infoModel);
+                      },
+                      lessonType: type,
+                      concepts: selectConceptsViewModel.selectedItems!,
+                      learningStyle:
+                          selectLearningStyleViewModel.selectedStyle),
+                  TextButton(
+                      onPressed: () async {
+                        if (viewModel.validate()) {
+                          bool result =
+                              await viewModel.addMultipleMaterials(lesson);
+                          if (result) {
+                            showMessageDialog("Successfully uploaded", context);
+                          } else {
+                            showMessageDialog(
+                                "There was an error uploading please try again",
+                                context);
+                          }
+                        } else {
+                          showMessageDialog("Please fill all fields", context);
+                        }
+                      },
+                      child: const Text('Save'))
+                ] else
+                  const Text("Provide information above")
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  void showMessageDialog(String message, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Message'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 }

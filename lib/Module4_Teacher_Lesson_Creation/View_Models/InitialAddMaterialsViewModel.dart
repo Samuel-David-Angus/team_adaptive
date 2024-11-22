@@ -66,4 +66,8 @@ class InitialAddMaterialsViewModel extends ChangeNotifier {
   Future<bool> confirmSetupComplete(LessonModel lesson) async {
     return await service.confirmSetupComplete(lesson);
   }
+
+  void refresh() {
+    notifyListeners();
+  }
 }
