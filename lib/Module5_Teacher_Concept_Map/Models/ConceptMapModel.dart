@@ -227,7 +227,9 @@ class ConceptMapModel {
     List<String> prereqs = [];
     for (int i = 0; i < conceptMap.length; i++) {
       if (conceptMap[concept]![i] == 1) {
-        prereqs.add(conceptOfIndex(i));
+        String prereq = conceptOfIndex(i);
+        prereq = prereq.startsWith("@") ? prereq.substring(1) : prereq;
+        prereqs.add(prereq);
       }
     }
     return prereqs;

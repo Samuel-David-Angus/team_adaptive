@@ -23,12 +23,14 @@ class LearningOutcomeMaterialsView extends StatefulWidget {
 class _LearningOutcomeMaterialsViewState
     extends State<LearningOutcomeMaterialsView> {
   Future<Map<String, List<LessonMaterialModel>>>? materialsWithLearningStyle;
+  late String learningOutcome = widget.learningOutcome;
+  late String recommendedStyle = widget.recommendedStyle;
 
   @override
   Widget build(BuildContext context) {
     materialsWithLearningStyle ??=
         Provider.of<StudentLessonViewModel>(context, listen: false)
-            .getLOMaterials(widget.learningOutcome);
+            .getLOMaterials(learningOutcome);
     return FutureBuilder<Map<String, List<LessonMaterialModel>>>(
         future: materialsWithLearningStyle!,
         builder: (context, snapshot) {
@@ -54,8 +56,7 @@ class _LearningOutcomeMaterialsViewState
                             builder: (context) {
                               Future<LearningOutcomeModel> model =
                                   Provider.of<ConceptMapViewModel>(context)
-                                      .getLearningOutcome(
-                                          widget.learningOutcome);
+                                      .getLearningOutcome(learningOutcome);
                               return AlertDialog(
                                 content: FutureBuilder<LearningOutcomeModel>(
                                     future: model,
@@ -104,7 +105,7 @@ class _LearningOutcomeMaterialsViewState
                                                         Navigator.of(context)
                                                             .pop();
                                                         GoRouter.of(context).go(
-                                                            '/materials/learning-outcome/$prereqPath/${widget.recommendedStyle}',
+                                                            '/materials/learning-outcome/$prereqPath/$recommendedStyle',
                                                             extra: prereq);
                                                       },
                                                       child: Text(prereq),
@@ -129,7 +130,7 @@ class _LearningOutcomeMaterialsViewState
                         return Column(
                           children: [
                             Text(entry.key +
-                                (entry.key == widget.recommendedStyle
+                                (entry.key == recommendedStyle
                                     ? " (Recommended)"
                                     : "")),
                             ...entry.value.map((LessonMaterialModel material) {

@@ -273,6 +273,7 @@ final GoRouter _router = GoRouter(
               path: '/materials/learning-outcome/:LO/:style',
               builder: (context, state) {
                 return LearningOutcomeMaterialsView(
+                    key: UniqueKey(),
                     recommendedStyle: state.pathParameters['style']!,
                     learningOutcome: (state.extra as String? ??
                         Uri.decodeFull(state.pathParameters['LO']!)));
