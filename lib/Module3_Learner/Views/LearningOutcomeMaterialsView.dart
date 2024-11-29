@@ -93,6 +93,10 @@ class _LearningOutcomeMaterialsViewState
                                                   String prereq =
                                                       learningOutcome
                                                           .directPrereqs[index];
+                                                  prereq =
+                                                      prereq.startsWith("@")
+                                                          ? prereq.substring(1)
+                                                          : prereq;
                                                   return Padding(
                                                     padding:
                                                         const EdgeInsets.all(
