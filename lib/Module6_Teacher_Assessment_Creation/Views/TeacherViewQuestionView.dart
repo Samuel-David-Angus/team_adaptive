@@ -48,7 +48,10 @@ class TeacherViewQuestionView extends StatelessWidget {
                               onPressed: () {
                                 GoRouter.of(context).go(
                                     '/courses/${lesson.courseID}/lessons/${lesson.id}/questions/edit/${question.id}',
-                                    extra: (question, lesson));
+                                    extra: (
+                                      lesson: lesson,
+                                      question: question
+                                    ));
                               },
                               child: const Text('Edit'),
                             ),

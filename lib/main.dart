@@ -50,6 +50,7 @@ import 'Module1_User_Management/View_Models/RegisterViewModel.dart';
 import 'Module1_User_Management/Views/LoginView.dart';
 import 'Module1_User_Management/Views/RegisterView.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:html' as html;
 
 final TopNavViewmodel topNavViewmodel = TopNavViewmodel();
 final DataHandler dataHandler = DataHandler();
@@ -112,6 +113,9 @@ FutureBuilder<futureType> routeBuilder<futureType, pageType>(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
+          if (snapshot.error.toString().contains("minified")) {
+            html.window.location.reload();
+          }
           return Center(
             child: Text("Error: ${snapshot.error}"),
           );
@@ -191,7 +195,8 @@ final GoRouter _router = GoRouter(
             ),
           ),
           GoRoute(
-            path: '/courses/:courseID/lessons/:lessonID/main/:materialID',
+            path:
+                '/courses/:courseID/lessons/:lessonID/main-lesson/:materialID',
             builder: (context, state) =>
                 routeBuilder<LessonAndMaterial?, ViewLessonView>(
               dataHandler.getLessonAndMainMaterial(state),

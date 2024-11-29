@@ -9,10 +9,15 @@ class LessonMaterialView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Expanded(
-        child: IframeView(source: lessonMaterial.src!,),
-      )
-    );
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: IframeView(
+                source: lessonMaterial.src!,
+              ),
+            ),
+          ],
+        ));
   }
 }
