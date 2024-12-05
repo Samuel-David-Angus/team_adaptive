@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module1_User_Management/View_Models/RegisterViewModel.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
@@ -236,7 +237,7 @@ class RegisterView extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/login');
+                          GoRouter.of(context).go("/login");
                         },
                         child: const Text(
                           'Log in',
