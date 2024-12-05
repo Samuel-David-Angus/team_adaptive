@@ -107,8 +107,8 @@ class _TeacherAddLessonViewState extends State<TeacherAddLessonView> {
                   ElevatedButton(
                     onPressed: () async {
                       List<String>? lOs = conceptMapViewModel
-                          .map?.lessonPartitions[lessonID]!
-                          .where((lo) => !lo.startsWith("@"))
+                          .map?.lessonPartitions[lessonID]
+                          ?.where((lo) => !lo.startsWith("@"))
                           .toList();
                       if (lOs != null &&
                           lOs.isNotEmpty &&
