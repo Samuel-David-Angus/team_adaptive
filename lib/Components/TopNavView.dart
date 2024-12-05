@@ -85,8 +85,8 @@ class TopNavView extends StatelessWidget {
             child: AppBar(
               title: Wrap(spacing: 100, children: topLeft),
               actions: authServices.userInfo == null
-                  ? authOptions(context)
-                  : userInfo(context),
+                  ? authOptions(context, viewModel)
+                  : userInfo(context, viewModel),
             ),
           ),
         ),

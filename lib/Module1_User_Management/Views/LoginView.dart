@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Components/TopNavViewModel.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../Others/enums.dart';
@@ -13,6 +14,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginViewModel viewModel = Provider.of<LoginViewModel>(context);
+    final TopNavViewmodel topNavViewModel = Provider.of<TopNavViewmodel>(context);
 
     final List<AssetImage> carouselItems = [
       const AssetImage('assets/hero-register1.png'),
@@ -178,6 +180,7 @@ class LoginView extends StatelessWidget {
                         } else {
                           bool isLoggedIn = await viewModel.login();
                           if (isLoggedIn) {
+                            topNavViewModel.setSelected(SELECTED.HOME);
                             GoRouter.of(context).go('/home');
                           } else {
                             msgDialogShow(

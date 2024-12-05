@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Components/TopNavViewModel.dart';
 import 'package:team_adaptive/Module1_User_Management/View_Models/RegisterViewModel.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
@@ -19,6 +21,8 @@ class RegisterView extends StatelessWidget {
     ];
 
     final RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
+    final TopNavViewmodel topNavViewModel = Provider.of<TopNavViewmodel>(context);
+
     return Row(
       children: [
         Expanded(
@@ -257,7 +261,9 @@ class RegisterView extends StatelessWidget {
                       } else {
                         bool isRegistered = await viewModel.register();
                         if (isRegistered) {
-                          Navigator.pushReplacementNamed(context, '/login');
+                          topNavViewModel.setSelected(SELECTED.HOME);
+                          GoRouter.of(context).go('/home');
+                          // Navigator.pushReplacementNamed(context, '/login');
                         } else {
                           msgDialogShow(context,
                               'Registering user failed! Please try again');

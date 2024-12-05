@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Components/TopNavViewModel.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
 
-List<Widget> authOptions(context) {
+List<Widget> authOptions(context, topNavViewModel) {
   String highlighted = "";
   final RouteMatch lastMatch =
       GoRouter.of(context).routerDelegate.currentConfiguration.last;
@@ -22,6 +23,7 @@ List<Widget> authOptions(context) {
     ElevatedButton(
       onPressed: () {
         GoRouter.of(context).go('/register');
+        topNavViewModel.setSelected(SELECTED.NONE);
       },
       style: ButtonStyle(
         backgroundColor: highlighted == 'register'
@@ -39,6 +41,7 @@ List<Widget> authOptions(context) {
     ElevatedButton(
       onPressed: () {
         GoRouter.of(context).go('/login');
+        topNavViewModel.setSelected(SELECTED.NONE);
       },
       style: ButtonStyle(
         backgroundColor: highlighted == 'login'
@@ -53,7 +56,7 @@ List<Widget> authOptions(context) {
   ];
 }
 
-List<Widget> userInfo(BuildContext context) {
+List<Widget> userInfo(BuildContext context, TopNavViewmodel topNavViewModel) {
   final authServices = context.read<AuthServices>();
   final user = authServices.userInfo;
   return [
@@ -68,6 +71,7 @@ List<Widget> userInfo(BuildContext context) {
     ElevatedButton(
       onPressed: () async {
         await authServices.signOut();
+        topNavViewModel.setSelected(SELECTED.NONE);
         context.go('/login');
       },
       child: const Text('Sign out'),
