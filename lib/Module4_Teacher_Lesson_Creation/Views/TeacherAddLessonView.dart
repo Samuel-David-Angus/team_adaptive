@@ -139,7 +139,7 @@ class _TeacherAddLessonViewState extends State<TeacherAddLessonView> {
                             return AlertDialog(
                               title: const Text('Message'),
                               content: const Text(
-                                  'Pls fill all fields and map concepts'),
+                                  'Please fill all fields, click the right arrow, and add learning outcomes.'),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('OK'),
