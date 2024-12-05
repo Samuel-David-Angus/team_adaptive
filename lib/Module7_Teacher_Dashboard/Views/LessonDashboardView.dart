@@ -22,8 +22,11 @@ class LessonDashboardView extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                  child:
-                      CircularProgressIndicator()); // Show a loading indicator
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    CircularProgressIndicator(),
+                  ]));
             } else if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
                 return Center(

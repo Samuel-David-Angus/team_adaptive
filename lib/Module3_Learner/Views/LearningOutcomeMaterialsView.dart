@@ -36,7 +36,13 @@ class _LearningOutcomeMaterialsViewState
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-                child: CircularProgressIndicator()); // Loading state
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                  ]
+                )
+              );
           } else if (snapshot.hasError) {
             return Center(
                 child: Text('Error: ${snapshot.error}')); // Error state
@@ -65,7 +71,12 @@ class _LearningOutcomeMaterialsViewState
                                           ConnectionState.waiting) {
                                         // While the connection is still waiting, show a loading indicator
                                         return const Center(
-                                            child: CircularProgressIndicator());
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                              CircularProgressIndicator(),
+                                            ]));
                                       } else if (snapshot.hasError) {
                                         // If there was an error fetching the data, show an error message
                                         return Center(

@@ -35,8 +35,11 @@ class _AtomicLOFeedbackViewState extends State<AtomicLOFeedbackView> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(), // Show loading spinner
-            );
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                  CircularProgressIndicator(),
+                ]));
           } else if (snapshot.hasError) {
             return Center(
               child: Text('Error: ${snapshot.error}'), // Show error message

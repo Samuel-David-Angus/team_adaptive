@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
-import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class TeacherLessonHomeView extends StatelessWidget {
@@ -27,7 +26,12 @@ class TeacherLessonHomeView extends StatelessWidget {
         future: viewModel.allLessons,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // or any loading indicator
+            return const Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                  CircularProgressIndicator(),
+                ]));
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {

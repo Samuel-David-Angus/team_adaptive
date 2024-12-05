@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module3_Learner/View_Models/StudentLessonViewModel.dart';
 import 'package:team_adaptive/Module3_Learner/Views/StudentMainMaterialsView.dart';
@@ -21,7 +20,12 @@ class StudentLessonListView extends StatelessWidget {
         future: viewModel.getCourseLessons(course.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // or any loading indicator
+            return const Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                  CircularProgressIndicator(),
+                ]));
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {

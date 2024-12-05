@@ -26,7 +26,12 @@ class ConceptMapView extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While the future is loading, show a loading indicator
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                  CircularProgressIndicator(),
+                ]));
           } else if (snapshot.hasError) {
             // If there was an error, show an error message
             return Center(
