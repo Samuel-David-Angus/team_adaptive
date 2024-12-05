@@ -258,7 +258,7 @@ class RegisterView extends StatelessWidget {
                       } else {
                         bool isRegistered = await viewModel.register();
                         if (isRegistered) {
-                          Navigator.pushReplacementNamed(context, '/login');
+                          GoRouter.of(context).go("/home");
                         } else {
                           msgDialogShow(context,
                               'Registering user failed! Please try again');
