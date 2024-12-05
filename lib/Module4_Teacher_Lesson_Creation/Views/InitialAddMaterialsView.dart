@@ -80,6 +80,10 @@ class InitialAddMaterialsView extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
+                    const Text(
+                        "To upload a YouTube video link, go to the YouTube video, click Share, click Embed, and copy the link enclosed in \"quotation marks\"."),
+                    const Text(
+                        "When uploading a PDF or mp3 link from a Google drive, change 'view' to 'preview'."),
                     Row(children: [
                       ElevatedButton(
                           child: const Text('Main lessons'),
