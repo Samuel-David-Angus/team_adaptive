@@ -346,7 +346,7 @@ class RegisterView extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/login');
+                              GoRouter.of(context).go('/login');
                             },
                             child: const Text(
                               'Log in',
