@@ -5,4 +5,6 @@ class ThemeColor {
   static const Color lightgreyTheme = Color.fromARGB(255, 208, 208, 208);
   static const Color offwhiteTheme = Color.fromARGB(255, 254, 246, 255);
   static const Color blueTheme = Color.fromARGB(255, 33, 59, 208);
+  static const Color studentTheme = Color.fromARGB(255, 9, 22, 95);
+  static const Color teacherTheme = Color.fromARGB(255, 4, 68, 20);
 }

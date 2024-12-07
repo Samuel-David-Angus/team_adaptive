@@ -22,7 +22,7 @@ class TopNavView extends StatelessWidget {
           fontSize: 32,
           fontWeight: FontWeight.bold,
         ),
-        )
+      )
     ];
     topLeft.addAll(List.generate(viewModel.navBtns.length, (index) {
       Text text = Text(viewModel.navBtns[index],
@@ -78,16 +78,16 @@ class TopNavView extends StatelessWidget {
                   spreadRadius: 6,
                   blurRadius: 6,
                   offset:
-                      const Offset(0, 4), // Positive offset for bottom shadow
+                      const Offset(0, 4),
                 ),
               ],
             ),
             child: AppBar(
-              title: Wrap(spacing: 100, children: topLeft),
-              actions: authServices.userInfo == null
-                  ? authOptions(context, viewModel)
-                  : userInfo(context, viewModel),
-            ),
+                    title: Wrap(spacing: 100, children: topLeft),
+                    actions: authServices.userInfo == null
+                        ? authOptions(context, viewModel)
+                        : userInfo(context, viewModel),
+                  )
           ),
         ),
         body: child,

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/TopNavViewModel.dart';
 import 'package:team_adaptive/Module1_User_Management/Services/AuthServices.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 List<Widget> authOptions(context, topNavViewModel) {
   String highlighted = "";
@@ -60,11 +61,29 @@ List<Widget> userInfo(BuildContext context, TopNavViewmodel topNavViewModel) {
   final authServices = context.read<AuthServices>();
   final user = authServices.userInfo;
   return [
-    Text(user!.username!),
+    Text(
+      user!.username!,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    ),
     const SizedBox(
       width: 10,
     ),
-    Text(user.type!),
+    Container(
+      padding: const EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+        color: user.type == 'student'
+          ? ThemeColor.studentTheme
+          : ThemeColor.teacherTheme,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Text(
+        user.type! == 'student' ? 'Student' : 'Teacher',
+        style: const TextStyle(
+          color: Colors.white,),
+        ),
+    ),
     const SizedBox(
       width: 10,
     ),
