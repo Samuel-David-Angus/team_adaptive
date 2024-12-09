@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module3_Student_Assessment/ViewModels/AssessmentViewModel.dart';
 import 'package:team_adaptive/Module3_Student_Feedback/ViewModels/FeedbackViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class AssessmentView extends StatelessWidget {
   final LessonModel lessonModel;
@@ -51,44 +52,82 @@ class AssessmentView extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const Text('Assessment'),
+                const Text(
+                  'Assessment',
+                  style: TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 ...generateTestItems(viewModel),
-                ElevatedButton(
-                    onPressed: () async {
-                      bool? confirmSubmit = await showConfirmationDialog(
-                          context, "Are you sure you want to submit");
-                      if (confirmSubmit == true) {
-                        bool success = await viewModel.submitAssessment();
-                        if (success) {
-                          late BuildContext dialogContext;
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                dialogContext = context;
-                                return Container(
-                                    decoration: const BoxDecoration(
-                                        color: Color.fromRGBO(0, 0, 0, 0.5)),
-                                    child: const Center(
-                                        child: CircularProgressIndicator()));
-                              });
-                          String? feedbackID = await feedBackViewModel
-                              .createFeedback(viewModel.assessmentModel);
-                          Navigator.pop(dialogContext);
-                          if (feedbackID != null) {
-                            GoRouter.of(context).go('/feedbacks/$feedbackID',
-                                extra: feedBackViewModel.feedbackSummary);
-                          } else {
-                            showConfirmationDialog(
-                                context, "Error generating feedback");
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [TextButton (
+                        onPressed: () async {
+                          bool? confirmSubmit = await showConfirmationDialog(
+                              context, "Are you sure you want to submit");
+                          if (confirmSubmit == true) {
+                            bool success = await viewModel.submitAssessment();
+                            if (success) {
+                              late BuildContext dialogContext;
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    dialogContext = context;
+                                    return Container(
+                                        decoration: const BoxDecoration(
+                                            color:
+                                                Color.fromRGBO(0, 0, 0, 0.5)),
+                                        child: const Center(
+                                            child:
+                                                CircularProgressIndicator()));
+                                  });
+                              String? feedbackID = await feedBackViewModel
+                                  .createFeedback(viewModel.assessmentModel);
+                              Navigator.pop(dialogContext);
+                              if (feedbackID != null) {
+                                GoRouter.of(context).go(
+                                    '/feedbacks/$feedbackID',
+                                    extra: feedBackViewModel.feedbackSummary);
+                              } else {
+                                showConfirmationDialog(
+                                    context, "Error generating feedback");
+                              }
+                            } else {
+                              showConfirmationDialog(
+                                  context, "Error submitting assessment");
+                            }
                           }
-                        } else {
-                          showConfirmationDialog(
-                              context, "Error submitting assessment");
-                        }
-                      }
-                    },
-                    child: const Text('Submit'))
+                        },
+                        style: ButtonStyle(overlayColor:
+                            WidgetStateProperty.resolveWith<Color>(
+                                (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.hovered)) {
+                            return Colors.transparent;
+                          }
+                          return Colors.transparent;
+                        }), textStyle:
+                            WidgetStateProperty.resolveWith<TextStyle>(
+                          (Set<WidgetState> states) {
+                            if (states.contains(WidgetState.hovered)) {
+                              return const TextStyle(
+                                fontSize: 18,
+                                decoration: TextDecoration.underline,
+                              );
+                            }
+                            return const TextStyle(
+                              fontSize: 16,
+                            );
+                          },
+                        )),
+                        child: const Text(
+                          'Submit Answers →',
+                          style: TextStyle(color: ThemeColor.darkgreyTheme),
+                        )
+                      )]
+                )
+                
               ],
             ),
           ));
@@ -144,7 +183,7 @@ Future<bool?> showConfirmationDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Message'),
+        title: const Text('Submit Answers?'),
         content: Text(message),
         actions: <Widget>[
           TextButton(
