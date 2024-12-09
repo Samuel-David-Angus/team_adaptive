@@ -6,7 +6,7 @@ import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 
 class StudentCourseOverviewView extends StatelessWidget {
   final Course course;
-  StudentCourseOverviewView({super.key, required this.course});
+  const StudentCourseOverviewView({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {

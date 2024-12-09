@@ -214,7 +214,7 @@ class LoginView extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    GoRouter.of(context).go('/register');
+                                    Navigator.pushReplacementNamed(context, '/register');
                                   },
                                   child: const Text(
                                     'Register',
