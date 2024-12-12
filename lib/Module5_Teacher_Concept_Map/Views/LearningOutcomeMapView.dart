@@ -44,48 +44,57 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
         Expanded(
           child: Stack(
             children: [
-              graph.nodeCount() == 0
-                  ? const Text("No learning outcomes yet")
-                  : InteractiveViewer(
-                      constrained: false,
-                      boundaryMargin: const EdgeInsets.all(50),
-                      minScale: 1.0,
-                      maxScale: 1.0,
-                      child: GraphView(
-                        graph: graph,
-                        algorithm: SugiyamaAlgorithm(builder),
-                        builder: (Node node) {
-                          String nodeText = node.key?.value ?? 'Node';
-                          return MouseRegion(
-                            onEnter: (PointerEnterEvent event) {
-                              setState(() {
-                                hoveredNode = node;
-                              });
-                            },
-                            onExit: (PointerExitEvent event) {
-                              setState(() {
-                                hoveredNode = null;
-                              });
-                            },
-                            child: GestureDetector(
-                              onTap: () => onNodeTap(node),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: (nodeText.startsWith("@"))
-                                      ? BorderRadius.circular(10)
-                                      : null,
-                                  color: setNodeColor(node),
-                                ),
-                                child: Text(
-                                  nodeText,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          );
+              if (graph.nodeCount() == 0)
+                const Text("No learning outcomes yet")
+              else ...[
+                const Align(
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    "To connect learning outcomes, click a prerequisite, then click its successor.",
+                  ),
+                ),
+                InteractiveViewer(
+                  constrained: false,
+                  boundaryMargin: const EdgeInsets.all(50),
+                  minScale: 1.0,
+                  maxScale: 1.0,
+                  child: GraphView(
+                    graph: graph,
+                    algorithm: SugiyamaAlgorithm(builder),
+                    builder: (Node node) {
+                      String nodeText = node.key?.value ?? 'Node';
+                      return MouseRegion(
+                        onEnter: (PointerEnterEvent event) {
+                          setState(() {
+                            hoveredNode = node;
+                          });
                         },
-                      )),
+                        onExit: (PointerExitEvent event) {
+                          setState(() {
+                            hoveredNode = null;
+                          });
+                        },
+                        child: GestureDetector(
+                          onTap: () => onNodeTap(node),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: (nodeText.startsWith("@"))
+                                  ? BorderRadius.circular(10)
+                                  : null,
+                              color: setNodeColor(node),
+                            ),
+                            child: Text(
+                              nodeText,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
               if (selectedNode != null)
                 Align(
                   alignment: Alignment.centerRight,
