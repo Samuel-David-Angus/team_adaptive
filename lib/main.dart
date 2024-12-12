@@ -1,6 +1,9 @@
+import 'dart:html' as html;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Components/DataHandler.dart';
@@ -49,8 +52,6 @@ import 'LandingNavPages/HomePage.dart';
 import 'Module1_User_Management/View_Models/RegisterViewModel.dart';
 import 'Module1_User_Management/Views/LoginView.dart';
 import 'Module1_User_Management/Views/RegisterView.dart';
-import 'package:go_router/go_router.dart';
-import 'dart:html' as html;
 
 final TopNavViewmodel topNavViewmodel = TopNavViewmodel();
 final DataHandler dataHandler = DataHandler();
@@ -337,7 +338,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-        title: 'Flutter Demo',
+        title: 'AdaptiveEdu',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: ThemeColor.blueTheme),
           useMaterial3: true,
