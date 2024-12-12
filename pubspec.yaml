@@ -88,6 +88,7 @@ flutter:
     - assets/hero-courses.png
     - assets/about/hero-about.png
     - assets/about/jun.png
+    - assets/about/default.jpg
     - assets/icons/arrow-right.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

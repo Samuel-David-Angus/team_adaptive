@@ -92,7 +92,7 @@ class AboutPage extends StatelessWidget {
                         ),
                       ),
                       child: const Image(
-                          image: AssetImage('assets/about/jun.png')),
+                          image: AssetImage('assets/about/default.jpg')),
                     ),
                     const SizedBox(height: 20.0),
                     const Text(
@@ -115,7 +115,7 @@ class AboutPage extends StatelessWidget {
                         ),
                       ),
                       child: const Image(
-                          image: AssetImage('assets/about/jun.png')),
+                          image: AssetImage('assets/about/default.jpg')),
                     ),
                     const SizedBox(height: 20.0),
                     const Text(
@@ -138,7 +138,7 @@ class AboutPage extends StatelessWidget {
                         ),
                       ),
                       child: const Image(
-                          image: AssetImage('assets/about/jun.png')),
+                          image: AssetImage('assets/about/default.jpg')),
                     ),
                     const SizedBox(height: 20.0),
                     const Text(

@@ -118,4 +118,14 @@ class AuthServices with ChangeNotifier {
       // Handle error as needed
     }
   }
+
+  Future<void> checkAuthStatus() async {
+    _currentUser = fauth.FirebaseAuth.instance.currentUser;
+    if (_currentUser != null) {
+      await _fetchUserInfo();
+    } else {
+      _userInfo = null;
+      notifyListeners();
+    }
+  }
 }

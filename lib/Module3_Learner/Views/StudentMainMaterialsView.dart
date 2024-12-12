@@ -69,7 +69,7 @@ class StudentMainMaterialsView extends StatelessWidget {
                             ),
                           );
                         }),
-                        const Divider(),
+                        const Divider(height: 30),
                       ],
                     );
                   },

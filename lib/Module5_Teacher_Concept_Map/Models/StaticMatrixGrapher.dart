@@ -1,6 +1,8 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
+
 import 'ConceptMapModel.dart';
 
 void main() {
@@ -44,7 +46,7 @@ class StaticConceptMapPage extends StatelessWidget {
 
   final Map<String, Color> lessonColors = {};
 
-  StaticConceptMapPage() {
+  StaticConceptMapPage({super.key}) {
     _assignColorsToLessons();
     _buildGraphFromModel();
   }
@@ -54,14 +56,14 @@ class StaticConceptMapPage extends StatelessWidget {
         conceptMapModel.lessonPartitions.keys.length; // Number of lessons
     int index = 0;
 
-    conceptMapModel.lessonPartitions.keys.forEach((lesson) {
+    for (var lesson in conceptMapModel.lessonPartitions.keys) {
       double hue =
           (index * 360 / n) % 360; // Spread hues evenly around the color wheel
       int color = HSVColor.fromAHSV(1.0, hue, 0.8, 0.9).toColor().value;
 
       lessonColors[lesson] = Color(color);
       index++;
-    });
+    }
   }
 
   void _buildGraphFromModel() {
@@ -95,22 +97,22 @@ class StaticConceptMapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Concept Map'),
+        title: const Text('Concept Map'),
       ),
       body: Row(
         children: [
           // Legend Box
           Container(
             width: 150,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Legend',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 ...lessonColors.entries.map((entry) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Row(
@@ -123,12 +125,12 @@ class StaticConceptMapPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(entry.key),
                         ],
                       ),
                     )),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 // External Concept Indicator
                 Row(
                   children: [
@@ -140,8 +142,8 @@ class StaticConceptMapPage extends StatelessWidget {
                         border: Border.all(color: Colors.black, width: 2),
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Text("from another\ncourse"),
+                    const SizedBox(width: 8),
+                    const Text("from another\ncourse"),
                   ],
                 ),
               ],
@@ -151,7 +153,7 @@ class StaticConceptMapPage extends StatelessWidget {
           Expanded(
             child: InteractiveViewer(
               constrained: false,
-              boundaryMargin: EdgeInsets.all(50),
+              boundaryMargin: const EdgeInsets.all(50),
               minScale: 0.01,
               maxScale: 5.0,
               child: Transform(
@@ -178,7 +180,7 @@ class StaticConceptMapPage extends StatelessWidget {
                       width: nodeText.startsWith('@') ? size : null,
                       height: nodeText.startsWith('@') ? size : null,
                       padding:
-                          nodeText.startsWith('@') ? null : EdgeInsets.all(8),
+                          nodeText.startsWith('@') ? null : const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: nodeColor,
                         shape: nodeText.startsWith('@')
@@ -192,7 +194,7 @@ class StaticConceptMapPage extends StatelessWidget {
                         child: FittedBox(
                           child: Text(
                             displayedText,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),

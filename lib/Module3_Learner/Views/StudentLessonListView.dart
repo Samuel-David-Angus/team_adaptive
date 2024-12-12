@@ -48,12 +48,21 @@ class StudentLessonListView extends StatelessWidget {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title:
-                                          const Text('Select Lesson Material'),
-                                      content: StudentMainMaterialsView(
-                                        lesson: lessons[index],
-                                      ),
-                                    );
+                                        title: const Center(
+                                          child: Text(
+                                            'Select Lesson Material',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold
+                                                )
+                                            )
+                                          ),
+                                        content: SizedBox(
+                                          width: 500,
+                                          height: 400,
+                                          child: StudentMainMaterialsView(
+                                            lesson: lessons[index],
+                                          ),
+                                        ));
                                   });
                             },
                             child: const Text('Take Lesson'),
