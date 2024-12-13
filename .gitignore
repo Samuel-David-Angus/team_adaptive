@@ -10,6 +10,14 @@
 .svn/
 migrate_working_dir/
 
+# Firebase Hosting files
+firebase.json
+.firebaserc
+*.firebase/
+/public/
+
+
+
 # IntelliJ related
 *.iml
 *.ipr
