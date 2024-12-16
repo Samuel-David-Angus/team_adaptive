@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
-import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/NodeSelectionModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLearningOutcomesView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
@@ -270,7 +269,7 @@ class LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
   void onNodeTap(Node node) {
     setState(() {
       if (selectedNode == null) {
-        selectedNode = context.read<NodeSelectionModel>().setSelectedNode(node);
+        selectedNode = node;
         debugPrint('Selected a node');
       } else {
         if (selectedNode != node) {
@@ -283,7 +282,6 @@ class LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
           }
         }
         selectedNode = null;
-        context.read<NodeSelectionModel>().resetSelectedNode();
       }
     });
   }
