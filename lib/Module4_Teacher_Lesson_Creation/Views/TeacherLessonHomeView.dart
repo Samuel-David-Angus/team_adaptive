@@ -4,15 +4,18 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/LessonModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/TeacherLessonViewModel.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLessonView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class TeacherLessonHomeView extends StatelessWidget {
   final Course course;
-  bool justLoaded = true;
-  TeacherLessonHomeView({super.key, required this.course});
+  const TeacherLessonHomeView({super.key, required this.course});
 
   @override
   Widget build(BuildContext context) {
+    bool justLoaded = true;
+    bool isSetUpComplete = true;
+
     final TeacherLessonViewModel viewModel =
         Provider.of<TeacherLessonViewModel>(context);
     if (justLoaded) {
@@ -36,6 +39,9 @@ class TeacherLessonHomeView extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else {
             List<LessonModel> lessons = snapshot.data!;
+            if (lessons.any((lesson) => lesson.isSetupComplete == false)) {
+              isSetUpComplete = false;
+            }
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -45,8 +51,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                   height: 40.0,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (!lessons
-                          .any((lesson) => lesson.isSetupComplete == false)) {
+                      if (isSetUpComplete) {
                         GoRouter.of(context).go(
                             "/courses/${course.id}/add-lesson",
                             extra: course);
@@ -57,7 +62,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                             return AlertDialog(
                               title: const Text('Message'),
                               content: const Text(
-                                  'Cannot add lesson when there is a lessn that is not finished setting up'),
+                                  'Cannot add lesson when there is a lesson that is not finished setting up'),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('Close'),
@@ -88,46 +93,89 @@ class TeacherLessonHomeView extends StatelessWidget {
                   spacing: 10,
                   children: List.generate(lessons.length, (index) {
                     return Card(
-                        child: ListTile(
-                      title: Text(lessons[index].lessonTitle!),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              GoRouter.of(context).go(
-                                  '/courses/${course.id}/lessons/${lessons[index].id}/materials',
-                                  extra: lessons[index]);
-                            },
-                            child: const Text('See materials'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              GoRouter.of(context).go(
-                                  '/courses/${course.id}/lessons/${lessons[index].id}/questions',
-                                  extra: lessons[index]);
-                            },
-                            child: const Text('Create Assessment Questions'),
-                          ),
-                          if (!lessons[index].isSetupComplete!)
-                            TextButton(
-                                onPressed: () async {
-                                  await context.push(
-                                      '/courses/${course.id}/lessons/${lessons[index].id}/initialize',
-                                      extra: lessons[index]);
-                                  viewModel.refresh();
-                                },
-                                child: const Text('Setup')),
-                          if (lessons[index].isSetupComplete!)
-                            TextButton(
-                                onPressed: () {
-                                  context.go(
-                                      '/courses/${course.id}/lessons/${lessons[index].id}/dashboard');
-                                },
-                                child: const Text('dashboard'))
-                        ],
-                      ),
-                    ));
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                border: Border.all(
+                                    color: ThemeColor.errorTheme, width: 2)),
+                            child: ListTile(
+                              title: Row(children: [
+                                Text(lessons[index].lessonTitle!),
+                                const SizedBox(width: 10),
+                                !isSetUpComplete
+                                    ? const Text('(Setup Required)',
+                                        style: TextStyle(
+                                            color: ThemeColor.errorTheme))
+                                    : const Text(''),
+                              ]),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  isSetUpComplete
+                                      ? TextButton(
+                                          onPressed: () {
+                                            GoRouter.of(context).go(
+                                                '/courses/${course.id}/lessons/${lessons[index].id}/materials',
+                                                extra: lessons[index]);
+                                          },
+                                          child: const Text('See materials'),
+                                        )
+                                      : const SizedBox(width: 0),
+                                  isSetUpComplete
+                                      ? TextButton(
+                                          onPressed: () {
+                                            GoRouter.of(context).go(
+                                                '/courses/${course.id}/lessons/${lessons[index].id}/questions',
+                                                extra: lessons[index]);
+                                          },
+                                          child: const Text(
+                                              'Create Assessment Questions'),
+                                        )
+                                      : const SizedBox(width: 0),
+                                  if (!lessons[index].isSetupComplete!)
+                                    TextButton(
+                                        style: ButtonStyle(overlayColor:
+                                            WidgetStateProperty.resolveWith<
+                                                    Color>(
+                                                (Set<WidgetState> states) {
+                                          if (states
+                                              .contains(WidgetState.hovered)) {
+                                            return Colors.transparent;
+                                          }
+                                          return Colors.transparent;
+                                        }), textStyle: WidgetStateProperty
+                                            .resolveWith<TextStyle>(
+                                          (Set<WidgetState> states) {
+                                            if (states.contains(
+                                                WidgetState.hovered)) {
+                                              return const TextStyle(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              );
+                                            }
+                                            return const TextStyle();
+                                          },
+                                        )),
+                                        onPressed: () async {
+                                          await context.push(
+                                              '/courses/${course.id}/lessons/${lessons[index].id}/initialize',
+                                              extra: lessons[index]);
+                                          viewModel.refresh();
+                                        },
+                                        child: const Text('Setup →',
+                                            style: TextStyle(
+                                                color: ThemeColor.darkgreyTheme,
+                                                fontSize: 16))),
+                                  if (lessons[index].isSetupComplete!)
+                                    TextButton(
+                                        onPressed: () {
+                                          context.go(
+                                              '/courses/${course.id}/lessons/${lessons[index].id}/dashboard');
+                                        },
+                                        child: const Text('dashboard'))
+                                ],
+                              ),
+                            )));
                   }),
                 ),
               ],
@@ -136,5 +184,13 @@ class TeacherLessonHomeView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void showAddLessonDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return TeacherAddLessonView(course: course);
+        });
   }
 }

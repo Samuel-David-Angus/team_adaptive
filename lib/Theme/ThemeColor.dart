@@ -7,4 +7,5 @@ class ThemeColor {
   static const Color blueTheme = Color.fromARGB(255, 33, 59, 208);
   static const Color studentTheme = Color.fromARGB(255, 9, 22, 95);
   static const Color teacherTheme = Color.fromARGB(255, 4, 68, 20);
+  static const Color errorTheme = Color.fromARGB(255, 255, 38, 22);
 }

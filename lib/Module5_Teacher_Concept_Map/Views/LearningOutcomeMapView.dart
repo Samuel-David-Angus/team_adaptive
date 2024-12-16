@@ -2,22 +2,25 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Models/NodeSelectionModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherAddLearningOutcomesView.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/LearningOutcomeModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Views/SearchExternalLearningOutcomesView.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class LearningOutcomeMapView extends StatefulWidget {
   final String lessonID;
   final String courseID;
+
   const LearningOutcomeMapView(
       {super.key, required this.lessonID, required this.courseID});
 
   @override
-  State<LearningOutcomeMapView> createState() => _LearningOutcomeMapViewState();
+  State<LearningOutcomeMapView> createState() => LearningOutcomeMapViewState();
 }
 
-class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
+class LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
     with AutomaticKeepAliveClientMixin<LearningOutcomeMapView> {
   final Graph graph = Graph();
   final SugiyamaConfiguration builder = SugiyamaConfiguration()
@@ -39,171 +42,219 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(
-      children: [
-        Expanded(
-          child: Stack(
-            children: [
-              if (graph.nodeCount() == 0)
-                const Text("No learning outcomes yet")
-              else ...[
-                const Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    "To connect learning outcomes, click a prerequisite, then click its successor.",
-                  ),
-                ),
-                InteractiveViewer(
-                  constrained: false,
-                  boundaryMargin: const EdgeInsets.all(50),
-                  minScale: 1.0,
-                  maxScale: 1.0,
-                  child: GraphView(
-                    graph: graph,
-                    algorithm: SugiyamaAlgorithm(builder),
-                    builder: (Node node) {
-                      String nodeText = node.key?.value ?? 'Node';
-                      return MouseRegion(
-                        onEnter: (PointerEnterEvent event) {
-                          setState(() {
-                            hoveredNode = node;
-                          });
-                        },
-                        onExit: (PointerExitEvent event) {
-                          setState(() {
-                            hoveredNode = null;
-                          });
-                        },
-                        child: GestureDetector(
-                          onTap: () => onNodeTap(node),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: (nodeText.startsWith("@"))
-                                  ? BorderRadius.circular(10)
-                                  : null,
-                              color: setNodeColor(node),
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      double parentHeight = constraints.maxHeight;
+      double parentWidth = constraints.maxWidth;
+
+      return Column(
+        children: [
+          Text(
+              graph.nodeCount() == 0
+                  ? "No learning outcomes yet"
+                  : "To connect learning outcomes, click a prerequisite, then click its successor.",
+              style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 20),
+          Container(
+              width: parentWidth,
+              height: parentHeight - 105,
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.black)),
+              child: Row(children: [
+                SizedBox(
+                    width: selectedNode == null
+                        ? parentWidth - 2
+                        : parentWidth * 0.7 - 2,
+                    child: graph.nodeCount() == 0
+                        ? const SizedBox()
+                        : InteractiveViewer(
+                            constrained: false,
+                            boundaryMargin: const EdgeInsets.all(50),
+                            minScale: 1.0,
+                            maxScale: 1.0,
+                            child: GraphView(
+                              graph: graph,
+                              algorithm: SugiyamaAlgorithm(builder),
+                              builder: (Node node) {
+                                String nodeText = node.key?.value ?? 'Node';
+                                return MouseRegion(
+                                  onEnter: (PointerEnterEvent event) {
+                                    setState(() {
+                                      hoveredNode = node;
+                                    });
+                                  },
+                                  onExit: (PointerExitEvent event) {
+                                    setState(() {
+                                      hoveredNode = null;
+                                    });
+                                  },
+                                  child: GestureDetector(
+                                    onTap: () => onNodeTap(node),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: (nodeText.startsWith("@"))
+                                            ? BorderRadius.circular(10)
+                                            : null,
+                                        color: setNodeColor(node),
+                                      ),
+                                      child: Text(
+                                        nodeText,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            child: Text(
-                              nodeText,
-                              style: const TextStyle(color: Colors.white),
+                          )),
+                if (selectedNode != null)
+                  Container(
+                    width: parentWidth * 0.3 - 2,
+                    height: parentHeight * 0.8,
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: ThemeColor.darkgreyTheme)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: IntrinsicWidth(
+                              child: Text(
+                                getNodeValue(selectedNode!),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-              if (selectedNode != null)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    color: Colors.green,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Learning Outcome: ${getNodeValue(selectedNode!)}",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 24),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                conceptMapViewModel.deleteConcept(
-                                    getNodeValue(selectedNode!),
-                                    widget.lessonID);
-                                graph.removeNode(selectedNode!);
-                                selectedNode = null;
-                              });
-                            },
-                            child: const Text("Delete Learning Outcome")),
-                        Row(
-                          children: [
-                            const Text("Prerequisites: "),
-                            ElevatedButton(
-                                onPressed: () {
-                                  addExternalLOasPrerequisite(
-                                      selectedNode!, context);
-                                },
-                                child: const Text("Add external prerequisite"))
-                          ],
-                        ),
-                        Expanded(
-                            child: ListView.builder(
-                          itemCount: conceptMapViewModel.map!
-                              .findDirectPrerequisites(
-                                  getNodeValue(selectedNode!))
-                              .length,
-                          itemBuilder: (context, index) {
-                            final prerequisite = conceptMapViewModel.map!
+                          const SizedBox(height: 20),
+                          const Text("Prerequisites:",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16)),
+                          Expanded(
+                              child: ListView.builder(
+                            itemCount: conceptMapViewModel.map!
                                 .findDirectPrerequisites(
-                                    getNodeValue(selectedNode!))[index];
+                                    getNodeValue(selectedNode!))
+                                .length,
+                            itemBuilder: (context, index) {
+                              final prerequisite = conceptMapViewModel.map!
+                                  .findDirectPrerequisites(
+                                      getNodeValue(selectedNode!))[index];
 
-                            return Card(
-                              elevation: 2,
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              child: ListTile(
-                                leading: MouseRegion(
-                                  onEnter: (event) {
-                                    highlightConnection(
-                                        selectedNode!, prerequisite,
-                                        highlight: true);
-                                  },
-                                  onExit: (event) {
-                                    highlightConnection(
-                                        selectedNode!, prerequisite,
-                                        highlight: false);
-                                  },
-                                  child: IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      deleteConnection(
-                                          selectedNode!, prerequisite);
+                              return Card(
+                                elevation: 2,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 16),
+                                child: ListTile(
+                                  leading: MouseRegion(
+                                    onEnter: (event) {
+                                      highlightConnection(
+                                          selectedNode!, prerequisite,
+                                          highlight: true);
                                     },
+                                    onExit: (event) {
+                                      highlightConnection(
+                                          selectedNode!, prerequisite,
+                                          highlight: false);
+                                    },
+                                    child: IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () {
+                                        deleteConnection(
+                                            selectedNode!, prerequisite);
+                                      },
+                                    ),
                                   ),
+                                  title: Text(prerequisite),
                                 ),
-                                title: Text(prerequisite),
-                              ),
-                            );
-                          },
-                        )),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedNode = null;
-                            });
-                          },
-                          child: const Text('Hide'),
-                        ),
-                      ],
+                              );
+                            },
+                          )),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedNode = null;
+                                    });
+                                  },
+                                  style: ButtonStyle(overlayColor:
+                                      WidgetStateProperty.resolveWith<Color>(
+                                          (Set<WidgetState> states) {
+                                    if (states.contains(WidgetState.hovered)) {
+                                      return Colors.transparent;
+                                    }
+                                    return Colors.transparent;
+                                  }), textStyle: WidgetStateProperty
+                                      .resolveWith<TextStyle>(
+                                    (Set<WidgetState> states) {
+                                      if (states
+                                          .contains(WidgetState.hovered)) {
+                                        return const TextStyle(
+                                          decoration: TextDecoration.underline,
+                                        );
+                                      }
+                                      return const TextStyle();
+                                    },
+                                  )),
+                                  child: const Text('←Hide',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      addExternalLOasPrerequisite(
+                                          selectedNode!, context);
+                                    },
+                                    child:
+                                        const Text("+ External Prerequisite")),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        conceptMapViewModel.deleteConcept(
+                                            getNodeValue(selectedNode!),
+                                            widget.lessonID);
+                                        graph.removeNode(selectedNode!);
+                                        selectedNode = null;
+                                      });
+                                    },
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.white))
+                              ])
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        ElevatedButton(
-            onPressed: () async {
-              String? lO = await showDialog<String>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        content: TeacherAddLearningObjectivesView(
-                            lessonID: widget.lessonID),
-                      ));
-              if (lO != null) {
-                setState(() {
-                  graph.addNode(Node.Id(lO));
-                });
-              }
-            },
-            child: const Text("Add learning outcome"))
-      ],
-    );
+                  )
+              ])),
+          const SizedBox(height: 30),
+          ElevatedButton(
+              onPressed: () async {
+                String? lO = await showDialog<String>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          content: TeacherAddLearningObjectivesView(
+                              lessonID: widget.lessonID),
+                        ));
+                if (lO != null) {
+                  setState(() {
+                    graph.addNode(Node.Id(lO));
+                  });
+                }
+              },
+              child: const Text("Add learning outcome"))
+        ],
+      );
+    });
   }
 
   Color setNodeColor(node) {
@@ -212,13 +263,15 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
     } else if (node == hoveredNode) {
       return Colors.lightBlue;
     }
+
     return Colors.blue;
   }
 
   void onNodeTap(Node node) {
     setState(() {
       if (selectedNode == null) {
-        selectedNode = node;
+        selectedNode = context.read<NodeSelectionModel>().setSelectedNode(node);
+        debugPrint('Selected a node');
       } else {
         if (selectedNode != node) {
           String sourceName = getNodeValue(selectedNode!);
@@ -230,6 +283,7 @@ class _LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
           }
         }
         selectedNode = null;
+        context.read<NodeSelectionModel>().resetSelectedNode();
       }
     });
   }
