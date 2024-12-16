@@ -28,7 +28,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     StudentCourseViewModel viewModel =
         Provider.of<StudentCourseViewModel>(context);
 
-    return SingleChildScrollView(
+    return Container(
       child: Stack(
         children: [
           // Background Image
