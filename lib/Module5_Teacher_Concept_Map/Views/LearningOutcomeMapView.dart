@@ -270,7 +270,6 @@ class LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
     setState(() {
       if (selectedNode == null) {
         selectedNode = node;
-        debugPrint('Selected a node');
       } else {
         if (selectedNode != node) {
           String sourceName = getNodeValue(selectedNode!);
