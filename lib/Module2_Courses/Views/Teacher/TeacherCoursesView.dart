@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:team_adaptive/Module2_Courses/Views/Teacher/TeacherAddCourseView.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../../Models/CourseModel.dart';
@@ -79,14 +80,14 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                         children: [
                           ElevatedButton(
                               onPressed: () {
-                                GoRouter.of(context).go('/courses/add');
+                                showTeacherAddCourseDialog(context);
                               },
                               child: const Text('Add Course')),
                           const SizedBox(height: 20.0),
                           ElevatedButton(
                               onPressed: () {
-                                joinCourseDialog(context, viewModel,
-                                    'Enter course code');
+                                joinCourseDialog(
+                                    context, viewModel, 'Enter course code');
                               },
                               child: const Text('Join Course'))
                         ],
@@ -105,11 +106,9 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
                                   extra: courses[index]);
                             },
                             child: Container(
-                              width: MediaQuery.of(context).size.width / 5 -
-                                  20,
+                              width: MediaQuery.of(context).size.width / 5 - 20,
                               height:
-                                  MediaQuery.of(context).size.height / 4 -
-                                      20,
+                                  MediaQuery.of(context).size.height / 4 - 20,
                               decoration: BoxDecoration(
                                 color: ThemeColor.lightgreyTheme,
                                 borderRadius: BorderRadius.circular(
@@ -147,6 +146,15 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
     ));
   }
 
+  void showTeacherAddCourseDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return TeacherAddCourseView();
+      },
+    );
+  }
+
   void joinCourseDialog(
       BuildContext context, TeacherCourseViewModel viewModel, String message) {
     showDialog(
@@ -155,60 +163,87 @@ class _TeacherCoursesViewState extends State<TeacherCoursesView> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              content: SizedBox(
-                height: 200.0,
-                width: 300.0, // Set your desired width here
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20.0),
-                    Text(message),
-                    const SizedBox(height: 20.0),
-                    TextField(
-                      controller: textController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    if (isCodeIncorrect)
-                      const Column(
-                        children: [
-                          Text(
-                            'Incorrect course code',
-                            style: TextStyle(color: Colors.red),
+                shadowColor: ThemeColor.darkgreyTheme,
+                contentPadding: EdgeInsets.zero,
+                content: Container(
+                  height: MediaQuery.of(context).size.width * 0.15,
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: ThemeColor.darkgreyTheme,
+                  ),
+                  child: Center(
+                      child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(message,
+                            style: const TextStyle(
+                                color: ThemeColor.offwhiteTheme, fontSize: 24)),
+                        const SizedBox(height: 20.0),
+                        TextField(
+                          textAlign: TextAlign.center,
+                          controller: textController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .offwhiteTheme), // Change the outline color
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 0, 0, 0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor
+                                      .lightgreyTheme), // Change the outline color when focused
+                            ),
+                            fillColor: ThemeColor
+                                .offwhiteTheme, // Change the background color
+                            filled: true,
                           ),
-                          SizedBox(height: 10.0),
-                        ],
-                      ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () async {
-                        bool enrolled =
-                            await viewModel.joinCourse(textController.text);
-                        if (enrolled) {
-                          GoRouter.of(context).go('/courses');
-                        } else {
-                          setState(() {
-                            isCodeIncorrect = true;
-                          });
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 36, vertical: 16),
-                        backgroundColor: ThemeColor.darkgreyTheme,
-                      ),
-                      child: const Text(
-                        "Enroll",
-                        style: TextStyle(
-                          color: ThemeColor.offwhiteTheme,
                         ),
-                      ),
+                        if (isCodeIncorrect)
+                          const Column(
+                            children: [
+                              Text(
+                                'Incorrect course code',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              SizedBox(height: 10.0),
+                            ],
+                          ),
+                        const SizedBox(height: 20.0),
+                        ElevatedButton(
+                          onPressed: () async {
+                            bool enrolled =
+                                await viewModel.joinCourse(textController.text);
+                            if (enrolled) {
+                              GoRouter.of(context).go('/courses');
+                            } else {
+                              setState(() {
+                                isCodeIncorrect = true;
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 36, vertical: 16),
+                            backgroundColor: ThemeColor.offwhiteTheme,
+                          ),
+                          child: const Text(
+                            "Enroll",
+                            style: TextStyle(
+                              color: ThemeColor.darkgreyTheme,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            );
+                  )),
+                ));
           },
         );
       },

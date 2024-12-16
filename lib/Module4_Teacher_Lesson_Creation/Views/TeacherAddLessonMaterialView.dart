@@ -5,6 +5,7 @@ import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/Atomic
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/View_Models/InitialAddMaterialsViewModel.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/AtomicInputMaterialInfoView.dart';
 import 'package:team_adaptive/Module4_Teacher_Lesson_Creation/Views/TeacherSelectLearningStyleView.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 import '../View_Models/SelectConceptsViewModel.dart';
 import '../View_Models/SelectLearningStyleViewModel.dart';
@@ -86,7 +87,9 @@ class TeacherAddLessonMaterialView extends StatelessWidget {
                       lessonType: type,
                       concepts: selectConceptsViewModel.selectedItems!,
                       learningStyle:
-                          selectLearningStyleViewModel.selectedStyle),
+                          selectLearningStyleViewModel.selectedStyle,
+                          color: ThemeColor.generatePastelColors(
+                          selectConceptsViewModel.selectedItems!.length)),
                   TextButton(
                       onPressed: () async {
                         if (viewModel.validate()) {

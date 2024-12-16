@@ -24,22 +24,28 @@ class TeacherAddCourseView extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 50.0),
-      child: Wrap(
-        children: [
-          Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(
-                  color: ThemeColor.darkgreyTheme,
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.all(50.0),
+    return AlertDialog(
+        shadowColor: ThemeColor.darkgreyTheme,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+        contentPadding: EdgeInsets.zero,
+        content: Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          height: MediaQuery.of(context).size.height * 0.65,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50.0),
+            color: ThemeColor.darkgreyTheme,),
+          child: Wrap(
+            children: [
+              Center(
                   child: Column(
-                    children: [
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(50.0),
+                    child: Column(children: [
                       const Text('Add Course',
                           style: TextStyle(
-                            fontSize: 64,
+                            fontSize: 36,
                             fontWeight: FontWeight.bold,
                             color: ThemeColor.offwhiteTheme,
                           )),
@@ -130,54 +136,53 @@ class TeacherAddCourseView extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ],
-                  )),
-            ]),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(),
-                child: ElevatedButton(
-                    onPressed: () async {
-                      if (teacherCourseViewModel.validate(titleController.text,
-                          codeController.text, descriptionController.text)) {
-                        Course course = Course.setAll(
-                          id: null,
-                          title: titleController.text,
-                          code: codeController.text,
-                          description: descriptionController.text,
-                          students: [],
-                          teachers: [AuthServices().userInfo?.id ?? ''],
-                        );
-                        Course? added =
-                            await teacherCourseViewModel.addCourse(course);
-                        if (added != null) {
-                          GoRouter.of(context)
-                              .go('/courses/${added.id}', extra: added);
-                        } else {
-                          msgDialogShow(context, "Course failed to be added");
-                        }
-                      } else {
-                        msgDialogShow(
-                            context, "Please check the inputted info");
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 98, vertical: 24),
-                      backgroundColor: ThemeColor.darkgreyTheme,
-                    ),
-                    child: const Text('Add Course',
-                        style: TextStyle(
-                            color: ThemeColor.offwhiteTheme, fontSize: 16.0))),
-              )
+                      const SizedBox(height: 50),
+                      Center(
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              if (teacherCourseViewModel.validate(
+                                  titleController.text,
+                                  codeController.text,
+                                  descriptionController.text)) {
+                                Course course = Course.setAll(
+                                  id: null,
+                                  title: titleController.text,
+                                  code: codeController.text,
+                                  description: descriptionController.text,
+                                  students: [],
+                                  teachers: [AuthServices().userInfo?.id ?? ''],
+                                );
+                                Course? added = await teacherCourseViewModel
+                                    .addCourse(course);
+                                if (added != null) {
+                                  GoRouter.of(context)
+                                      .go('/courses/${added.id}', extra: added);
+                                } else {
+                                  msgDialogShow(
+                                      context, "Course failed to be added");
+                                }
+                              } else {
+                                msgDialogShow(
+                                    context, "Please check the inputted info");
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 98, vertical: 24),
+                              backgroundColor: ThemeColor.offwhiteTheme,
+                            ),
+                            child: const Text('Add Course',
+                                style: TextStyle(
+                                    color: ThemeColor.darkgreyTheme,
+                                    fontSize: 16.0))),
+                      )
+                    ]),
+                  ),
+                ],
+              )),
             ],
-          )
-        ],
-      ),
-    );
+          ),
+        ));
   }
 
   void msgDialogShow(BuildContext context, String message) {
