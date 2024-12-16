@@ -57,341 +57,348 @@ class RegisterView extends StatelessWidget {
           flex: 4,
           child: Consumer<RegisterViewModel>(
             builder: (context, registerViewModel, child) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Register',
-                    style: TextStyle(
-                      fontSize: 60,
-                      fontWeight: FontWeight.bold,
-                      color: registerViewModel.userType == UserType.student
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Register',
+                      style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        color: registerViewModel.userType == UserType.student
+                            ? ThemeColor.studentTheme
+                            : ThemeColor.teacherTheme,
+                      ),
+                    ),
+                    const SizedBox(height: 54),
+                    ToggleButtons(
+                      isSelected: [
+                        registerViewModel.userType == UserType.student,
+                        registerViewModel.userType == UserType.teacher,
+                      ],
+                      onPressed: (int index) {
+                        registerViewModel.userType =
+                            index == 0 ? UserType.student : UserType.teacher;
+                      },
+                      fillColor: registerViewModel.userType == UserType.student
                           ? ThemeColor.studentTheme
                           : ThemeColor.teacherTheme,
+                      selectedColor: ThemeColor.offwhiteTheme,
+                      children: const <Widget>[
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 100.0, vertical: 8.0),
+                          child: Text('Student'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 100.0, vertical: 8.0),
+                          child: Text('Teacher'),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 54),
-                  ToggleButtons(
-                    isSelected: [
-                      registerViewModel.userType == UserType.student,
-                      registerViewModel.userType == UserType.teacher,
-                    ],
-                    onPressed: (int index) {
-                      registerViewModel.userType =
-                          index == 0 ? UserType.student : UserType.teacher;
-                    },
-                    fillColor: registerViewModel.userType == UserType.student
-                        ? ThemeColor.studentTheme
-                        : ThemeColor.teacherTheme,
-                    selectedColor: ThemeColor.offwhiteTheme,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 100.0, vertical: 8.0),
-                        child: Text('Student'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 100.0, vertical: 8.0),
-                        child: Text('Teacher'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: 600,
-                    child: TextField(
-                      onChanged: (value) {
-                        registerViewModel.firstname = value;
-                      },
-                      decoration: InputDecoration(
-                        fillColor: ThemeColor.offwhiteTheme,
-                        filled: true,
-                        labelText: 'First name',
-                        floatingLabelStyle: TextStyle(
-                          color: registerViewModel.userType == UserType.student
-                              ? ThemeColor.studentTheme
-                              : ThemeColor.teacherTheme,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: 600,
+                      child: TextField(
+                        onChanged: (value) {
+                          registerViewModel.firstname = value;
+                        },
+                        decoration: InputDecoration(
+                          errorText: viewModel.firstnameErrorMessage,
+                          fillColor: ThemeColor.offwhiteTheme,
+                          filled: true,
+                          labelText: 'First name',
+                          floatingLabelStyle: TextStyle(
+                            color: registerViewModel.userType == UserType.student
+                                ? ThemeColor.studentTheme
+                                : ThemeColor.teacherTheme,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: 600,
-                    child: TextField(
-                      onChanged: (value) {
-                        registerViewModel.lastname = value;
-                      },
-                      decoration: InputDecoration(
-                        fillColor: ThemeColor.offwhiteTheme,
-                        filled: true,
-                        labelText: 'Last name',
-                        floatingLabelStyle: TextStyle(
-                          color: registerViewModel.userType == UserType.student
-                              ? ThemeColor.studentTheme
-                              : ThemeColor.teacherTheme,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: 600,
-                    child: TextField(
-                      onChanged: (value) {
-                        registerViewModel.username = value;
-                      },
-                      decoration: InputDecoration(
-                        fillColor: ThemeColor.offwhiteTheme,
-                        filled: true,
-                        labelText: 'Username',
-                        floatingLabelStyle: TextStyle(
-                          color: registerViewModel.userType == UserType.student
-                              ? ThemeColor.studentTheme
-                              : ThemeColor.teacherTheme,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  SizedBox(
-                    width: 600,
-                    child: TextField(
-                      onChanged: (value) {
-                        registerViewModel.email = value;
-                      },
-                      decoration: InputDecoration(
-                        fillColor: ThemeColor.offwhiteTheme,
-                        filled: true,
-                        labelText: 'Email',
-                        floatingLabelStyle: TextStyle(
-                          color: registerViewModel.userType == UserType.student
-                              ? ThemeColor.studentTheme
-                              : ThemeColor.teacherTheme,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  SizedBox(
-                    width: 600,
-                    child: TextField(
-                      onChanged: (value) {
-                        registerViewModel.password = value;
-                      },
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        fillColor: ThemeColor.offwhiteTheme,
-                        filled: true,
-                        labelText: 'Password',
-                        floatingLabelStyle: TextStyle(
-                          color: registerViewModel.userType == UserType.student
-                              ? ThemeColor.studentTheme
-                              : ThemeColor.teacherTheme,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                registerViewModel.userType == UserType.student
-                                    ? ThemeColor.studentTheme
-                                    : ThemeColor.teacherTheme,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 60.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        children: [
-                          const Text(
-                            'Already have an account? ',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/login');
-                            },
-                            child: const Text(
-                              'Log in',
-                              style: TextStyle(
-                                color: ThemeColor.blueTheme,
-                                fontSize: 16,
-                              ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
                             ),
                           ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          bool validInput = registerViewModel.validate();
-                          if (!validInput) {
-                            msgDialogShow(context,
-                                'Make sure the fields are all filled correctly. Email must have the correct format. Password must be at least 6 characters long');
-                          } else {
-                            bool isRegistered =
-                                await registerViewModel.register();
-                            if (isRegistered) {
-                              topNavViewModel.setSelected(SELECTED.HOME);
-                              GoRouter.of(context).go('/home');
-                              // Navigator.pushReplacementNamed(context, '/login');
-                            } else {
-                              msgDialogShow(context,
-                                  'Registering user failed! Please try again');
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 92, vertical: 16),
-                          backgroundColor:
-                              registerViewModel.userType == UserType.student
-                                  ? ThemeColor.studentTheme
-                                  : ThemeColor.teacherTheme,
-                          foregroundColor: ThemeColor.offwhiteTheme,
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
                         ),
-                        child: const Text('Register',
-                            style: TextStyle(fontSize: 18)),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: 600,
+                      child: TextField(
+                        onChanged: (value) {
+                          registerViewModel.lastname = value;
+                        },
+                        decoration: InputDecoration(
+                          errorText: viewModel.lastnameErrorMessage,
+                          fillColor: ThemeColor.offwhiteTheme,
+                          filled: true,
+                          labelText: 'Last name',
+                          floatingLabelStyle: TextStyle(
+                            color: registerViewModel.userType == UserType.student
+                                ? ThemeColor.studentTheme
+                                : ThemeColor.teacherTheme,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: 600,
+                      child: TextField(
+                        onChanged: (value) {
+                          registerViewModel.username = value;
+                        },
+                        decoration: InputDecoration(
+                          errorText: viewModel.usernameErrorMesssage,
+                          fillColor: ThemeColor.offwhiteTheme,
+                          filled: true,
+                          labelText: 'Username',
+                          floatingLabelStyle: TextStyle(
+                            color: registerViewModel.userType == UserType.student
+                                ? ThemeColor.studentTheme
+                                : ThemeColor.teacherTheme,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    SizedBox(
+                      width: 600,
+                      child: TextField(
+                        onChanged: (value) {
+                          registerViewModel.email = value;
+                        },
+                        decoration: InputDecoration(
+                          errorText: viewModel.emailErrorMessage,
+                          fillColor: ThemeColor.offwhiteTheme,
+                          filled: true,
+                          labelText: 'Email',
+                          floatingLabelStyle: TextStyle(
+                            color: registerViewModel.userType == UserType.student
+                                ? ThemeColor.studentTheme
+                                : ThemeColor.teacherTheme,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    SizedBox(
+                      width: 600,
+                      child: TextField(
+                        onChanged: (value) {
+                          registerViewModel.password = value;
+                        },
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          errorText: viewModel.passwordErrorMessage,
+                          fillColor: ThemeColor.offwhiteTheme,
+                          filled: true,
+                          labelText: 'Password',
+                          floatingLabelStyle: TextStyle(
+                            color: registerViewModel.userType == UserType.student
+                                ? ThemeColor.studentTheme
+                                : ThemeColor.teacherTheme,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  registerViewModel.userType == UserType.student
+                                      ? ThemeColor.studentTheme
+                                      : ThemeColor.teacherTheme,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 60.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              'Already have an account? ',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                GoRouter.of(context).go('/login');
+                              },
+                              child: const Text(
+                                'Log in',
+                                style: TextStyle(
+                                  color: ThemeColor.blueTheme,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            bool validInput = registerViewModel.validate();
+                            if (!validInput) {
+                              msgDialogShow(context,
+                                  'Make sure the fields are all filled correctly. Email must have the correct format. Password must be at least 6 characters long');
+                            } else {
+                              bool isRegistered =
+                                  await registerViewModel.register();
+                              if (isRegistered) {
+                                topNavViewModel.setSelected(SELECTED.HOME);
+                                GoRouter.of(context).go('/home');
+                                // Navigator.pushReplacementNamed(context, '/login');
+                              } else {
+                                msgDialogShow(context,
+                                    'Registering user failed! Please try again');
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 92, vertical: 16),
+                            backgroundColor:
+                                registerViewModel.userType == UserType.student
+                                    ? ThemeColor.studentTheme
+                                    : ThemeColor.teacherTheme,
+                            foregroundColor: ThemeColor.offwhiteTheme,
+                          ),
+                          child: const Text('Register',
+                              style: TextStyle(fontSize: 18)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             },
           ),
