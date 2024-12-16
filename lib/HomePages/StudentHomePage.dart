@@ -28,7 +28,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     StudentCourseViewModel viewModel =
         Provider.of<StudentCourseViewModel>(context);
 
-    return SingleChildScrollView(
+    return Container(
       child: Stack(
         children: [
           // Background Image
@@ -43,7 +43,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           ),
           Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: 100.0, vertical: 200.0),
+                  horizontal: 100.0, vertical: 100.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

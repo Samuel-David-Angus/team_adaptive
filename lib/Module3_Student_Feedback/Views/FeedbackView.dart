@@ -92,7 +92,7 @@ class FeedbackView extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 15),
-          const Text('Weak Concepts:', style: TextStyle(fontSize: 24.0)),
+          const Text('Weaknesses:', style: TextStyle(fontSize: 24.0)),
           const SizedBox(height: 15),
           ...feedback.weakConcepts.map(
             (concept) {

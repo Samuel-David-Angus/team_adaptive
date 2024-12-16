@@ -7,7 +7,7 @@ class TeacherHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Container(
       child: Stack(
         children: [
           // Background Image
@@ -22,7 +22,7 @@ class TeacherHomePage extends StatelessWidget {
           ),
           Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 100.0, vertical: 200.0),
+                const EdgeInsets.symmetric(horizontal: 100.0, vertical: 100.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -107,32 +107,28 @@ class TeacherHomePage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width / 8),
+                      SizedBox(width: MediaQuery.of(context).size.width / 8),
                       TextButton(
                         onPressed: () async {
                           GoRouter.of(context).go('/student-performance');
                         },
-                        style: ButtonStyle(
-                          overlayColor:
-                              WidgetStateProperty.resolveWith<Color>(
-                            (Set<WidgetState> states) {
-                              if (states.contains(WidgetState.hovered)) {
-                                return Colors.transparent;
-                              }
+                        style: ButtonStyle(overlayColor:
+                            WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) {
+                            if (states.contains(WidgetState.hovered)) {
                               return Colors.transparent;
-                            },
-                          ),
-                          textStyle:
+                            }
+                            return Colors.transparent;
+                          },
+                        ), textStyle:
                             WidgetStateProperty.resolveWith<TextStyle>(
-                              (Set<WidgetState> states) {
-                                if (states.contains(WidgetState.hovered)) {
-                                  return const TextStyle(decoration: TextDecoration.underline);
-                                }
-                                return const TextStyle();
-                              }
-                            )
-                        ),
+                                (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.hovered)) {
+                            return const TextStyle(
+                                decoration: TextDecoration.underline);
+                          }
+                          return const TextStyle();
+                        })),
                         child: const Text(
                           'Check Now →',
                           style: TextStyle(

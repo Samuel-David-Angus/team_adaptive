@@ -71,11 +71,12 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-              const Center(child: Text("Latest Feedback",
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontWeight: FontWeight.bold,
-                  ))),
+              const Center(
+                  child: Text("Latest Feedback",
+                      style: TextStyle(
+                        fontSize: 45,
+                        fontWeight: FontWeight.bold,
+                      ))),
               const SizedBox(height: 30),
               Center(
                   child: Column(children: [
@@ -182,7 +183,7 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Center(
-                                  child: Text('Weak Concepts',
+                                  child: Text('Weaknesses',
                                       style: TextStyle(fontSize: 24.0))),
                               const SizedBox(height: 15),
                               SingleChildScrollView(
@@ -476,7 +477,7 @@ class _FeedbackSummaryViewState extends State<FeedbackSummaryView> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const Text("Learning Outcomes"),
+                                  const Text("Failure rates"),
                                   DropdownMenu<String>(
                                     initialSelection: selectedLO,
                                     dropdownMenuEntries: widget.feedbackSummary
