@@ -149,11 +149,11 @@ class TeacherLessonHomeView extends StatelessWidget {
                                             if (states.contains(
                                                 WidgetState.hovered)) {
                                               return const TextStyle(
-                                                decoration:
-                                                    TextDecoration.underline,
+                                                  fontSize: 17
                                               );
                                             }
-                                            return const TextStyle();
+                                            return const TextStyle(
+                                                fontSize: 16);
                                           },
                                         )),
                                         onPressed: () async {
@@ -164,8 +164,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                                         },
                                         child: const Text('Setup →',
                                             style: TextStyle(
-                                                color: ThemeColor.darkgreyTheme,
-                                                fontSize: 16))),
+                                                color: ThemeColor.darkgreyTheme))),
                                   if (lessons[index].isSetupComplete!)
                                     TextButton(
                                         onPressed: () {
