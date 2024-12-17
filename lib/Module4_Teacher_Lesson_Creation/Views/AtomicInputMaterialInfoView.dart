@@ -22,11 +22,11 @@ class AtomicInputMaterialInfoView extends StatefulWidget {
       required this.color});
   @override
   State<AtomicInputMaterialInfoView> createState() =>
-      _AtomicInputMaterialInfoViewState();
+      _AtomicInputMaterialInfoViewState() ;
 }
 
 class _AtomicInputMaterialInfoViewState
-    extends State<AtomicInputMaterialInfoView> {
+    extends State<AtomicInputMaterialInfoView> with AutomaticKeepAliveClientMixin {
   final viewModel = AtomicInputMaterialViewModel();
   bool isUploadingFile = true;
 
@@ -41,6 +41,7 @@ class _AtomicInputMaterialInfoViewState
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       padding: const EdgeInsets.all(16),
       child: LayoutBuilder(
@@ -191,4 +192,8 @@ class _AtomicInputMaterialInfoViewState
       }),
     );
   }
+  
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
