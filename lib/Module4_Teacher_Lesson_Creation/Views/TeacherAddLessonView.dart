@@ -109,10 +109,12 @@ class _TeacherAddLessonViewState extends State<TeacherAddLessonView> {
                             ),
                             fillColor: ThemeColor
                                 .offwhiteTheme, // Change the background color
-                            filled: true, // Enable the background color
+                            filled: true,
+                            hintText: "Start here...",
                           ),
                           controller: descriptionController,
                           maxLines: 22,
+                          
                         ),
                       ],
                     ))),

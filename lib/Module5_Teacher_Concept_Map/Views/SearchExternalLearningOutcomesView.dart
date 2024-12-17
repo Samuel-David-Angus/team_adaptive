@@ -151,11 +151,11 @@ class SearchExternalLearningOutcomesViewState
                       ),
                     ),
                     const SizedBox(width: 8.0),
-                    ElevatedButton(
+                    IconButton(
                       onPressed: () {
                         _searchConcepts(searchResults);
                       },
-                      child: const Text('Search'),
+                      icon: const Icon(Icons.search),
                     ),
                   ],
                 ),
@@ -170,7 +170,6 @@ class SearchExternalLearningOutcomesViewState
                           if (widget.lessonID != null) {
                             Navigator.of(context).pop(_searchResults[index]);
                           } else {
-                            print(widget.studentID);
                             showDialog(
                                 context: context,
                                 builder: (context) {

@@ -57,8 +57,6 @@ class LearningOutcomeMapViewState extends State<LearningOutcomeMapView>
           Container(
               width: parentWidth,
               height: parentHeight - 105,
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.black)),
               child: Row(children: [
                 SizedBox(
                     width: selectedNode == null

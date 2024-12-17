@@ -174,7 +174,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                                           context.go(
                                               '/courses/${course.id}/lessons/${lessons[index].id}/dashboard');
                                         },
-                                        child: const Text('dashboard'))
+                                        child: const Text('Dashboard'))
                                 ],
                               ),
                             )));

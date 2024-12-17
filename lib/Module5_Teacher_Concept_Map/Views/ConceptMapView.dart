@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:team_adaptive/Module2_Courses/Models/CourseModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/Models/ConceptMapModel.dart';
 import 'package:team_adaptive/Module5_Teacher_Concept_Map/View_Models/ConceptMapViewModel.dart';
+import 'package:team_adaptive/Theme/ThemeColor.dart';
 
 class ConceptMapView extends StatelessWidget {
   final Course? course;
@@ -166,14 +167,11 @@ class ConceptMapView extends StatelessWidget {
   void _assignColorsToLessons(ConceptMapModel conceptMapModel) {
     final int n =
         conceptMapModel.lessonPartitions.keys.length; // Number of lessons
+    List<Color> colors = ThemeColor.generatePastelColors(n);
     int index = 0;
 
     for (var lesson in conceptMapModel.lessonPartitions.keys) {
-      double hue =
-          (index * 360 / n) % 360; // Spread hues evenly around the color wheel
-      int color = HSVColor.fromAHSV(1.0, hue, 0.8, 0.9).toColor().value;
-
-      lessonColors[lesson] = Color(color);
+      lessonColors[lesson] = colors[index];
       index++;
     }
   }
