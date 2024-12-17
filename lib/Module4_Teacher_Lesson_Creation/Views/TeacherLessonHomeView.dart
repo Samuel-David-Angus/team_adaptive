@@ -78,7 +78,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: ThemeColor.darkgreyTheme,
+                      backgroundColor: isSetUpComplete ? ThemeColor.darkgreyTheme : ThemeColor.errorTheme,
                     ),
                     child: const Text(
                       '+ Add Lesson',
@@ -97,12 +97,15 @@ class TeacherLessonHomeView extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
                                 border: Border.all(
-                                    color: ThemeColor.errorTheme, width: 2)),
+                                    color: !lessons[index].isSetupComplete!
+                                        ? ThemeColor.errorTheme
+                                        : ThemeColor.darkgreyTheme,
+                                    width: 2)),
                             child: ListTile(
                               title: Row(children: [
                                 Text(lessons[index].lessonTitle!),
                                 const SizedBox(width: 10),
-                                !isSetUpComplete
+                                !lessons[index].isSetupComplete!
                                     ? const Text('(Setup Required)',
                                         style: TextStyle(
                                             color: ThemeColor.errorTheme))
@@ -111,7 +114,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  isSetUpComplete
+                                  lessons[index].isSetupComplete!
                                       ? TextButton(
                                           onPressed: () {
                                             GoRouter.of(context).go(
@@ -121,7 +124,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                                           child: const Text('See materials'),
                                         )
                                       : const SizedBox(width: 0),
-                                  isSetUpComplete
+                                  lessons[index].isSetupComplete!
                                       ? TextButton(
                                           onPressed: () {
                                             GoRouter.of(context).go(
@@ -149,8 +152,7 @@ class TeacherLessonHomeView extends StatelessWidget {
                                             if (states.contains(
                                                 WidgetState.hovered)) {
                                               return const TextStyle(
-                                                  fontSize: 17
-                                              );
+                                                  fontSize: 17);
                                             }
                                             return const TextStyle(
                                                 fontSize: 16);
@@ -164,7 +166,8 @@ class TeacherLessonHomeView extends StatelessWidget {
                                         },
                                         child: const Text('Setup →',
                                             style: TextStyle(
-                                                color: ThemeColor.darkgreyTheme))),
+                                                color:
+                                                    ThemeColor.darkgreyTheme))),
                                   if (lessons[index].isSetupComplete!)
                                     TextButton(
                                         onPressed: () {

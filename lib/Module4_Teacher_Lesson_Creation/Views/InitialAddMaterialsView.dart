@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:team_adaptive/Theme/ThemeColor.dart';
 
@@ -182,7 +183,8 @@ class _InitialAddMaterialsViewState extends State<InitialAddMaterialsView> with 
                                 .addMultipleMaterials(widget.lesson) &&
                             await viewmodel
                                 .confirmSetupComplete(widget.lesson)) {
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
+                          GoRouter.of(context).go("/courses/${widget.lesson.courseID}/lessons");
                         } else {
                           showMessage(
                               'Error submitting lessons and completing setup',
