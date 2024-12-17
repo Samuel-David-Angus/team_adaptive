@@ -80,7 +80,7 @@ class _AtomicInputMaterialInfoViewState
                         hintText: 'Title'),
                     controller: viewModel.titleController,
                     style: const TextStyle(
-                      color: ThemeColor.offwhiteTheme, // Change text color here
+                      color: ThemeColor.darkgreyTheme, // Change text color here
                     ),
                   ),
                   Row(
