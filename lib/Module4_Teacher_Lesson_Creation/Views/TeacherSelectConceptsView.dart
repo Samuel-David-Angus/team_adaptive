@@ -30,7 +30,7 @@ class TeacherSelectConceptsView extends StatelessWidget {
           }
         }
         if (viewModel.items == null) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
         return AlertDialog(
           title: const Text('Select Options'),

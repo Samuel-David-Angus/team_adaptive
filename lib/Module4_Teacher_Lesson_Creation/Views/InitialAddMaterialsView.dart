@@ -147,11 +147,11 @@ class _InitialAddMaterialsViewState extends State<InitialAddMaterialsView> with 
                             child: TabBarView(
                             children: [
                               SingleChildScrollView(
-                                key: PageStorageKey('mainTab'),
+                                key: const PageStorageKey('mainTab'),
                                 child: mainLessonTab,
                               ),
                               SingleChildScrollView(
-                                key: PageStorageKey('subTab'),
+                                key: const PageStorageKey('subTab'),
                                 child: subLessonTab,
                               ),
                             ],
