@@ -7,7 +7,7 @@ class TeacherHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       child: Stack(
         children: [
           // Background Image
@@ -16,13 +16,13 @@ class TeacherHomePage extends StatelessWidget {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/hero-home-authenticated.png'),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),
           Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 100.0, vertical: 100.0),
+                const EdgeInsets.only(top: 100, left: 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -79,7 +79,7 @@ class TeacherHomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 60),
                 Container(
-                    width: MediaQuery.of(context).size.width / 2.5,
+                    width: 750,
                     decoration: BoxDecoration(
                       color: ThemeColor.offwhiteTheme,
                       boxShadow: [

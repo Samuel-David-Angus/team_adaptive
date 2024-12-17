@@ -28,7 +28,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
     StudentCourseViewModel viewModel =
         Provider.of<StudentCourseViewModel>(context);
 
-    return Container(
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: Stack(
         children: [
           // Background Image
@@ -37,13 +38,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/hero-home-authenticated.png'),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),
           Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 100.0, vertical: 100.0),
+              padding: const EdgeInsets.only(top: 100, left: 100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -81,7 +81,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
                   ),
                   const SizedBox(height: 50.0),
-                  Row(children: [
+                  SizedBox(
+                    width: 700,
+                    child: Wrap(children: [
                     SizedBox(
                       width: 500.0,
                       child: TextField(
@@ -128,6 +130,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ),
                     ),
                   ]),
+                  ),
                   const SizedBox(height: 10),
                   if (isCodeIncorrect)
                     const Text(

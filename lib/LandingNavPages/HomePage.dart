@@ -37,13 +37,13 @@ class HomePage extends StatelessWidget {
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/hero-home.png'),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 100.0, vertical: 200.0),
+                    padding: const EdgeInsets.only(
+                        left: 100.0, top: 200.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
